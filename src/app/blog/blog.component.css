@@ -1,0 +1,31 @@
+.blog {
+    padding: 40px;
+  }
+  .blog h2 {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .posts {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .post {
+    max-width: 300px;
+    text-align: center;
+  }
+  .post img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .post h3 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+  }
+  .post p {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  

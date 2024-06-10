@@ -1,0 +1,87 @@
+/* Add this CSS for the fixed header */
+.fixed-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: black; /* Black background for the header */
+    z-index: 1000; /* Ensure it is above other content */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px; /* Adjust as needed */
+}
+
+.nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.logo {
+    flex: 0 0 auto; /* Prevent the logo from shrinking */
+}
+
+.logo img {
+    height: 50px; /* Adjust as needed */
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    flex: 1; /* Allow the nav links to take up available space */
+    justify-content: center; /* Center the links */
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: white; /* White text for contrast against black background */
+    padding: 10px 15px; /* Adjust padding for clickable area */
+    font-size: 16px; /* Adjust font size as needed */
+}
+
+.language {
+    flex: 0 0 auto; /* Prevent the button from shrinking */
+    padding: 10px 15px; /* Adjust padding for the button */
+    cursor: pointer;
+    background-color: white; /* White background for contrast */
+    color: black; /* Black text */
+    border: none; /* Remove default border */
+    border-radius: 5px;
+    font-size: 16px; /* Adjust font size as needed */
+}
+
+/* Add some padding to the top of the body to avoid content being hidden behind the fixed header */
+body {
+    padding-top: 70px; /* Adjust this value based on the height of your header */
+}
+
+/* Media query to handle smaller screen sizes */
+@media (max-width: 768px) {
+    .nav-bar {
+        flex-direction: column; /* Stack items vertically */
+        align-items: center;
+    }
+
+    .nav-links {
+        flex-direction: column; /* Stack nav links vertically */
+        align-items: center;
+        width: 100%;
+        gap: 10px; /* Adjust gap for better spacing on small screens */
+    }
+
+    .nav-links li {
+        width: 100%; /* Ensure each nav link takes full width */
+        text-align: center; /* Center align nav items */
+    }
+
+    .language {
+        margin-top: 10px;
+        margin-right: 10px; /* Add some margin for spacing */
+    }
+
+    .logo img {
+        height: 40px; /* Adjust size for smaller screens */
+    }
+}

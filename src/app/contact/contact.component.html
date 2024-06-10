@@ -1,0 +1,42 @@
+<div class="contact-container">
+    <div class="contact-details">
+        <h2>Contact details</h2>
+        <p>If you have any questions or comments, we would be happy to hear from you.</p>
+        <p>In addition, you will find all contact details to reach us.</p>
+        <div class="details">
+         
+            <div class="detail-item">
+                <h3>Phone</h3>
+                <p>+31 (0) 638342809  (nl)</p>
+                <p>+44 (0) 7342740196 (uk)</p>
+            </div>
+            <div class="detail-item">
+                <h3>Office hours</h3>
+                <p>Mo - Fr: 9:00 - 18:00</p>
+                <p>Sat - Sun: Closed</p>
+            </div>
+            <div class="detail-item">
+                <h3>Email</h3>
+                <p><a href="mailto:info@vartec.global">info@vartec.global</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="contact-form">
+        <h1>Get in touch</h1>
+        <form (ngSubmit)="sendEmail(contactForm)" #contactForm="ngForm">
+            <label for="name">Full Name :</label>
+            <input type="text" id="name" name="name" ngModel required>
+            
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" ngModel required>
+            
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" ngModel required>
+            
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="4" ngModel required></textarea>
+            
+            <button type="submit" [disabled]="!contactForm.form.valid">Submit</button>
+        </form>
+    </div>
+</div>
