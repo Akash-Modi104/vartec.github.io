@@ -14,6 +14,10 @@ import { ContactComponent } from './contact/contact.component';
 import { Hero2Component } from './hero2/hero2.component';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
+import { EpcComponent } from './services/epc/epc.component';
+import { AboutUsComponent } from './home/about-us/about-us.component';
+import { ConsultaingComponent } from './services/consultaing/consultaing.component';
+import { OpertaionComponent } from './services/opertaion/opertaion.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +29,10 @@ import {MatButtonModule} from '@angular/material/button';
     FooterComponent,
     ContactComponent,
     Hero2Component,
+    EpcComponent,
+    AboutUsComponent,
+    ConsultaingComponent,
+    OpertaionComponent,
    
   ],
   imports: [

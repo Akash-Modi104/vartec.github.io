@@ -1,0 +1,74 @@
+.consulting-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #ffffff; /* Ensure background is white for readability */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    color: #333; /* Dark text for readability */
+    font-family: 'Roboto', sans-serif;
+    margin: 20px auto;
+    max-width: 1200px; /* Center and constrain width */
+  }
+  
+  .image-content {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .image-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px; /* Add space between images */
+  }
+  
+  .image-item {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .image-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+  }
+  
+  .image-item p {
+    margin-top: 10px;
+    font-weight: bolder;
+    font-size: large;
+    color: #333; /* Dark text for readability */
+  }
+  
+  .text-content {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .text-content h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #000; /* Use primary color for heading */
+  }
+  
+  .text-content p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  
+  .text-content ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    text-align: left; /* Left align list */
+  }
+  
+  .text-content li {
+    margin-bottom: 10px;
+  }
+  

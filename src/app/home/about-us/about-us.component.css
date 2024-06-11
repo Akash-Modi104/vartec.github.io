@@ -1,0 +1,213 @@
+/* styles.css */
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #000;
+    overflow-x: hidden; /* Set the background color of the body to black */
+  }
+  
+  .navbar {
+    display: flex;
+    align-items: center; /* Align items vertically center */
+    background-color: #000; /* Primary color */
+    padding: 10px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  .container {
+    display: flex;
+    justify-content: space-between; /* Space between logo and nav items */
+    align-items: center; /* Align items vertically center */
+    width: 100%;
+  }
+  
+  .logo img {
+    height: 50px;
+  }
+  
+  .nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center; /* Align items vertically center */
+  }
+  
+  .nav-item {
+    position: relative;
+    margin: 0 10px;
+  }
+  
+  .nav-links a, .nav-links button {
+    color: #fff;
+    background-color: transparent;
+    border: none;
+    text-decoration: none;
+    padding: 10px 20px;
+    display: inline-block;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+  }
+  
+  .nav-links a:hover, .nav-links button:hover, .nav-links .active {
+    background-color: #fff; /* Secondary color for hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    color:#000/* Shadow for hover effect */
+  }
+  
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #333333; /* Dark background for the dropdown */
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Larger shadow for dropdown */
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 4px; /* Rounded corners */
+    overflow: hidden; /* Clip the corners */
+    transform: translateY(10px); /* Initial position for animation */
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s; /* Smooth transitions */
+  }
+  
+  .dropdown-menu.show {
+    display: block;
+    transform: translateY(0); /* Final position for animation */
+    opacity: 1;
+  }
+  
+  .dropdown-menu li {
+    border-bottom: 1px solid #444444; /* Darker border for the dropdown items */
+  }
+  
+  .dropdown-menu li:last-child {
+    border-bottom: none;
+  }
+  
+  .dropdown-menu a {
+    color: #ffffff; /* White text for dropdown items */
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s; /* Smooth transitions */
+  }
+  
+  .dropdown-menu a:hover {
+    background-color: #000; /* Highlight color for hover */
+    color: #fff;
+  }
+  
+  .active {
+    color: #6200ea !important;
+    background-color: #ffffff !important;
+    font-weight: bold;
+    border-radius: 4px;
+  }
+  
+  .hero {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+  
+    position: relative;
+    padding-top: 60px;
+  }
+  
+  .hero:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .hero h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+  }
+  
+  .hero p {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .hero .btn {
+    background: #bb86fc;
+    color: #ffffff;
+    padding: 14px 24px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 18px;
+    transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+  }
+  
+  .hero .btn:hover {
+    background: #ffffff;
+    color: #bb86fc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow for hover effect */
+  }
+  
+  .about-us {
+    background-color: #fff; /* Dark background for about section */
+    padding: 40px 20px;
+    color: #ffffff; /* White text for about section */
+  }
+  
+  .about-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .about-text {
+    flex: 1;
+    margin-right: 20px;
+  }
+  
+  .about-text h2 {
+    font-size: 32px;
+    color: #ffffff;
+  }
+  
+  .about-text p {
+    font-size: 18px;
+    color: #cccccc; /* Light grey text for paragraphs */
+    margin: 20px 0;
+  }
+  
+  .about-video {
+    flex: 1;
+    max-width: 600px;
+  }
+  
+  .about-video video {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow for the video */
+  }
+  

@@ -1,0 +1,31 @@
+.epc-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: #ffffff; /* Ensure background is white for readability */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    color: #333; /* Dark text for readability */
+    font-family: 'Roboto', sans-serif;
+    margin: 20px auto;
+    max-width: 1200px; /* Center and constrain width */
+  }
+  
+  .text-content {
+    flex: 1;
+    margin-right: 20px;
+  }
+  
+  .text-content h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #000; /* Use primary color for heading */
+  }
+  
+  .text-content p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  

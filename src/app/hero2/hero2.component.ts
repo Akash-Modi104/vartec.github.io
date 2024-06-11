@@ -14,11 +14,16 @@ export class Hero2Component implements  OnInit, OnDestroy {
   backgroundInterval: any;
  
 
-  selectedItem: string = '';
+  activeMenu: string | null = null;
+  selectedItem: string | null = null;
+
+  toggleDropdown(menu: string) {
+    this.activeMenu = this.activeMenu === menu ? null : menu;
+  }
 
   selectItem(item: string) {
     this.selectedItem = item;
-    // Optionally, you might want to close the currently open menu
+    this.activeMenu = null;
   }
 
   constructor(private renderer: Renderer2) {
