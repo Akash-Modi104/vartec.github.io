@@ -7,11 +7,11 @@ import { OpertaionComponent } from './services/opertaion/opertaion.component';
 
 const routes: Routes = [
  
-  { path: '', redirectTo: 'home/about_us', pathMatch: 'full' },
+  { path: '', redirectTo: '/', pathMatch: 'full' },
     { path: 'home/about_us', component: AboutUsComponent },
     { path: 'services/epc', component: EpcComponent },
     { path: 'services/Consulting', component: ConsultaingComponent },
-    { path: 'services,/operation&maintenance', component: OpertaionComponent },
+    { path: 'services/operationmaintenance', component: OpertaionComponent },
  
   
 ];
