@@ -196,7 +196,7 @@ body {
   
   .about-text p {
     font-size: 18px;
-    color: #cccccc; /* Light grey text for paragraphs */
+    color: #000; /* Light grey text for paragraphs */
     margin: 20px 0;
   }
   
