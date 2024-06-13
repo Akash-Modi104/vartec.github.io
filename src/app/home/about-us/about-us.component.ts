@@ -1,5 +1,8 @@
 import { Component, OnInit, OnDestroy, Renderer2, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/language.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-about-us',
@@ -27,8 +30,14 @@ export class AboutUsComponent implements OnInit {
     this.selectedItem = item;
     this.activeMenu = null;
   }
+  languageChangeSubscription: Subscription;
 
-  constructor(private renderer: Renderer2) {
+
+
+  constructor(private renderer: Renderer2,private languageService: LanguageService, private translate: TranslateService) {
+    this.languageChangeSubscription = this.translate.onLangChange.subscribe(() => {
+      this.updateContent();
+    });
     this.videoSources = [
       'assets/video/video2.mov',
       'assets/video/video1.mov',
@@ -43,6 +52,9 @@ export class AboutUsComponent implements OnInit {
     
     ];
     this.currentBackgroundIndex = 0;
+  }
+  updateContent() {
+    throw new Error('Method not implemented.');
   }
 
   ngOnInit() {

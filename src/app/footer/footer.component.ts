@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { LanguageService } from '../language.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-footer',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
 
-  constructor() { }
+  languageChangeSubscription: Subscription;
+
+  constructor(private languageService: LanguageService, private translate: TranslateService) {
+    this.languageChangeSubscription = this.translate.onLangChange.subscribe(() => {
+      this.updateContent();
+    });
+  }
 
   ngOnInit(): void {
   }
 
+  updateContent() {
+    // Handle content updates on language change if necessary
+  }
 }

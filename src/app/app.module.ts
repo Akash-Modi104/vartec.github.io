@@ -18,6 +18,13 @@ import { EpcComponent } from './services/epc/epc.component';
 import { AboutUsComponent } from './home/about-us/about-us.component';
 import { ConsultaingComponent } from './services/consultaing/consultaing.component';
 import { OpertaionComponent } from './services/opertaion/opertaion.component';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -40,7 +47,15 @@ import { OpertaionComponent } from './services/opertaion/opertaion.component';
     AppRoutingModule,
     FormsModule, 
     MatMenuModule,
-    MatButtonModule,BrowserAnimationsModule
+    MatButtonModule,BrowserAnimationsModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,4 +1,7 @@
 import { Component, OnInit, OnDestroy, Renderer2, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { LanguageService } from '../language.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-hero2',
@@ -6,7 +9,7 @@ import { Component, OnInit, OnDestroy, Renderer2, ElementRef, ViewChild, HostLis
   styleUrls: ['./hero2.component.css']
 })
 export class Hero2Component implements OnInit, OnDestroy {
-  videoElement:any;
+  videoElement: any;
   @ViewChild('heroElement', { static: true }) heroElement!: ElementRef;
   videoSources: string[];
   currentVideoIndex: number;
@@ -14,6 +17,8 @@ export class Hero2Component implements OnInit, OnDestroy {
   currentBackgroundIndex: number;
   backgroundInterval: any;
   toshow = false;
+  toshowlan = true;
+  languageChangeSubscription: Subscription;
 
   activeMenu: string | null = null;
   selectedItem: string | null = null;
@@ -31,7 +36,9 @@ export class Hero2Component implements OnInit, OnDestroy {
     this.toshow = true;
   }
 
-  constructor(private renderer: Renderer2) {
+  constructor(private renderer: Renderer2,private languageService: LanguageService, private translate: TranslateService) {
+    this.translate.setDefaultLang('en');
+    this.translate.use('en');
     this.videoSources = [
       'assets/video/video2.mov',
       'assets/video/video1.mov',
@@ -45,16 +52,22 @@ export class Hero2Component implements OnInit, OnDestroy {
       'assets/image/hero3-min.jpg'
     ];
     this.currentBackgroundIndex = 0;
+    this.languageChangeSubscription = this.translate.onLangChange.subscribe(() => {
+      this.updateContent();
+    });
+  }
+
+  updateContent() {
+    // Handle content updates on language change if necessary
+  }
+
+  switchLanguage(language: string) {
+    this.languageService.switchLanguage(language);
+    this.toshowlan = language !== 'nl';
   }
 
   ngOnInit() {
-    // this.videoElement = document.getElementById('aboutVideo') as HTMLVideoElement;
-    // this.videoElement.src = this.videoSources[this.currentVideoIndex];
-    // this.videoElement.play();
-    
-    // this.videoElement.addEventListener('ended', this.handleVideoEnded.bind(this));
-
-    // Start background image change interval
+    // Initialize video and background image interval
     this.backgroundInterval = setInterval(this.changeBackgroundImage.bind(this), 3000);
   }
 
@@ -77,7 +90,6 @@ export class Hero2Component implements OnInit, OnDestroy {
       this.renderer.setStyle(heroElement, 'background-image', `url(${this.backgroundImages[this.currentBackgroundIndex]})`);
     }
   }
-
 
   @HostListener('document:click', ['$event'])
   handleClick(event: Event) {

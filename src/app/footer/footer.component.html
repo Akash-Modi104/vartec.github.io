@@ -1,14 +1,14 @@
 <footer>
   <div class="footer-container">
     <div class="footer-left">
-      <p>© VARTEC B.V. 2024. All rights reserved.</p>
+      <p>© VARTEC B.V. 2024. {{ 'ALL_RIGHTS_RESERVED' | translate }}</p>
     </div>
     <nav class="footer-right">
       <ul>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Services</a></li>
-        <li><a href="#">Projects</a></li>
-        <li><a href="#">Privacy</a></li>
+        <li><a routerLink="/home/about_us">{{ 'ABOUT_US' | translate }}</a></li>
+        <li><a routerLink="/services">{{ 'SERVICES' | translate }}</a></li>
+        <li><a routerLink="/projects">{{ 'PROJECTS' | translate }}</a></li>
+        <li><a routerLink="/privacy">{{ 'PRIVACY' | translate }}</a></li>
       </ul>
     </nav>
   </div>

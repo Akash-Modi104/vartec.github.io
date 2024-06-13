@@ -6,36 +6,39 @@
     <nav>
       <ul class="nav-links">
         <li class="nav-item">
-          <button class="dropdown-btn" routerLink="/" (click)="toggleDropdown('homeMenu')">Home</button>
+          <button class="dropdown-btn" routerLink="/" (click)="toggleDropdown('homeMenu')">{{ 'HOME' | translate }}</button>
           <ul class="dropdown-menu" [class.show]="activeMenu === 'homeMenu'">
-            <li><a routerLink="/home/about_us" (click)="selectItem('aboutUs')">About Us</a></li>
+            <li><a routerLink="/home/about_us" (click)="selectItem('aboutUs')">{{ 'ABOUT_US' | translate }}</a></li>
           </ul>
         </li>
         <li class="nav-item">
-          <button class="dropdown-btn" (click)="toggleDropdown('servicesMenu')">Services</button>
+          <button class="dropdown-btn" (click)="toggleDropdown('servicesMenu')">{{ 'SERVICES' | translate }}</button>
           <ul class="dropdown-menu" [class.show]="activeMenu === 'servicesMenu'">
-            <li><a routerLink="/services/epc" (click)="selectItem('epc')">EPC</a></li>
-            <li><a routerLink="/services/Consulting" (click)="selectItem('Consulting')">Consulting Services</a></li>
-            <li><a routerLink="/services/operationmaintenance" (click)="selectItem('Operation')">Operation and Maintenance (O&M)</a></li>
+            <li><a routerLink="/services/epc" (click)="selectItem('epc')">{{ 'EPC' | translate }}</a></li>
+            <li><a routerLink="/services/Consulting" (click)="selectItem('Consulting')">{{ 'CONSULTING_SERVICES' | translate }}</a></li>
+            <li><a routerLink="/services/operationmaintenance" (click)="selectItem('Operation')">{{ 'OPERATION_MAINTENANCE' | translate }}</a></li>
           </ul>
         </li>
         <li class="nav-item">
-          <button class="dropdown-btn" (click)="toggleDropdown('projectsMenu')">Projects</button>
+          <button class="dropdown-btn" (click)="toggleDropdown('projectsMenu')">{{ 'PROJECTS' | translate }}</button>
           <ul class="dropdown-menu" [class.show]="activeMenu === 'projectsMenu'">
-            <li><a (click)="selectItem('Battery')">Battery Storage</a></li>
-            <li><a (click)="selectItem('carpots')">Carports</a></li>
-            <li><a (click)="selectItem('Charging')">EV Charging</a></li>
-            <li><a (click)="selectItem('Floating')">Floating Solar</a></li>
-            <li><a (click)="selectItem('Security')">Security Systems</a></li>
-            <li><a (click)="selectItem('parks')">Solar Parks</a></li>
+            <li><a (click)="selectItem('Battery')">{{ 'BATTERY_STORAGE' | translate }}</a></li>
+            <li><a (click)="selectItem('carpots')">{{ 'CARPORTS' | translate }}</a></li>
+            <li><a (click)="selectItem('Charging')">{{ 'EV_CHARGING' | translate }}</a></li>
+            <li><a (click)="selectItem('Floating')">{{ 'FLOATING_SOLAR' | translate }}</a></li>
+            <li><a (click)="selectItem('Security')">{{ 'SECURITY_SYSTEMS' | translate }}</a></li>
+            <li><a (click)="selectItem('parks')">{{ 'SOLAR_PARKS' | translate }}</a></li>
           </ul>
         </li>
         <li class="nav-item">
-          <a routerLink="/contact" (click)="selectItem('contact')">Contact Us</a>
+          <a routerLink="/contact" (click)="selectItem('contact')">{{ 'CONTACT_US' | translate }}</a>
         </li>
         <li class="nav-item">
-          <a routerLink="/language" (click)="selectItem('language')">
-            <img src="assets/image/language/netherlands.png" alt="Language"> DU
+          <a *ngIf="toshowlan" (click)="switchLanguage('nl')">
+            <img src="assets/image/language/netherlands.png" alt="Language"> NL
+          </a>
+          <a *ngIf="!toshowlan" (click)="switchLanguage('en')">
+            <img src="assets/image/language/english.png" alt="Language"> EN
           </a>
         </li>
       </ul>
@@ -45,15 +48,15 @@
 <section *ngIf="!toshow" class="hero" #heroElement>
   <div class="hero-content">
     <h1>VARTEC</h1>
-    <p>Design, Development, EPC, Operation and Maintenance of solar PV-Systems (Solar Parks, Carports, Floating) and Battery Storage Systems</p>
+    <p>{{ 'VARTEC_DESC' | translate }}</p>
   </div>
 </section>
 <section *ngIf="!toshow" class="about-us">
   <div class="about-container">
     <div class="about-text">
-      <h2>About Us</h2>
-      <p>VARTEC has been supplying the most advanced solutions for large-scale solar PV installations for over 10 years in the UK and The Netherlands. With our extensive experience and a team of internal and external consultants and contractors, VARTEC is the ideal partner for designing, building, and operating solar parks, carports, battery storage systems, and electric vehicle charging. Every project starts with a detailed analysis before we make an offer that perfectly suits your needs.</p>
-      <p>We combine our professional services with the latest technologies and products available on the market. We can help you with design services, full EPC (Engineering, Procurement & Construction) or EPC-Lite, and/or bespoke services such as project management, construction management, operation and maintenance, and fault-finding. We also have our own portfolio of projects.</p>
+      <h2>{{ 'ABOUT_US' | translate }}</h2>
+      <p>{{ 'ABOUT_US_DESCRIPTION1' | translate }}</p>
+      <p>{{ 'ABOUT_US_DESCRIPTION2' | translate }}</p>
     </div>
     <div class="about-video">
       <video id="aboutVideo" controls autoplay>
@@ -62,5 +65,4 @@
       </video>
     </div>
   </div>
-
 </section>
