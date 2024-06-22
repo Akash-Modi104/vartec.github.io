@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule,CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
@@ -21,6 +21,8 @@ import { OpertaionComponent } from './services/opertaion/opertaion.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ServivesRotatingComponent } from './servives-rotating/servives-rotating.component';
+import { CarouselModule } from 'ngx-owl-carousel-o';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -40,6 +42,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AboutUsComponent,
     ConsultaingComponent,
     OpertaionComponent,
+    ServivesRotatingComponent,
    
   ],
   imports: [
@@ -49,6 +52,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     MatMenuModule,
     MatButtonModule,BrowserAnimationsModule,
     HttpClientModule,
+    CarouselModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -58,6 +62,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     })
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

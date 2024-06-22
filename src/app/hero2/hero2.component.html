@@ -8,7 +8,7 @@
         <li class="nav-item">
           <button class="dropdown-btn" routerLink="/" (click)="toggleDropdown('homeMenu')">{{ 'HOME' | translate }}</button>
           <ul class="dropdown-menu" [class.show]="activeMenu === 'homeMenu'">
-            <li><a routerLink="/home/about_us" (click)="selectItem('aboutUs')">{{ 'ABOUT_US' | translate }}</a></li>
+            <li><a (click)="scrollToSection('aboutUsSection')">{{ 'ABOUT_US' | translate }}</a></li>
           </ul>
         </li>
         <li class="nav-item">
@@ -31,7 +31,7 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a routerLink="/contact" (click)="selectItem('contact')">{{ 'CONTACT_US' | translate }}</a>
+          <a (click)="scrollToSection('contactussection')">{{ 'CONTACT_US' | translate }}</a>
         </li>
         <li class="nav-item">
           <a *ngIf="toshowlan" (click)="switchLanguage('nl')">
@@ -45,13 +45,13 @@
     </nav>
   </div>
 </header>
-<section *ngIf="!toshow" class="hero" #heroElement>
+<section *ngIf="showMiddleSection" class="hero" id="heroSection" #heroElement>
   <div class="hero-content">
     <h1>VARTEC</h1>
     <p>{{ 'VARTEC_DESC' | translate }}</p>
   </div>
 </section>
-<section *ngIf="!toshow" class="about-us">
+<section *ngIf="showMiddleSection" class="about-us" id="aboutUsSection" #aboutUsElement>
   <div class="about-container">
     <div class="about-text">
       <h2>{{ 'ABOUT_US' | translate }}</h2>
@@ -59,10 +59,16 @@
       <p>{{ 'ABOUT_US_DESCRIPTION2' | translate }}</p>
     </div>
     <div class="about-video">
-      <video id="aboutVideo" controls autoplay>
-        <source src="assets/video/video1.mov" type="video/mp4">
+      <video #aboutVideo id="aboutVideo" controls autoplay muted>
+        <source src="assets/video/mege.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
     </div>
   </div>
 </section>
+<app-servives-rotating *ngIf="fullView"></app-servives-rotating>
+
+<router-outlet></router-outlet>
+
+<app-contact></app-contact>
+<app-footer></app-footer>

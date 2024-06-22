@@ -12,11 +12,11 @@ import { Subscription } from 'rxjs';
 export class ContactComponent {
 
   languageChangeSubscription: Subscription;
-  updateContent: any;
+ ;
 
   constructor(private languageService: LanguageService, private translate: TranslateService) {
     this.languageChangeSubscription = this.translate.onLangChange.subscribe(() => {
-      this.updateContent();
+      console.log('language')
     });
   }
 

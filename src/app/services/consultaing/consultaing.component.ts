@@ -10,10 +10,14 @@ import { Subscription } from 'rxjs';
 })
 export class ConsultaingComponent implements OnInit {
   languageChangeSubscription: Subscription;
+  backgroundImageUrl: string = 'assets/image/services/Consulting services/health and safety.jpg';
+
+
 
   constructor(private languageService: LanguageService, private translate: TranslateService) {
     this.languageChangeSubscription = this.translate.onLangChange.subscribe(() => {
       this.updateContent();
+      this.backgroundImageUrl = 'assets/image/services/Consulting services/health and safety.jpg';
     });
   }
   updateContent() {

@@ -1,0 +1,21 @@
+<div class="header-container">
+  <h1>{{ 'OUR_SERVICES' | translate }}</h1>
+</div>
+<div class="carousel-container">
+  <owl-carousel-o [options]="customOptions">
+    <ng-container *ngFor="let panel of panels">
+      <ng-template carouselSlide>
+        <div class="panel" (click)="navigateToService(panel.route)">
+          <div class="panel-content">
+            <img [src]="panel.image" alt="{{ panel.title | translate }}" />
+            <div class="panel-text">
+              <h3>{{ panel.title | translate }}</h3>
+              <p>{{ panel.description | translate }}</p>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </owl-carousel-o>
+</div>
+<br>

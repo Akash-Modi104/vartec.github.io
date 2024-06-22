@@ -1,10 +1,3 @@
-body, html {
-  margin: 0;
-  font-family: 'Roboto', sans-serif;
-  background-color: #000;
-  overflow-x: hidden; /* Prevent horizontal overflow */
-}
-
 .navbar {
   display: flex;
   align-items: center; /* Align items vertically center */
@@ -67,7 +60,7 @@ body, html {
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: #333333; /* Dark background for the dropdown */
+  background-color: #333; /* Dark background for the dropdown */
   min-width: 200px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Larger shadow for dropdown */
   z-index: 1000;
@@ -129,7 +122,7 @@ body, html {
   background-repeat: no-repeat;
   overflow: hidden; /* Prevent horizontal overflow */
   background-position: center;
-/* Smooth transition for background image */
+  transition: background-image 0.3s ease-in-out; /* Smooth transition for background image */
 }
 
 .hero:before {
@@ -151,13 +144,21 @@ body, html {
 }
 
 .hero h1 {
-  font-size: 48px;
+  font-size: 120px;
   margin-bottom: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  animation: fadeIn 2s ease-in-out;
+  color: #ffffff; /* White text color */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); /* Add shadow to text */
+  font-family: 'Arial', sans-serif; /* Font style */
+  font-weight: bold; 
 }
 
 .hero p {
-  font-size: 24px;
+  font-size: 35px;
   margin-bottom: 20px;
+  color: #ffffff; /* Match the color of the h1 tag */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); 
 }
 
 .hero .btn {
@@ -177,15 +178,15 @@ body, html {
 }
 
 .about-us {
-  background-color: #fff; /* Dark background for about section */
+  background-color: #fff; /* Light background for about section */
   padding: 40px 20px;
-  color: #ffffff; /* White text for about section */
+  color: #333; /* Dark text for about section */
 }
 
 .about-container {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   max-width: 1200px;
   margin: auto;
 }
@@ -201,20 +202,35 @@ body, html {
 }
 
 .about-text p {
-  font-size: 18px;
-  color: #000; /* Light grey text for paragraphs */
-  margin: 20px 0;
+  font-size: 20px;
+  color: #333; /* Light grey text for paragraphs */
+  line-height: 1.5; /* Increase line height for better readability */
+  margin: 40px 0;
 }
 
 .about-video {
   flex: 1;
-  max-width: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Ensure the video container takes full height */
 }
 
 .about-video video {
   width: 100%;
+  max-width: 600px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow for the video */
-  max-width: 100%; /* Ensure content doesn't overflow */
-  overflow: hidden; /* Prevent overflow */
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
