@@ -21,6 +21,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
   showMiddleSection = true;
   languageChangeSubscription: Subscription;
   fullView = true;
+  backgroundImage: string;
 
   activeMenu: string | null = null;
   selectedItem: string | null = null;
@@ -33,17 +34,18 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
     private translate: TranslateService
   ) {
     this.backgroundImages = [
-      'assets/image/hero1.jpg',
-      'assets/image/hero2.jpg',
-      'assets/image/hero3.jpg',
-      'assets/image/hero4.jpg',
-      'assets/image/hero5.jpg',
-      'assets/image/hero6.jpg',
-      'assets/image/hero7.jpg'
+      'assets/image/hero1-min.jpg',
+      'assets/image/hero2-min.jpg',
+      'assets/image/hero3-min.jpg',
+      'assets/image/hero4-min.jpg',
+      'assets/image/hero5-min.jpg',
+      'assets/image/hero6-min.jpg',
+      'assets/image/hero7-min.jpg'
     ];
     this.currentBackgroundIndex = 0;
+    this.backgroundImage = this.backgroundImages[this.currentBackgroundIndex];
     this.languageChangeSubscription = this.translate.onLangChange.subscribe(() => {
-      console.log('language');
+      console.log('Language changed');
     });
 
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
@@ -54,9 +56,6 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    // Initialize background image interval
-    this.backgroundInterval = setInterval(this.changeBackgroundImage.bind(this), 3000);
-
     const currentRoute = this.route.snapshot.firstChild;
     this.fullView = currentRoute ? currentRoute.data['fullView'] : true;
     this.showMiddleSection = this.fullView;
@@ -65,6 +64,9 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
     this.languageService.setInitialAppLanguage();
     // Set the flag for showing language toggle
     this.toshowlan = this.translate.currentLang !== 'nl';
+
+    // Initialize background image interval
+    this.backgroundInterval = setInterval(this.changeBackgroundImage.bind(this), 7000);
   }
 
   ngAfterViewInit() {
@@ -104,11 +106,8 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
 
   changeBackgroundImage() {
     this.currentBackgroundIndex = (this.currentBackgroundIndex + 1) % this.backgroundImages.length;
-    const heroElement = this.heroElement.nativeElement;
-    if (heroElement) {
-      this.renderer.setStyle(heroElement, 'background-image', `url(${this.backgroundImages[this.currentBackgroundIndex]})`);
-      this.renderer.setStyle(heroElement, 'transition', 'background-image 1s ease-in-out');
-    }
+    this.backgroundImage = this.backgroundImages[this.currentBackgroundIndex];
+    console.log(`Background image set to: ${this.backgroundImage}`);
   }
 
   scrollToSection(section: string) {

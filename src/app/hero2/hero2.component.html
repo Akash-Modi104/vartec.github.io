@@ -45,7 +45,7 @@
     </nav>
   </div>
 </header>
-<section *ngIf="showMiddleSection" class="hero" id="heroSection" #heroElement>
+<section *ngIf="showMiddleSection" class="hero" id="heroSection" [style.backgroundImage]="'url(' + backgroundImage + ')'">
   <div class="hero-content">
     <h1>VARTEC</h1>
     <p>{{ 'VARTEC_DESC' | translate }}</p>
@@ -60,7 +60,7 @@
     </div>
     <div class="about-video">
       <video #aboutVideo id="aboutVideo" controls autoplay muted>
-        <source src="assets/video/mege.mp4" type="video/mp4">
+        <source src="assets/video/finalmerge.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
     </div>
