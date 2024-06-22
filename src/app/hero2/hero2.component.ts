@@ -35,7 +35,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
     this.backgroundImages = [
       'assets/image/hero1.jpg',
       'assets/image/hero2.jpg',
-      'assets/image/hero3-min.jpg',
+      'assets/image/hero3.jpg',
       'assets/image/hero4.jpg',
       'assets/image/hero5.jpg',
       'assets/image/hero6.jpg',
@@ -54,7 +54,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    // Initialize video and background image interval
+    // Initialize background image interval
     this.backgroundInterval = setInterval(this.changeBackgroundImage.bind(this), 3000);
 
     const currentRoute = this.route.snapshot.firstChild;
@@ -68,7 +68,8 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Ensure video is set up correctly
+    // Ensure initial background image is set correctly
+    this.changeBackgroundImage();
   }
 
   ngOnDestroy() {
@@ -103,9 +104,10 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
 
   changeBackgroundImage() {
     this.currentBackgroundIndex = (this.currentBackgroundIndex + 1) % this.backgroundImages.length;
-    const heroElement = document.querySelector('.hero');
+    const heroElement = this.heroElement.nativeElement;
     if (heroElement) {
       this.renderer.setStyle(heroElement, 'background-image', `url(${this.backgroundImages[this.currentBackgroundIndex]})`);
+      this.renderer.setStyle(heroElement, 'transition', 'background-image 1s ease-in-out');
     }
   }
 

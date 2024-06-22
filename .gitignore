@@ -3,11 +3,11 @@
 # Compiled output
 
 /docs/vartec/assets/video
-/docs/vartec/assets/video/gif
+/docs/vartec/assets/video/gif/*
 /tmp
 /out-tsc
 /bazel-out
-/src/assets
+/src/assets/*
 /node_modules
 npm-debug.log
 yarn-error.log
