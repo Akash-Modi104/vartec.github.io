@@ -85,6 +85,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
 
   toggleDropdown(menu: string) {
     this.activeMenu = this.activeMenu === menu ? null : menu;
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on dropdown toggle
     if (menu === 'homeMenu') {
       this.toshow = false;
       this.showMiddleSection = true;

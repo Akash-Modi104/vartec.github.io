@@ -3,7 +3,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 40px;
-  background-color: #f9f9f9;
+  background-color: var(--third-color);
 }
 
 .contact-details {
@@ -14,11 +14,13 @@
 .contact-details h2 {
   font-size: 28px;
   margin-bottom: 15px;
+  color: var(--text-color);
 }
 
 .contact-details p {
   font-size: 18px;
   margin-bottom: 10px;
+  color: var(--text-color);
 }
 
 .details {
@@ -35,6 +37,7 @@
 .detail-item h3 {
   font-size: 22px;
   margin-bottom: 10px;
+  color: var(--text-color);
 }
 
 .detail-item p {
@@ -60,6 +63,7 @@
 .info-item h3 {
   font-size: 16px;
   margin-bottom: 10px;
+  color: var(--text-color);
 }
 
 .info-item p {
@@ -70,7 +74,7 @@
 .contact-form {
   flex: 1 1 45%;
   padding: 20px;
-  background-color: #ffffff;
+  background-color: var(--secondary-color);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add elevation */
   display: flex;
@@ -82,6 +86,7 @@
   font-size: 26px;
   margin-bottom: 15px;
   text-align: center;
+  color: var(--text-color);
 }
 
 .form-group {
@@ -96,6 +101,7 @@
   margin-bottom: 3px;
   width: 100%;
   max-width: 400px; /* Ensure labels align with inputs */
+  color: var(--text-color);
 }
 
 .form-group input,
@@ -114,8 +120,8 @@
 }
 
 .submit-button-container button {
-  background-color: #333;
-  color: #fff;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
   border: none;
   padding: 10px 20px;
   border-radius: 4px;

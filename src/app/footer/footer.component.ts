@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./footer.component.css']
 })
 export class FooterComponent implements OnInit {
+  currentYear: number = new Date().getFullYear();
 
   languageChangeSubscription: Subscription;
 
@@ -23,5 +24,12 @@ export class FooterComponent implements OnInit {
 
   updateContent() {
     // Handle content updates on language change if necessary
+  }
+
+  scrollToSection(section: string) {
+    const element = document.getElementById(section);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 }
