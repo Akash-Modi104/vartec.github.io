@@ -5,13 +5,13 @@
     </div>
     <nav>
       <ul class="nav-links">
-        <li class="nav-item">
+        <li class="nav-item" [class.active]="activeMenu === 'homeMenu'">
           <button class="dropdown-btn" routerLink="/" (click)="toggleDropdown('homeMenu')">{{ 'HOME' | translate }}</button>
           <ul class="dropdown-menu" [class.show]="activeMenu === 'homeMenu'">
             <li><a (click)="scrollToSection('aboutUsSection')">{{ 'ABOUT_US' | translate }}</a></li>
           </ul>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" [class.active]="activeMenu === 'servicesMenu'">
           <button class="dropdown-btn" (click)="toggleDropdown('servicesMenu')">{{ 'SERVICES' | translate }}</button>
           <ul class="dropdown-menu" [class.show]="activeMenu === 'servicesMenu'">
             <li><a routerLink="/services/epc" (click)="selectItem('epc')">{{ 'EPC' | translate }}</a></li>
@@ -19,7 +19,7 @@
             <li><a routerLink="/services/operationmaintenance" (click)="selectItem('Operation')">{{ 'OPERATION_MAINTENANCE' | translate }}</a></li>
           </ul>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" [class.active]="activeMenu === 'projectsMenu'">
           <button class="dropdown-btn" (click)="toggleDropdown('projectsMenu')">{{ 'PROJECTS' | translate }}</button>
           <ul class="dropdown-menu" [class.show]="activeMenu === 'projectsMenu'">
             <li><a [routerLink]="['/project/batterystorage']" routerLinkActive="router-link-active"  (click)="selectItem('Battery')">{{ 'BATTERY_STORAGE' | translate }}</a></li>
@@ -30,8 +30,8 @@
             <li><a [routerLink]="['/project/solarparks']"(click)="selectItem('parks')">{{ 'SOLAR_PARKS' | translate }}</a></li>
           </ul>
         </li>
-        <li class="nav-item">
-          <a (click)="scrollToSection('contactussection')">{{ 'CONTACT_US' | translate }}</a>
+        <li class="nav-item" [class.active]="activeMenu === 'contactMenu'">
+          <a id="contactus" (click)="scrollToSection('contactussection')">{{ 'CONTACT_US' | translate }}</a>
         </li>
         <li class="nav-item">
           <a *ngIf="toshowlan" (click)="switchLanguage('nl')">
@@ -45,7 +45,9 @@
     </nav>
   </div>
 </header>
+
 <section *ngIf="showMiddleSection" class="hero" id="heroSection" [style.backgroundImage]="'url(' + backgroundImage + ')'">
+  <div class="hero-overlay"></div>
   <div class="hero-content">
     <div class="logo-heading">
       <div class="hero-logo">
@@ -72,8 +74,6 @@
     </div>
   </div>
 </section>
-<!-- <app-servives-rotating *ngIf="fullView"></app-servives-rotating>
-<app-features-project *ngIf="fullView"></app-features-project> -->
 
 <router-outlet></router-outlet>
 <div id="contactussection">

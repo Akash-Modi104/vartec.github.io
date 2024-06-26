@@ -52,6 +52,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
       const currentRoute = this.route.snapshot.firstChild;
       this.fullView = currentRoute ? currentRoute.data['fullView'] : true;
       this.showMiddleSection = this.fullView;
+      this.activeMenu = null; // Ensure no dropdown is shown by default
     });
   }
 
@@ -85,12 +86,14 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
 
   toggleDropdown(menu: string) {
     this.activeMenu = this.activeMenu === menu ? null : menu;
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on dropdown toggle
-    if (menu === 'homeMenu') {
+    if (this.activeMenu !== 'homeMenu') {
+      this.toshow = true;
+      this.showMiddleSection = false;
+    } else {
       this.toshow = false;
       this.showMiddleSection = true;
-      this.fullView = true;
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on dropdown toggle
   }
 
   selectItem(item: string) {

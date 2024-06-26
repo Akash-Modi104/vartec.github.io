@@ -5,25 +5,25 @@
     </div>
     <div class="footer-links">
       <div class="footer-column">
-        <h4 routerLink="/" (click)="scrollToSection('aboutUsSection')">{{ 'ABOUT_US' | translate }}</h4>
+        <h4 (click)="scrollToSection('aboutUsSection')">{{ 'ABOUT_US' | translate }}</h4>
       </div>
       <div class="footer-column">
         <h4>{{ 'SERVICES' | translate }}</h4>
-        <a routerLink="/services/epc">{{ 'EPC' | translate }}</a>
-        <a routerLink="/services/Consulting">{{ 'CONSULTING_SERVICES' | translate }}</a>
-        <a routerLink="/services/operationmaintenance">{{ 'OPERATION_MAINTENANCE' | translate }}</a>
+        <a (click)="navigateAndScroll('/services/epc')">{{ 'EPC' | translate }}</a>
+        <a (click)="navigateAndScroll('/services/Consulting')">{{ 'CONSULTING_SERVICES' | translate }}</a>
+        <a (click)="navigateAndScroll('/services/operationmaintenance')">{{ 'OPERATION_MAINTENANCE' | translate }}</a>
       </div>
       <div class="footer-column">
         <h4>{{ 'PROJECTS' | translate }}</h4>
-        <a routerLink="/project/batterystorage">{{ 'BATTERY_STORAGE' | translate }}</a>
-        <a routerLink="/project/carpots">{{ 'CARPORTS' | translate }}</a>
-        <a routerLink="/project/evcharging">{{ 'EV_CHARGING' | translate }}</a>
-        <a routerLink="/project/floating">{{ 'FLOATING_SOLAR' | translate }}</a>
-        <a routerLink="/project/security">{{ 'SECURITY_SYSTEMS' | translate }}</a>
-        <a routerLink="/project/solarparks">{{ 'SOLAR_PARKS' | translate }}</a>
+        <a (click)="navigateAndScroll('/project/batterystorage')">{{ 'BATTERY_STORAGE' | translate }}</a>
+        <a (click)="navigateAndScroll('/project/carpots')">{{ 'CARPORTS' | translate }}</a>
+        <a (click)="navigateAndScroll('/project/evcharging')">{{ 'EV_CHARGING' | translate }}</a>
+        <a (click)="navigateAndScroll('/project/floating')">{{ 'FLOATING_SOLAR' | translate }}</a>
+        <a (click)="navigateAndScroll('/project/security')">{{ 'SECURITY_SYSTEMS' | translate }}</a>
+        <a (click)="navigateAndScroll('/project/solarparks')">{{ 'SOLAR_PARKS' | translate }}</a>
       </div>
       <div class="footer-column">
-        <h4 routerLink="/contact">{{ 'CONTACT_US' | translate }}</h4>
+        <h4 (click)="scrollToSection('contactussection')">{{ 'CONTACT_US' | translate }}</h4>
       </div>
     </div>
   </div>
