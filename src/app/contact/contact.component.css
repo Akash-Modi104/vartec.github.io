@@ -2,32 +2,32 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 40px;
+  padding: 4vw;
   background-color: var(--third-color);
 }
 
 .contact-details {
   flex: 1 1 45%;
-  padding: 20px;
+  padding: 2vw;
 }
 
 .contact-details h2 {
-  font-size: 28px;
-  margin-bottom: 15px;
+  font-size: 2.8vw;
+  margin-bottom: 1.5vw;
   color: var(--text-color);
 }
 
 .contact-details p {
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 1.8vw;
+  margin-bottom: 1vw;
   color: var(--text-color);
 }
 
 .details {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  margin-top: 15px;
+  gap: 2vw;
+  margin-top: 1.5vw;
 }
 
 .detail-item {
@@ -35,25 +35,25 @@
 }
 
 .detail-item h3 {
-  font-size: 22px;
-  margin-bottom: 10px;
+  font-size: 2.2vw;
+  margin-bottom: 1vw;
   color: var(--text-color);
 }
 
 .detail-item p {
-  font-size: 18px;
+  font-size: 1.8vw;
   color: #666;
 }
 
 .additional-info {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 2vw;
 }
 
 .info-item {
   flex: 1;
-  margin-right: 20px;
+  margin-right: 2vw;
 }
 
 .info-item:last-child {
@@ -61,75 +61,139 @@
 }
 
 .info-item h3 {
-  font-size: 16px;
-  margin-bottom: 10px;
+  font-size: 1.6vw;
+  margin-bottom: 1vw;
   color: var(--text-color);
 }
 
 .info-item p {
-  font-size: 14px;
+  font-size: 1.4vw;
   color: #666;
 }
 
 .contact-form {
   flex: 1 1 45%;
-  padding: 20px;
+  padding: 2vw;
   background-color: var(--secondary-color);
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add elevation */
+  border-radius: 0.8vw;
+  box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .contact-form h1 {
-  font-size: 26px;
-  margin-bottom: 15px;
+  font-size: 2.6vw;
+  margin-bottom: 1.5vw;
   text-align: center;
   color: var(--text-color);
 }
 
 .form-group {
-  margin-bottom: 10px;
+  margin-bottom: 1vw;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .form-group label {
-  font-size: 16px;
-  margin-bottom: 3px;
+  font-size: 1.6vw;
+  margin-bottom: 0.3vw;
   width: 100%;
-  max-width: 400px; /* Ensure labels align with inputs */
+  max-width: 40vw;
   color: var(--text-color);
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-  max-width: 400px; /* Set maximum width for inputs */
-  padding: 10px;
+  max-width: 40vw;
+  padding: 1vw;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 0.4vw;
+  font-size: 1.6vw;
 }
 
 .submit-button-container {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 2vw;
 }
 
 .submit-button-container button {
   background-color: var(--primary-color);
   color: var(--secondary-color);
   border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  font-size: 20px;
+  padding: 1vw 2vw;
+  border-radius: 0.4vw;
+  font-size: 2vw;
   cursor: pointer;
 }
 
 .submit-button-container button[disabled] {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1200px) {
+  .contact-details, .contact-form {
+    flex: 1 1 100%;
+    margin-bottom: 2vw;
+  }
+
+  .contact-details {
+    padding: 3vw;
+  }
+
+  .contact-form {
+    padding: 3vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-container {
+    padding: 2vw;
+  }
+
+  .contact-details h2 {
+    font-size: 4vw;
+  }
+
+  .contact-details p,
+  .detail-item h3,
+  .detail-item p,
+  .info-item h3,
+  .info-item p,
+  .contact-form h1,
+  .form-group label,
+  .form-group input,
+  .form-group textarea,
+  .submit-button-container button {
+    font-size: 3vw;
+  }
+
+  .form-group label,
+  .form-group input,
+  .form-group textarea {
+    max-width: 90vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-details h2 {
+    font-size: 5vw;
+  }
+
+  .contact-details p,
+  .detail-item h3,
+  .detail-item p,
+  .info-item h3,
+  .info-item p,
+  .contact-form h1,
+  .form-group label,
+  .form-group input,
+  .form-group textarea,
+  .submit-button-container button {
+    font-size: 4vw;
+  }
 }

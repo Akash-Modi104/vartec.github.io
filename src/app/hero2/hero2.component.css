@@ -1,25 +1,26 @@
 .navbar {
   display: flex;
-  align-items: center; /* Align items vertically center */
-  justify-content: space-between; /* Space between logo and nav items */
-  background-color: var(--secondary-color); /* White */
-  padding: 2px 20px;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--secondary-color);
+  padding: 0.2vw 2vw;
   position: fixed;
-  width: 98%;
+  width: 98vw;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1);
 }
 
 .container {
   display: flex;
-  justify-content: space-between; /* Space between logo and nav items */
-  align-items: center; /* Align items vertically center */
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
 }
 
 .logo img {
-  height: 60px;
+  height: 6vw;
+  max-height: 60px;
 }
 
 .nav-links {
@@ -27,97 +28,66 @@
   margin: 0;
   padding: 0;
   display: flex;
-  align-items: center; /* Align items vertically center */
+  align-items: center;
 }
 
 .nav-item {
   position: relative;
-  margin: 0 10px;
+  margin: 0 1vw;
 }
 
-.nav-links a {
-  color: var(--text-color); /* Black */
-  font-weight: normal; /* Ensure normal font-weight */
+.nav-links a,
+.nav-links button,
+#contactus {
+  color: var(--text-color);
+  font-weight: normal;
   background-color: transparent;
   border: none;
   text-decoration: none;
-  padding: 10px 20px;
+  padding: 1vw 2vw;
   display: inline-block;
-  border-radius: 4px;
-  font-size: 16px;
-
+  border-radius: 0.4vw;
+  font-size: 1.6vw;
   cursor: pointer;
-  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
- .nav-links button {
-  color: var(--text-color); /* Black */
-  font-weight: normal; /* Ensure normal font-weight */
-  background-color: transparent;
-  border: none;
-  text-decoration: none;
-  padding: 10px 20px;
-  display: inline-block;
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: bolder;
-  cursor: pointer;
-  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+#contactus:hover,
+.nav-links a:hover,
+.nav-links button:hover,
+.nav-links .active {
+  background-color: var(--hover-background-color);
+  box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1);
+  color: var(--hover-text-color);
 }
-#contactus  {
-  color: var(--text-color); /* Black */
-  font-weight: normal; /* Ensure normal font-weight */
-  background-color: transparent;
-  border: none;
-  text-decoration: none;
-  padding: 10px 20px;
-  display: inline-block;
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: bolder;
-  cursor: pointer;
-  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
-}
-#contactus:hover{
-  background-color: var(--hover-background-color); /* Gold color similar to the logo */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-  color: var(--hover-text-color); /* White */
-}
-
-.nav-links a:hover, .nav-links button:hover, .nav-links .active {
-  background-color: var(--hover-background-color); /* Gold color similar to the logo */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-  color: var(--hover-text-color); /* White */
-}
-
 
 .dropdown-menu {
   display: none;
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: var(--secondary-color); /* White */
-  min-width: 200px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Larger shadow for dropdown */
+  background-color: var(--secondary-color);
+  min-width: 20vw;
+  box-shadow: 0 0.8vw 1.6vw rgba(0, 0, 0, 0.2);
   z-index: 1000;
   list-style: none;
   padding: 0;
   margin: 0;
-  border-radius: 4px; /* Rounded corners */
-  overflow: hidden; /* Clip the corners */
-  transform: translateY(10px); /* Initial position for animation */
+  border-radius: 0.4vw;
+  overflow: hidden;
+  transform: translateY(1vw);
   opacity: 0;
-  transition: opacity 0.3s, transform 0.3s; /* Smooth transitions */
+  transition: opacity 0.3s, transform 0.3s;
 }
 
 .dropdown-menu.show {
   display: block;
-  transform: translateY(0); /* Final position for animation */
+  transform: translateY(0);
   opacity: 1;
 }
 
 .dropdown-menu li {
-  border-bottom: 1px solid #999;
+  border-bottom: 0.1vw solid #999;
 }
 
 .dropdown-menu li:last-child {
@@ -125,40 +95,40 @@
 }
 
 .dropdown-menu a {
-  color: var(--text-color); /* Black */
-  padding: 12px 16px;
+  color: var(--text-color);
+  padding: 1.2vw 1.6vw;
   text-decoration: none;
   display: block;
-  transition: background-color 0.3s; /* Smooth transitions */
+  transition: background-color 0.3s;
 }
 
 .dropdown-menu a:hover {
-  background-color: var(--hover-background-color); /* Gold color for hover */
-  color: var(--hover-text-color); /* White */
+  background-color: var(--hover-background-color);
+  color: var(--hover-text-color);
 }
 
 .active {
-  color: var(--hover-text-color) !important; /* White */
-  background-color: var(--hover-background-color) !important; /* Gold color similar to the logo */
+  color: var(--hover-text-color) !important;
+  background-color: var(--hover-background-color) !important;
   font-weight: bold;
-  border-radius: 4px;
+  border-radius: 0.4vw;
 }
 
 .hero {
   height: 100vh;
-  width: 100%;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  color: var(--primary-color); /* Gold color similar to the logo */
+  color: var(--primary-color);
   position: relative;
-  padding-top: 60px; /* Adjust padding to make space for fixed navbar */
+  padding-top: 6vw;
   background-size: cover;
   background-repeat: no-repeat;
-  overflow: hidden; /* Prevent horizontal overflow */
+  overflow: hidden;
   background-position: center;
-  transition: background-image 1s ease-in-out; /* Smooth transition for background image */
+  transition: background-image 1s ease-in-out;
 }
 
 .hero:before {
@@ -168,82 +138,71 @@
   left: 0;
   right: 0;
   bottom: 0;
-/* Dark overlay */
-  z-index: 1;
-}
-
-.hero-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5); /* Black overlay */
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1;
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 100%; /* Ensure content doesn't overflow */
-  overflow: hidden; /* Prevent overflow */
-  display: flex; /* Make the container a flex container */
-  align-items: center; /* Vertically center the items */
-  flex-direction: column; /* Stack the items vertically */
+  max-width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .hero-content .logo-heading {
-  display: flex; /* Make the container a flex container */
-  align-items:  flex-end; /* Vertically center the items */
- /* Space between the logo-heading and description */
+  display: flex;
+  align-items: flex-end;
 }
 
 .hero-logo {
-  margin-right: 20px;
-/* Space between the logo and the heading */
+  margin-right: 2vw;
 }
+
 .hero-logo img {
-  height: 180px; /* Adjust the height of the logo */
-  width: auto; /* Ensure the aspect ratio is maintained */
+  height: 18vw;
+  width: auto;
 }
+
 .hero h1 {
-  font-size: 120px;
-  margin-bottom: 10px;
-  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1); /* Adjust shadow color */
+  font-size: 12vw;
+  margin-bottom: 1vw;
   animation: fadeIn 2s ease-in-out;
-  color: var(--secondary-color); /* White */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); /* Add shadow to text */
-  font-family: 'Arial', sans-serif; /* Font style */
-  font-weight: bold; 
+  color: var(--primary-color);
+  text-shadow: 0.2vw 0.2vw 0.4vw rgba(0, 0, 0, 0.6);
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
 }
 
 .hero p {
-  font-size: 35px;
-  margin-bottom: 20px;
-  color: var(--secondary-color); /* White */
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Adjust shadow color */
+  font-size: 3.5vw;
+  margin-bottom: 2vw;
+  color: var(--secondary-color);
+  text-shadow: 0.1vw 0.1vw 0.3vw rgba(0, 0, 0, 0.5);
 }
 
 .hero .btn {
-  background: var(--primary-color); /* Gold color similar to the logo */
-  color: var(--text-color); /* Black */
-  padding: 14px 24px;
+  background: var(--primary-color);
+  color: var(--text-color);
+  padding: 1.4vw 2.4vw;
   text-decoration: none;
-  border-radius: 4px;
-  font-size: 18px;
-  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+  border-radius: 0.4vw;
+  font-size: 1.8vw;
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .hero .btn:hover {
-  background: var(--text-color); /* Black */
-  color: var(--primary-color); /* Gold color similar to the logo */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow for hover effect */
+  background: var(--text-color);
+  color: var(--primary-color);
+  box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1);
 }
 
 .about-us {
-  background-color: var(--secondary-color); /* White */
-  padding: 40px 20px;
-  color: var(--text-color); /* Black */
+  background-color: var(--secondary-color);
+  padding: 4vw 2vw;
+  color: var(--text-color);
 }
 
 .about-container {
@@ -256,19 +215,19 @@
 
 .about-text {
   flex: 1;
-  margin-right: 20px;
+  margin-right: 2vw;
 }
 
 .about-text h2 {
-  font-size: 32px;
-  color: var(--text-color); /* Black */
+  font-size: 3.2vw;
+  color: var(--text-color);
 }
 
 .about-text p {
-  font-size: 20px;
-  color: var(--text-color); /* Black */
-  line-height: 1.5; /* Increase line height for better readability */
-  margin: 40px 0;
+  font-size: 2vw;
+  color: var(--text-color);
+  line-height: 1.5;
+  margin: 4vw 0;
 }
 
 .about-video {
@@ -276,14 +235,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%; /* Ensure the video container takes full height */
+  height: 100%;
 }
 
 .about-video video {
   width: 100%;
-  max-width: 600px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow for the video */
+  max-width: 60vw;
+  border-radius: 1vw;
+  box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1);
 }
 
 @keyframes fadeIn {
@@ -301,19 +260,19 @@
 
 @media (max-width: 768px) {
   .hero h1 {
-    font-size: 80px;
+    font-size: 8vw;
   }
 
   .hero p {
-    font-size: 24px;
+    font-size: 2.4vw;
   }
 
   .hero-content {
-    flex-direction: column; /* Stack the logo and heading vertically on smaller screens */
+    flex-direction: column;
   }
 
   .hero-logo {
     margin-right: 0;
-    margin-bottom: 20px;
+    margin-bottom: 2vw;
   }
 }

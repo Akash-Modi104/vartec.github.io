@@ -22,6 +22,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
   languageChangeSubscription: Subscription;
   fullView = true;
   backgroundImage: string;
+  imageCache: HTMLImageElement[] = []; // Image cache for preloading
 
   activeMenu: string | null = null;
   selectedItem: string | null = null;
@@ -66,6 +67,9 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
     // Set the flag for showing language toggle
     this.toshowlan = this.translate.currentLang !== 'nl';
 
+    // Preload all background images
+    this.preloadImages();
+
     // Initialize background image interval
     this.backgroundInterval = setInterval(this.changeBackgroundImage.bind(this), 7000);
   }
@@ -82,6 +86,20 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
     if (this.languageChangeSubscription) {
       this.languageChangeSubscription.unsubscribe();
     }
+  }
+
+  preloadImages() {
+    this.backgroundImages.forEach((src, index) => {
+      const img = new Image();
+      img.src = src;
+      this.imageCache[index] = img;
+    });
+  }
+
+  changeBackgroundImage() {
+    this.currentBackgroundIndex = (this.currentBackgroundIndex + 1) % this.backgroundImages.length;
+    this.backgroundImage = this.backgroundImages[this.currentBackgroundIndex];
+    console.log(`Background image set to: ${this.backgroundImage}`);
   }
 
   toggleDropdown(menu: string) {
@@ -106,12 +124,6 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
   switchLanguage(language: string) {
     this.languageService.switchLanguage(language);
     this.toshowlan = language !== 'nl';
-  }
-
-  changeBackgroundImage() {
-    this.currentBackgroundIndex = (this.currentBackgroundIndex + 1) % this.backgroundImages.length;
-    this.backgroundImage = this.backgroundImages[this.currentBackgroundIndex];
-    console.log(`Background image set to: ${this.backgroundImage}`);
   }
 
   scrollToSection(section: string) {

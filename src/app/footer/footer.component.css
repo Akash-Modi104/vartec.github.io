@@ -1,65 +1,66 @@
 .footer {
-  background-color: var(--primary-color); /* Using the variable */
-  color: var(--secondary-color); /* Using the variable */
-  padding: 40px 20px;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  padding: 4vw 2vw;
 }
 
 .footer-content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* Align items at the start */
+  align-items: flex-start;
   max-width: 1200px;
   margin: auto;
   flex-wrap: wrap;
 }
 
 .footer-logo img {
-  height: 50px;
+  height: 5vw;
+  max-height: 50px;
 }
 
 .footer-links {
   display: flex;
   flex-wrap: wrap;
-  width: 100%; /* Ensure footer links take full width */
-  justify-content: space-between; /* Distribute space between columns */
+  width: 100%;
+  justify-content: space-between;
 }
 
 .footer-column {
-  margin: 10px 20px;
-  flex: 1; /* Make each column take equal space */
-  min-width: 150px; /* Ensure a minimum width for columns */
+  margin: 1vw 2vw;
+  flex: 1;
+  min-width: 15vw;
 }
 
 .footer-column h4 {
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 1.8vw;
+  margin-bottom: 1vw;
   color: var(--hover-text-color);
-  cursor: pointer; /* Make the pointer appear as clickable */
+  cursor: pointer;
 }
 
 .footer-column a {
   display: block;
-  color: var(--hover-text-color); /* Using the variable */
+  color: var(--hover-text-color);
   text-decoration: none;
-  margin: 5px 0;
+  margin: 0.5vw 0;
   transition: color 0.3s;
-  cursor: pointer; /* Make the pointer appear as clickable */
+  cursor: pointer;
 }
 
 .footer-column a:hover {
   background-color: var(--hover-background-color);
-  color: var(--text-color); /* Using the variable */
+  color: var(--text-color);
 }
 
 .footer-divider {
-  border-top: 1px solid var(--hover-text-color); /* Gold color for the divider line */
-  margin: 20px 0;
+  border-top: 1px solid var(--hover-text-color);
+  margin: 2vw 0;
 }
 
 .footer-bottom {
-  font-size: 14px;
-  color: var(--hover-text-color); /* Using the variable */
-  text-align: center; /* Center-align the bottom text */
+  font-size: 1.4vw;
+  color: var(--hover-text-color);
+  text-align: center;
 }
 
 /* Media Queries for Responsiveness */
@@ -70,11 +71,26 @@
   }
 
   .footer-column {
-    margin: 10px 0;
-    text-align: center; /* Center text for smaller screens */
+    margin: 1vw 0;
+    text-align: center;
   }
 
   .footer-logo {
-    margin-bottom: 20px; /* Add space between logo and links */
+    margin-bottom: 2vw;
+  }
+
+  .footer-column h4, .footer-column a, .footer-bottom {
+    font-size: 3.5vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-column h4, .footer-column a, .footer-bottom {
+    font-size: 4vw;
+  }
+
+  .footer-logo img {
+    height: 10vw;
+    max-height: none;
   }
 }

@@ -1,8 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
-/* Remove any lines like this if they exist */
+/* Import Montserrat font from Google Fonts */
+@import "~@fontsource/montserrat/index.css";
 @import "~material-design-icons/iconfont/material-icons.css";
-
-
+@import "~@fontsource/poppins/index.css";
 
 :root {
   --primary-color: #FFC107; /* Gold color similar to the logo */
@@ -10,16 +9,28 @@
   --text-color: #010101; /* Black */
   --background-color: #ffffff; /* White */
   --hover-background-color: #FFC107; /* Gold color for hover */
-  --hover-text-color: #ffffff;
- --third-color: #f5f5f5b1; /* White text on hover */
+  --hover-text-color: #ffffff; /* White text on hover */
+  --third-color: #f5f5f5b1; /* Light gray */
 }
 
 body, html {
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color:var(--background-color) ;
-    overflow-x: hidden; /* Prevent horizontal overflow */
-  }
+  margin: 0;
+  font-family: 'Poppins', sans-serif; /* Apply Poppins font */
+  background-color: var(--background-color);
+  overflow-x: hidden; /* Prevent horizontal overflow */
+}
 
+/* Additional global styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif; /* Apply Poppins font to headings */
+}
 
+a {
+  font-family: 'Poppins', sans-serif; /* Apply Poppins font to links */
+}
 
+button {
+  font-family: 'Poppins', sans-serif; /* Apply Poppins font to buttons */
+}
+
+/* Other global styles if needed */
