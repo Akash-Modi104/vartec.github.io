@@ -26,6 +26,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
 
   activeMenu: string | null = null;
   selectedItem: string | null = null;
+  isMenuOpen: boolean = false;
 
   constructor(
     private router: Router,
@@ -119,6 +120,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
     this.activeMenu = null;
     this.toshow = true;
     this.showMiddleSection = false;
+    this.isMenuOpen = false; // Close the menu on selection
   }
 
   switchLanguage(language: string) {
@@ -139,6 +141,11 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+    this.isMenuOpen = false; // Close the menu on navigation
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
   @HostListener('document:click', ['$event'])

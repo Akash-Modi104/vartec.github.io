@@ -1,10 +1,10 @@
 <header class="navbar">
   <div class="container">
     <div class="logo">
-      <img src="assets/image/logo.png" alt="Hoyert Logo">
+      <img src="assets/image/logo.png" alt="Vartec Logo">
     </div>
     <nav>
-      <ul class="nav-links">
+      <ul class="nav-links" [class.show]="isMenuOpen">
         <li class="nav-item" [class.active]="activeMenu === 'homeMenu'">
           <button class="dropdown-btn" routerLink="/" (click)="toggleDropdown('homeMenu')">{{ 'HOME' | translate }}</button>
           <ul class="dropdown-menu" [class.show]="activeMenu === 'homeMenu'">
@@ -22,12 +22,12 @@
         <li class="nav-item" [class.active]="activeMenu === 'projectsMenu'">
           <button class="dropdown-btn" (click)="toggleDropdown('projectsMenu')">{{ 'PROJECTS' | translate }}</button>
           <ul class="dropdown-menu" [class.show]="activeMenu === 'projectsMenu'">
-            <li><a [routerLink]="['/project/batterystorage']" routerLinkActive="router-link-active"  (click)="selectItem('Battery')">{{ 'BATTERY_STORAGE' | translate }}</a></li>
+            <li><a [routerLink]="['/project/batterystorage']" routerLinkActive="router-link-active" (click)="selectItem('Battery')">{{ 'BATTERY_STORAGE' | translate }}</a></li>
             <li><a [routerLink]="['project/carpots']" (click)="selectItem('carpots')">{{ 'CARPORTS' | translate }}</a></li>
-            <li><a [routerLink]="['/project/evcharging']"(click)="selectItem('Charging')">{{ 'EV_CHARGING' | translate }}</a></li>
-            <li><a [routerLink]="['/project/floating']"(click)="selectItem('Floating')">{{ 'FLOATING_SOLAR' | translate }}</a></li>
-            <li><a [routerLink]="['/project/security']"(click)="selectItem('Security')">{{ 'SECURITY_SYSTEMS' | translate }}</a></li>
-            <li><a [routerLink]="['/project/solarparks']"(click)="selectItem('parks')">{{ 'SOLAR_PARKS' | translate }}</a></li>
+            <li><a [routerLink]="['/project/evcharging']" (click)="selectItem('Charging')">{{ 'EV_CHARGING' | translate }}</a></li>
+            <li><a [routerLink]="['/project/floating']" (click)="selectItem('Floating')">{{ 'FLOATING_SOLAR' | translate }}</a></li>
+            <li><a [routerLink]="['/project/security']" (click)="selectItem('Security')">{{ 'SECURITY_SYSTEMS' | translate }}</a></li>
+            <li><a [routerLink]="['/project/solarparks']" (click)="selectItem('parks')">{{ 'SOLAR_PARKS' | translate }}</a></li>
           </ul>
         </li>
         <li class="nav-item" [class.active]="activeMenu === 'contactMenu'">
@@ -42,6 +42,11 @@
           </a>
         </li>
       </ul>
+      <div class="hamburger-menu" (click)="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </nav>
   </div>
 </header>
