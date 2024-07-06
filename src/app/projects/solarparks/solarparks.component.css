@@ -1,4 +1,3 @@
-
 .intro-section {
     background-color: var(--third-color);
     padding: 60px 20px;
@@ -34,11 +33,13 @@
 .white-background {
     background-color: var(--secondary-color);
     color: var(--text-color);
+    padding: 20px 0; /* Adjust padding for larger screen */
 }
 
 .black-background {
     background-color: var(--primary-color);
     color: var(--secondary-color);
+    padding: 20px 0; /* Adjust padding for larger screen */
 }
 
 .container {
@@ -71,6 +72,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Media Queries for Responsiveness */
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
@@ -81,7 +83,34 @@
     }
 
     .white-background, .black-background {
-        padding: 20px 0;
+        padding: 10px 0; /* Adjust padding for mobile view */
+    }
+
+    .text-content {
+        order: 2; /* Ensure text content comes after the image in mobile view */
+    }
+
+
+    .text-content h2 {
+        font-size: 4vw; /* Adjust font size for mobile view */
+    }
+
+    .text-content p {
+        font-size: 2.2vw; /* Adjust font size for mobile view */
+    }
+
+    .image-content p {
+        font-size: 3vw; /* Adjust font size for mobile view */
+    }
+}
+
+@media (min-width: 1200px) {
+    .white-background, .black-background {
+        padding: 60px 0; /* Increase padding for larger screens */
+    }
+
+    .container {
+        max-width: 1400px; /* Increase max width for larger screens */
     }
 }
 

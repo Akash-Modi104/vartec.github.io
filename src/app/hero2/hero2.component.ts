@@ -114,22 +114,30 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
 
   toggleDropdown(menu: string) {
     this.activeMenu = this.activeMenu === menu ? null : menu;
-    if (this.activeMenu !== 'homeMenu') {
-      this.toshow = true;
-      this.showMiddleSection = false;
-    } else {
+
+    if (menu === 'homeMenu') {
       this.toshow = false;
       this.showMiddleSection = true;
+    } else if (menu === 'projectsMenu' || menu === 'servicesMenu') {
+      // Do nothing for projectsMenu and servicesMenu
+    } else {
+      this.toshow = true;
+      this.showMiddleSection = false;
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on dropdown toggle
+
+    // Only scroll to top if a dropdown is being opened and it's not projects or services menu
+    if (this.activeMenu && menu !== 'projectsMenu' && menu !== 'servicesMenu') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   selectItem(item: string) {
     this.selectedItem = item;
     this.activeMenu = null;
+    this.isMenuOpen = false; // Close the menu on selection
+    this.updateHamburgerMenu(); // Update the hamburger menu icon state
     this.toshow = true;
     this.showMiddleSection = false;
-    this.isMenuOpen = false; // Close the menu on selection
   }
 
   switchLanguage(language: string) {
@@ -151,26 +159,29 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
       element.scrollIntoView({ behavior: 'smooth' });
     }
     this.isMenuOpen = false; // Close the menu on navigation
+    this.updateHamburgerMenu(); // Update the hamburger menu icon state
+  }
+
+  navigateTo(route: string) {
+    this.router.navigate([route]).then(() => {
+      this.isMenuOpen = false; // Close the menu on navigation
+      this.activeMenu = null; // Ensure no dropdown is shown by default
+      this.updateHamburgerMenu(); // Update the hamburger menu icon state
+    });
   }
 
   toggleMenu() {
-    const hamburgerMenu = document.querySelector('.hamburger-menu');
-    const navLinks = document.querySelector('.nav-links');
-    const closeBtn = document.querySelector('.close-btn');
-
-    if (hamburgerMenu) {
-      hamburgerMenu.classList.toggle('active');
-    }
-    
-    if (navLinks) {
-      navLinks.classList.toggle('show');
-    }
-
-    if (closeBtn) {
-      closeBtn.classList.toggle('show');
-    }
-
     this.isMenuOpen = !this.isMenuOpen; // Toggle the menu open state
+    this.updateHamburgerMenu(); // Update the hamburger menu icon state
+  }
+
+  updateHamburgerMenu() {
+    const hamburgerMenu = document.querySelector('.hamburger-menu');
+    if (this.isMenuOpen) {
+      hamburgerMenu?.classList.add('active');
+    } else {
+      hamburgerMenu?.classList.remove('active');
+    }
   }
 
   @HostListener('document:click', ['$event'])
@@ -179,6 +190,8 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
     const isDropdownButton = target.classList.contains('dropdown-btn') || target.closest('.dropdown-menu');
     if (!isDropdownButton) {
       this.activeMenu = null;
+      this.isMenuOpen = false; // Close the menu if clicked outside
+      this.updateHamburgerMenu(); // Update the hamburger menu icon state
     }
   }
 }

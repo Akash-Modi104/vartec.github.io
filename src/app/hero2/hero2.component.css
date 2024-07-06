@@ -207,7 +207,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
+ 
   margin: auto;
 }
 
@@ -539,4 +539,10 @@
   .contact-details p {
     font-size: 4vw;
   }
+}
+
+.about-container {
+/* Adjust the max-width to control the width of the content */
+  margin: auto; /* Center align the content */
+  padding: 0 20px; /* Add some padding for spacing */
 }
