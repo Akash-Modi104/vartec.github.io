@@ -72,7 +72,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
     this.preloadImages();
 
     // Initialize background image interval
-    this.backgroundInterval = setInterval(this.changeBackgroundImage.bind(this), 7000);
+    this.backgroundInterval = setInterval(this.changeBackgroundImage.bind(this), 4000);
   }
 
   ngAfterViewInit() {
@@ -145,7 +145,23 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
   }
 
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
+    const hamburgerMenu = document.querySelector('.hamburger-menu');
+    const navLinks = document.querySelector('.nav-links');
+    const closeBtn = document.querySelector('.close-btn');
+
+    if (hamburgerMenu) {
+      hamburgerMenu.classList.toggle('active');
+    }
+    
+    if (navLinks) {
+      navLinks.classList.toggle('show');
+    }
+
+    if (closeBtn) {
+      closeBtn.classList.toggle('show');
+    }
+
+    this.isMenuOpen = !this.isMenuOpen; // Toggle the menu open state
   }
 
   @HostListener('document:click', ['$event'])

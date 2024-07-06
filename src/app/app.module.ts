@@ -17,7 +17,6 @@ import { OpertaionComponent } from './services/opertaion/opertaion.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { ServivesRotatingComponent } from './servives-rotating/servives-rotating.component';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { BatterystorageComponent } from './projects/batterystorage/batterystorage.component';
 import { CarpotsComponent } from './projects/carpots/carpots.component';
@@ -27,7 +26,6 @@ import { SecuritysystemComponent } from './projects/securitysystem/securitysyste
 import { SolarparksComponent } from './projects/solarparks/solarparks.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { FeaturesProjectComponent } from './features-project/features-project.component';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -42,7 +40,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     EpcComponent,
     ConsultaingComponent,
     OpertaionComponent,
-    ServivesRotatingComponent,
+
     BatterystorageComponent,
     CarpotsComponent,
     EvchargingComponent,
@@ -50,11 +48,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     SecuritysystemComponent,
 
     SolarparksComponent,
-    FeaturesProjectComponent,
+
    
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     MatIconModule,
     AppRoutingModule,
     FormsModule, 
