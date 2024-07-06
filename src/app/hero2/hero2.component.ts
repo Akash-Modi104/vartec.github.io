@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Renderer2, ElementRef, ViewChild, HostListener, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, HostListener, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../language.service';
@@ -31,9 +31,9 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private renderer: Renderer2,
     private languageService: LanguageService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef // Inject ChangeDetectorRef
   ) {
     this.backgroundImages = [
       'assets/image/hero1-min.jpg',
@@ -72,7 +72,9 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
     this.preloadImages();
 
     // Initialize background image interval
-    this.backgroundInterval = setInterval(this.changeBackgroundImage.bind(this), 4000);
+    this.backgroundInterval = setInterval(() => {
+      this.changeBackgroundImage();
+    }, 4000);
   }
 
   ngAfterViewInit() {
@@ -100,7 +102,14 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
   changeBackgroundImage() {
     this.currentBackgroundIndex = (this.currentBackgroundIndex + 1) % this.backgroundImages.length;
     this.backgroundImage = this.backgroundImages[this.currentBackgroundIndex];
+    this.cdr.detectChanges(); // Trigger change detection manually
     console.log(`Background image set to: ${this.backgroundImage}`);
+  }
+
+  onImageError(event: Event) {
+    console.error(`Failed to load image: ${this.backgroundImage}`);
+    this.backgroundImage = 'assets/image/default-background.jpg'; // Fallback image
+    this.cdr.detectChanges();
   }
 
   toggleDropdown(menu: string) {

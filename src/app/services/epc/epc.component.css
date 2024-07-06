@@ -1,5 +1,6 @@
 .operation-maintenance-container {
   display: flex;
+  flex-wrap: wrap; /* Ensure flex items wrap on smaller screens */
   justify-content: space-between;
   align-items: flex-start;
   padding: 4vw;
@@ -104,6 +105,11 @@
 
   .text-content p {
     font-size: 2.2vw;
+    margin: 2vw 0; /* Adjusted margin for better spacing on mobile */
+  }
+
+  .image-item img {
+    max-width: 90vw; /* Ensure images are responsive on mobile */
   }
 
   .image-item p {
@@ -119,10 +125,15 @@
 
   .text-content h2 {
     font-size: 5vw;
+    text-align: center; /* Center heading on mobile */
   }
 
   .text-content p {
     font-size: 3vw;
+  }
+
+  .image-item img {
+    max-width: 100%;
   }
 
   .image-item p {

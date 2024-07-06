@@ -51,18 +51,19 @@
   </div>
 </header>
 
-<section *ngIf="showMiddleSection" class="hero" id="heroSection" [style.backgroundImage]="'url(' + backgroundImage + ')'">
+<section *ngIf="showMiddleSection" class="hero" id="heroSection" [ngStyle]="{'background-image': 'url(' + backgroundImage + ')'}">
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <div class="logo-heading">
-      <div class="hero-logo">
-        <!-- <img src="assets/image/logo.png" alt="Vartec Logo"> -->
-      </div>
       <h1>VARTEC</h1>
     </div>
     <p>{{ 'VARTEC_DESC' | translate }}</p>
   </div>
 </section>
+
+
+
+
 
 <section *ngIf="showMiddleSection" class="about-us" id="aboutUsSection" #aboutUsElement>
   <div class="about-container">

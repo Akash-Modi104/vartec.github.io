@@ -1,5 +1,5 @@
 .intro-section {
-    background-color:var(--third-color);
+    background-color: var(--third-color);
     padding: 60px 20px;
     text-align: center;
     border-bottom: 1px solid #ddd;
@@ -7,19 +7,19 @@
 }
 
 .intro-container {
-    max-width: 800px;
+    max-width: 1200px; /* Increased max-width for larger screens */
     margin: 0 auto;
 }
 
 .intro-section h1 {
-    font-size: 36px;
+    font-size: 3vw; /* Use vw units for better scaling on larger screens */
     color: var(--text-color);
     margin-bottom: 20px;
     animation: slideInLeft 1s ease-in-out;
 }
 
 .intro-section p {
-    font-size: 18px;
+    font-size: 1.5vw; /* Use vw units for better scaling on larger screens */
     color: #666;
     line-height: 1.6;
     animation: slideInRight 1s ease-in-out;
@@ -44,9 +44,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
+    max-width: 1400px; /* Increased max-width for larger screens */
     margin: auto;
-    padding: 0 20px;
+    padding: 0 40px; /* Increased padding for larger screens */
     animation: fadeIn 1s ease-in-out;
 }
 
@@ -70,7 +70,67 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+@media (min-width: 1600px) {
+    .intro-container {
+        max-width: 1600px;
+    }
+
+    .intro-section h1 {
+        font-size: 2.5vw;
+    }
+
+    .intro-section p {
+        font-size: 1.2vw;
+    }
+
+    .container {
+        max-width: 1600px;
+        padding: 0 60px;
+    }
+
+    .text-content, .image-content {
+        padding: 30px;
+    }
+
+    .image-content img {
+        border-radius: 15px;
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+}
+
+@media (max-width: 1200px) {
+    .intro-section h1 {
+        font-size: 4vw;
+    }
+
+    .intro-section p {
+        font-size: 2vw;
+    }
+
+    .container {
+        flex-direction: column;
+        max-width: 100%;
+        padding: 0 20px;
+    }
+
+    .text-content, .image-content {
+        padding: 10px;
+    }
+
+    .white-background, .black-background {
+        padding: 20px 0;
+    }
+}
+
 @media (max-width: 768px) {
+    .intro-section h1 {
+        font-size: 5vw;
+    }
+
+    .intro-section p {
+        font-size: 2.5vw;
+    }
+
     .container {
         flex-direction: column;
     }

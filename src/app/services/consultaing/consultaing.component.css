@@ -109,6 +109,10 @@
     font-size: 2.2vw;
   }
 
+  .image-content img {
+    max-width: 90vw;
+  }
+
   .image-content p {
     font-size: 3vw;
   }
@@ -122,10 +126,15 @@
 
   .text-content h2 {
     font-size: 5vw;
+    text-align: center;
   }
 
   .text-content p, .text-content ul li {
     font-size: 3vw;
+  }
+
+  .image-content img {
+    max-width: 100%;
   }
 
   .image-content p {

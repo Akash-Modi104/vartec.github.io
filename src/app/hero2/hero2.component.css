@@ -47,7 +47,8 @@
   padding: 1vw 2vw;
   display: inline-block;
   border-radius: 0.4vw;
-  font-size: 1.6vw;
+  font-size: 1.4vw;
+  font-weight: bolder;
   cursor: pointer;
   transition: background-color 0.3s, box-shadow 0.3s;
 }
@@ -124,15 +125,14 @@
   color: var(--primary-color);
   position: relative;
   padding-top: 6vw;
-  background-size: cover;
-  background-repeat: no-repeat;
   overflow: hidden;
+  background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   transition: background-image 1s ease-in-out;
 }
 
-.hero:before {
-  content: '';
+.hero-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -150,6 +150,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  padding: 0 2vw;
 }
 
 .hero-content .logo-heading {
@@ -162,12 +163,12 @@
 }
 
 .hero-logo img {
-  height: 18vw;
+  height: 12vw;
   width: auto;
 }
 
 .hero h1 {
-  font-size: 12vw;
+  font-size: 10vw;
   margin-bottom: 1vw;
   animation: fadeIn 2s ease-in-out;
   color: var(--primary-color);
@@ -177,26 +178,23 @@
 }
 
 .hero p {
-  font-size: 3.5vw;
+  font-size: 2.5vw;
   margin-bottom: 2vw;
   color: var(--secondary-color);
   text-shadow: 0.1vw 0.1vw 0.3vw rgba(0, 0, 0, 0.5);
 }
 
-.hero .btn {
-  background: var(--primary-color);
-  color: var(--text-color);
-  padding: 1.4vw 2.4vw;
-  text-decoration: none;
-  border-radius: 0.4vw;
-  font-size: 1.8vw;
-  transition: background-color 0.3s, box-shadow 0.3s;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.hero .btn:hover {
-  background: var(--text-color);
-  color: var(--primary-color);
-  box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1);
+.hero {
+  animation: fadeIn 1s ease-in-out;
 }
 
 .about-us {
@@ -224,7 +222,7 @@
 }
 
 .about-text p {
-  font-size: 2vw;
+  font-size: 1.6vw;
   color: var(--text-color);
   line-height: 1.5;
   margin: 4vw 0;
@@ -245,34 +243,173 @@
   box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.contact-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 4vw;
+  background-color: var(--third-color);
 }
 
-.hero {
-  animation: fadeIn 1s ease-in-out;
+.contact-details {
+  flex: 1 1 45%;
+  padding: 2vw;
+}
+
+.contact-details h2 {
+  font-size: 2.8vw;
+  margin-bottom: 1.5vw;
+  color: var(--text-color);
+}
+
+.contact-details p {
+  font-size: 1.6vw;
+  margin-bottom: 1vw;
+  color: var(--text-color);
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 2vw;
+  margin-top: 1.5vw;
+}
+
+.detail-item {
+  flex: 1;
+}
+
+.detail-item h3 {
+  font-size: 2.2vw;
+  margin-bottom: 1vw;
+  color: var(--text-color);
+}
+
+.detail-item p {
+  font-size: 1.6vw;
+  color: #666;
+}
+
+.additional-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2vw;
+}
+
+.info-item {
+  flex: 1;
+  margin-right: 2vw;
+}
+
+.info-item:last-child {
+  margin-right: 0;
+}
+
+.info-item h3 {
+  font-size: 1.6vw;
+  margin-bottom: 1vw;
+  color: var(--text-color);
+}
+
+.info-item p {
+  font-size: 1.4vw;
+  color: #666;
+}
+
+.contact-form {
+  flex: 1 1 45%;
+  padding: 2vw;
+  background-color: var(--secondary-color);
+  border-radius: 0.8vw;
+  box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contact-form h1 {
+  font-size: 2.6vw;
+  margin-bottom: 1.5vw;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.form-group {
+  margin-bottom: 1vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-group label {
+  font-size: 1.6vw;
+  margin-bottom: 0.3vw;
+  width: 100%;
+  max-width: 40vw;
+  color: var(--text-color);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  max-width: 40vw;
+  padding: 1vw;
+  border: 1px solid #ccc;
+  border-radius: 0.4vw;
+  font-size: 1.6vw;
+}
+
+.submit-button-container {
+  text-align: center;
+  margin-top: 2vw;
+}
+
+.submit-button-container button {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  border: none;
+  padding: 1vw 2vw;
+  border-radius: 0.4vw;
+  font-size: 2vw;
+  cursor: pointer;
+}
+
+.submit-button-container button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1200px) {
+  .contact-details, .contact-form {
+    flex: 1 1 100%;
+    margin-bottom: 2vw;
+  }
+
+  .contact-details {
+    padding: 3vw;
+  }
+
+  .contact-form {
+    padding: 3vw;
+  }
 }
 
 @media (max-width: 768px) {
   .navbar {
-    padding: 2vw; /* Increase padding for navbar */
+    padding: 2vw;
   }
 
   .logo img {
-    height: 12vw; /* Increase logo size */
+    height: 12vw;
   }
 
   .hero h1 {
-    font-size: 8vw;
+    font-size: 12vw;
   }
 
   .hero p {
-    font-size: 2.4vw;
+    font-size: 5vw;
   }
 
   .hero-content {
@@ -285,7 +422,7 @@
   }
 
   .nav-links {
-    display: none; /* Hide nav links on mobile */
+    display: none;
     flex-direction: column;
     background-color: var(--secondary-color);
     position: fixed;
@@ -317,6 +454,10 @@
     text-align: center;
   }
 
+  .dropdown-menu {
+    min-width: 60vw; /* Increase min-width for dropdown menu */
+  }
+
   .hamburger-menu {
     display: block;
     cursor: pointer;
@@ -341,5 +482,61 @@
 
   .hamburger-menu.active div:nth-child(3) {
     transform: rotate(45deg) translate(-5px, -6px);
+  }
+
+  .about-container {
+    flex-direction: column;
+    text-align: center; /* Center align for mobile view */
+  }
+
+  .about-text {
+    margin-right: 0;
+    margin-bottom: 2vw;
+  }
+
+  .about-text h2 {
+    text-align: center; /* Center align for mobile view */
+  }
+
+  .about-text p {
+    font-size: 4vw;
+    text-align: center; /* Center align for mobile view */
+  }
+
+  .contact-details h2 {
+    text-align: center; /* Center align for mobile view */
+  }
+  .contact-details p {
+    text-align: center; /* Center align for mobile view */
+  }
+
+  .about-video video {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 14vw;
+  }
+
+  .hero p {
+    font-size: 6vw;
+  }
+
+  .about-text h2 {
+    font-size: 5vw;
+  }
+
+  .about-text p {
+    font-size: 4vw;
+  }
+
+  .contact-details h2 {
+    font-size: 5vw;
+  }
+
+  .contact-details p {
+    font-size: 4vw;
   }
 }
