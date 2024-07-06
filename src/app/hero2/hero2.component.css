@@ -259,6 +259,14 @@
 }
 
 @media (max-width: 768px) {
+  .navbar {
+    padding: 2vw; /* Increase padding for navbar */
+  }
+
+  .logo img {
+    height: 12vw; /* Increase logo size */
+  }
+
   .hero h1 {
     font-size: 8vw;
   }
