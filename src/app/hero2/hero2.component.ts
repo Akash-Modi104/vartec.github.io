@@ -138,6 +138,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
     this.updateHamburgerMenu(); // Update the hamburger menu icon state
     this.toshow = true;
     this.showMiddleSection = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   switchLanguage(language: string) {
