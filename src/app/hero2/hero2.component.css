@@ -20,12 +20,9 @@
 
 .logo img {
   height: 6vw;
-  
+
 }
 
-.nav-item img{
-  height:1vw
-}
 .nav-links {
   list-style: none;
   margin: 0;
@@ -542,10 +539,4 @@
   .contact-details p {
     font-size: 4vw;
   }
-}
-
-.about-container {
-/* Adjust the max-width to control the width of the content */
-  margin: auto; /* Center align the content */
-  padding: 0 20px; /* Add some padding for spacing */
 }

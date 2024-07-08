@@ -112,6 +112,9 @@
     .container {
         max-width: 1400px; /* Increase max width for larger screens */
     }
+    .intro-section{
+        padding-top: 180px;
+    }
 }
 
 /* Keyframes for animations */
