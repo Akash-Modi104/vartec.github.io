@@ -4,6 +4,7 @@
   justify-content: space-between;
   padding: 4vw;
   background-color: #f9f9f9;
+  margin-top: 6vw; /* Add margin to prevent content from being hidden by navbar */
 }
 
 .text-content {
@@ -12,7 +13,7 @@
 }
 
 .text-content h2 {
-  font-size: 3.2vw;
+  font-size: 2.5vw;
   color: #000;
   margin-bottom: 2vw;
 }
@@ -54,6 +55,7 @@
   font-size: 2vw;
   color: #000;
   text-align: center;
+  font-weight: bold;
 }
 
 .background-image {
@@ -91,6 +93,7 @@
 @media (max-width: 768px) {
   .consulting-services-container {
     padding: 2vw;
+    margin-top: 12vw; /* Adjust top margin for smaller screens */
   }
 
   .text-content, .image-content {
@@ -119,6 +122,10 @@
 }
 
 @media (max-width: 480px) {
+  .consulting-services-container {
+    margin-top: 14vw; /* Further adjust top margin for smaller screens */
+  }
+
   .background-image {
     height: 20vh;
     font-size: 4vw;

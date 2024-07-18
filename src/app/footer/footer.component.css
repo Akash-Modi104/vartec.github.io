@@ -1,14 +1,14 @@
 .footer {
   background-color: var(--primary-color);
   color: var(--secondary-color);
-  padding: 2rem 1rem; /* Reduced padding to make the footer shorter */
+  padding: 2vw; /* Use vw for padding for consistency */
 }
 
 .footer-content {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  max-width: 1200px;
+
   margin: auto;
   flex-wrap: wrap;
 }
@@ -19,7 +19,7 @@
 }
 
 .footer-logo img {
-  height: 3rem; /* Adjusted height */
+  height: 3vw; /* Use vw for height */
   max-height: 50px;
 }
 
@@ -31,14 +31,14 @@
 }
 
 .footer-column {
-  margin: 1rem 2rem; /* Use rem for margin */
+  margin: 1vw 2vw; /* Use vw for margin */
   flex: 1;
-  min-width: 150px; /* Ensure a minimum width for columns */
+  min-width: 200px; /* Ensure a minimum width for columns */
 }
 
 .footer-column h4 {
-  font-size: 1.2rem; /* Use rem for font size */
-  margin-bottom: 0.5rem; /* Use rem for margin */
+  font-size: 1.8vw; /* Use vw for font size */
+  margin-bottom: 0.5vw; /* Use vw for margin */
   color: var(--hover-text-color);
   cursor: pointer;
 }
@@ -46,8 +46,9 @@
 .footer-column a {
   display: block;
   color: var(--hover-text-color);
+  font-size: 1.2vw;
   text-decoration: none;
-  margin: 0.5rem 0; /* Use rem for margin */
+  margin: 0.5vw 0; /* Use vw for margin */
   transition: color 0.3s;
   cursor: pointer;
 }
@@ -59,11 +60,11 @@
 
 .footer-divider {
   border-top: 1px solid var(--hover-text-color);
-  margin: 1rem 0; /* Use rem for margin */
+  margin: 1vw 0; /* Use vw for margin */
 }
 
 .footer-bottom {
-  font-size: 0.9rem; /* Use rem for font size */
+  font-size: 1vw; /* Use vw for font size */
   color: var(--hover-text-color);
   text-align: center;
 }
@@ -76,27 +77,27 @@
   }
 
   .footer-column {
-    margin: 1rem 0;
+    margin: 1vw 0;
     text-align: center;
   }
 
   .footer-logo {
     order: 1; /* Ensure the logo appears first on smaller screens */
-    margin-bottom: 1rem; /* Add margin for spacing */
+    margin-bottom: 1vw; /* Add margin for spacing */
   }
 
   .footer-column h4, .footer-column a, .footer-bottom {
-    font-size: 1.2rem; /* Adjusted font size for smaller screens */
+    font-size: 3.5vw; /* Adjusted font size for smaller screens */
   }
 }
 
 @media (max-width: 480px) {
   .footer-column h4, .footer-column a, .footer-bottom {
-    font-size: 1rem; /* Further adjusted font size for smallest screens */
+    font-size: 4.5vw; /* Further adjusted font size for smallest screens */
   }
 
   .footer-logo img {
-    height: 5rem; /* Use rem for height */
+    height: 5vw; /* Use vw for height */
     max-height: none;
   }
 }

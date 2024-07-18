@@ -1,6 +1,7 @@
 /* Import Montserrat font from Google Fonts */
 @import "~material-design-icons/iconfont/material-icons.css";
 @import "~@fontsource/poppins/index.css";
+@import 'ngx-toastr/toastr';
 
 :root {
   --primary-color: #FFC107; /* Gold color similar to the logo */

@@ -1,3 +1,4 @@
+
 .navbar {
   display: flex;
   align-items: center;
@@ -5,7 +6,7 @@
   background-color: var(--secondary-color);
   padding: 0.2vw 2vw;
   position: fixed;
-  width: 98vw;
+  width: 100%;
   top: 0;
   z-index: 1000;
   box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1);
@@ -20,9 +21,9 @@
 
 .logo img {
   height: 6vw;
-
 }
 
+/* Navigation Links */
 .nav-links {
   list-style: none;
   margin: 0;
@@ -40,7 +41,6 @@
 .nav-links button,
 #contactus {
   color: var(--text-color);
-  font-weight: normal;
   background-color: transparent;
   border: none;
   text-decoration: none;
@@ -62,6 +62,7 @@
   color: var(--hover-text-color);
 }
 
+/* Dropdown Menu */
 .dropdown-menu {
   display: none;
   position: absolute;
@@ -108,13 +109,78 @@
   color: var(--hover-text-color);
 }
 
-.active {
-  color: var(--hover-text-color) !important;
-  background-color: var(--hover-background-color) !important;
-  font-weight: bold;
-  border-radius: 0.4vw;
+/* Hamburger Menu */
+.hamburger-menu {
+  display: none;
+  cursor: pointer;
+  z-index: 1001;
 }
 
+.hamburger-menu div {
+  width: 25px;
+  height: 3px;
+  background-color: var(--text-color);
+  margin: 5px;
+  transition: 0.4s;
+}
+
+.hamburger-menu.active div:nth-child(1) {
+  transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.hamburger-menu.active div:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.active div:nth-child(3) {
+  transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .hamburger-menu {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background-color: var(--secondary-color);
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 75%;
+    max-width: 300px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    padding-top: 60px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .nav-links.show {
+    display: flex;
+    transform: translateX(0);
+  }
+
+  .nav-item {
+    margin: 1vw 0;
+  }
+
+  .nav-links a,
+  .nav-links button,
+  #contactus {
+    font-size: 4vw;
+    padding: 2vw;
+    text-align: center;
+  }
+
+  .dropdown-menu {
+    min-width: 60vw; /* Increase min-width for dropdown menu */
+  }
+}
+
+/* Hero Section */
 .hero {
   height: 100vh;
   width: 100vw;
@@ -207,7 +273,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
- 
   margin: auto;
 }
 
@@ -538,5 +603,20 @@
 
   .contact-details p {
     font-size: 4vw;
+  }
+}
+
+.navbar .hamburger-menu {
+  order: 2;
+}
+
+.navbar .nav-item:last-child {
+  order: 1;
+  margin-right: 2vw;
+}
+
+@media (max-width: 768px) {
+  .nav-links.show .nav-item:last-child {
+    margin-right: 0;
   }
 }

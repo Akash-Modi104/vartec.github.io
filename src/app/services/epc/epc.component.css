@@ -5,6 +5,7 @@
   align-items: flex-start;
   padding: 4vw;
   background-color: #f9f9f9;
+  margin-top: 6vw;
 }
 
 .text-content {
@@ -15,14 +16,14 @@
 }
 
 .text-content h2 {
-  font-size: 2.5vw;
+  font-size: 2.5vw; /* Adjusted to match the Battery Storage CSS */
   color: #000;
   margin-bottom: 2vw;
   margin-left: 4vw;
 }
 
 .text-content p {
-  font-size: 1.8vw;
+  font-size: 2vw; /* Adjusted to match the Battery Storage CSS */
   color: #000;
   line-height: 1.8;
   margin: 4vw;
@@ -49,9 +50,10 @@
 }
 
 .image-item p {
-  font-size: 1.8vw;
+  font-size: 1.8vw; /* Adjusted to match the Battery Storage CSS */
   color: #000;
   margin-top: 1vw;
+  font-weight: bold;
 }
 
 .background-image {
@@ -63,7 +65,7 @@
   border-radius: 1vw;
   margin-top: 2vw;
   color: #fff;
-  font-size: 2.4vw;
+  font-size: 24px; /* Adjusted to match the Battery Storage CSS */
   font-weight: bold;
   text-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.3);
   overflow: hidden;
@@ -78,7 +80,12 @@
 }
 
 /* Media Queries for Responsiveness */
-@media (max-width: 1200px) {
+@media (max-width: 1200px) 
+{  .operation-maintenance-container {
+  margin-top: 10vw; /* Adjust top margin for medium screens */
+}
+
+
   .text-content, .image-content {
     flex: 1 1 48%;
     margin-right: 0;
@@ -113,7 +120,7 @@
   }
 
   .image-item p {
-    font-size: 3vw;
+    font-size: 4vw;
   }
 }
 
@@ -125,11 +132,11 @@
 
   .text-content h2 {
     font-size: 5vw;
-    text-align: center; /* Center heading on mobile */
+    text-align: center;
   }
 
   .text-content p {
-    font-size: 3vw;
+    font-size: 4vw;
   }
 
   .image-item img {

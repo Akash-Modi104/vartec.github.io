@@ -7,19 +7,19 @@
 }
 
 .intro-container {
-    max-width: 800px;
+    max-width: 80%;
     margin: 0 auto;
 }
 
 .intro-section h1 {
-    font-size: 36px;
+    font-size: 2.5vw; /* Responsive font size */
     color: var(--text-color);
     margin-bottom: 20px;
     animation: slideInLeft 1s ease-in-out;
 }
 
 .intro-section p {
-    font-size: 18px;
+    font-size: 1.5vw; /* Responsive font size */
     color: #666;
     line-height: 1.6;
     animation: slideInRight 1s ease-in-out;
@@ -46,7 +46,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
+ 
     margin: auto;
     padding: 0 20px;
     animation: fadeIn 1s ease-in-out;
@@ -61,6 +61,17 @@
     padding: 20px;
 }
 
+.text-content h2 {
+    font-size: 1.5vw; /* Default font size for project titles */
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+.text-content p {
+    font-size: 1.2vw; /* Default font size for project descriptions */
+    color: var(--text-color);
+}
+
 .image-content {
     padding: 20px;
     animation: fadeInUp 1s ease-in-out;
@@ -68,11 +79,14 @@
 
 .image-content img {
     width: 100%;
+    max-width: 100%; /* Ensure image takes up full width of its container */
+    height: auto; /* Maintain aspect ratio */
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Media Queries for Responsiveness */
+
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
@@ -83,24 +97,61 @@
     }
 
     .white-background, .black-background {
-        padding: 10px 0; /* Adjust padding for mobile view */
+        padding: 20px 0; /* Adjust padding for mobile view */
     }
 
     .text-content {
         order: 2; /* Ensure text content comes after the image in mobile view */
     }
 
+    .intro-section h1 {
+        font-size: 6vw; /* Adjust font size for mobile view */
+    }
 
-    .text-content h2 {
+    .intro-section p {
         font-size: 4vw; /* Adjust font size for mobile view */
     }
 
+    .text-content h2 {
+        font-size: 5vw; /* Adjust font size for mobile view */
+    }
+
     .text-content p {
-        font-size: 2.2vw; /* Adjust font size for mobile view */
+        font-size: 3.5vw; /* Adjust font size for mobile view */
     }
 
     .image-content p {
         font-size: 3vw; /* Adjust font size for mobile view */
+    }
+
+    .image-content img {
+        max-width: 100%; /* Ensure image is responsive on mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .intro-section h1 {
+        font-size: 8vw; /* Adjust font size for very small screens */
+    }
+
+    .intro-section p {
+        font-size: 5vw; /* Adjust font size for very small screens */
+    }
+
+    .text-content h2 {
+        font-size: 6vw; /* Adjust font size for very small screens */
+    }
+
+    .text-content p {
+        font-size: 4vw; /* Adjust font size for very small screens */
+    }
+
+    .image-content p {
+        font-size: 3.5vw; /* Adjust font size for very small screens */
+    }
+
+    .image-content img {
+        max-width: 100%; /* Ensure image is responsive on very small screens */
     }
 }
 
@@ -109,12 +160,14 @@
         padding: 60px 0; /* Increase padding for larger screens */
     }
 
-    .container {
-        max-width: 1400px; /* Increase max width for larger screens */
-    }
-    .intro-section{
+  
+
+    .intro-section {
         padding-top: 180px;
     }
+
+
+   
 }
 
 /* Keyframes for animations */

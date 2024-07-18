@@ -42,7 +42,7 @@
           </a>
         </li>
       </ul>
-      <div class="hamburger-menu" (click)="toggleMenu()">
+      <div class="hamburger-menu" (click)="toggleMenu($event)">
         <div></div>
         <div></div>
         <div></div>
@@ -50,8 +50,6 @@
     </nav>
   </div>
 </header>
-
-
 
 <section *ngIf="showMiddleSection" class="hero" id="heroSection" [ngStyle]="{'background-image': 'url(' + backgroundImage + ')'}">
   <div class="hero-overlay"></div>
@@ -62,10 +60,6 @@
     <p>{{ 'VARTEC_DESC' | translate }}</p>
   </div>
 </section>
-
-
-
-
 
 <section *ngIf="showMiddleSection" class="about-us" id="aboutUsSection" #aboutUsElement>
   <div class="about-container">

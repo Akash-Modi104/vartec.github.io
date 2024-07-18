@@ -5,6 +5,7 @@
   align-items: flex-start;
   padding: 4vw;
   background-color: #f9f9f9;
+  margin-top: 6vw; /* Add margin to prevent content from being hidden by navbar */
 }
 
 .text-content, .image-content {
@@ -59,7 +60,7 @@
 }
 
 .image-item p {
-  font-size: 1.5vw;
+  font-size: 1.8vw !important;
   color: #000;
   margin-top: 1vw;
   font-weight: bold;
@@ -90,6 +91,10 @@
 
 /* Media Queries for Responsiveness */
 @media (max-width: 1200px) {
+  .operation-maintenance-container {
+    margin-top: 10vw; /* Adjust top margin for medium screens */
+  }
+
   .text-content, .image-content {
     flex: 1 1 48%;
     margin: 1vw 0;
@@ -121,6 +126,7 @@
     padding: 2vw;
     flex-direction: column;
     align-items: center;
+    margin-top: 12vw; /* Adjust top margin for smaller screens */
   }
 
   .text-content, .image-content {
@@ -150,6 +156,10 @@
 }
 
 @media (max-width: 480px) {
+  .operation-maintenance-container {
+    margin-top: 14vw; /* Further adjust top margin for smaller screens */
+  }
+
   .background-image {
     height: 20vh;
     font-size: 3.5vw;

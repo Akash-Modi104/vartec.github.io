@@ -15,7 +15,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('aboutUsElement', { static: true }) aboutUsElement!: ElementRef;
   backgroundImages: string[];
   currentBackgroundIndex: number;
-  backgroundInterval: any;
+  backgroundInterval!: ReturnType<typeof setInterval>;
   toshow = false;
   toshowlan = true;
   showMiddleSection = true;
@@ -26,7 +26,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
 
   activeMenu: string | null = null;
   selectedItem: string | null = null;
-  isMenuOpen: boolean = false;
+  isMenuOpen = false;
 
   constructor(
     private router: Router,
@@ -114,21 +114,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
 
   toggleDropdown(menu: string) {
     this.activeMenu = this.activeMenu === menu ? null : menu;
-
-    if (menu === 'homeMenu') {
-      this.toshow = false;
-      this.showMiddleSection = true;
-    } else if (menu === 'projectsMenu' || menu === 'servicesMenu') {
-      // Do nothing for projectsMenu and servicesMenu
-    } else {
-      this.toshow = true;
-      this.showMiddleSection = false;
-    }
-
-    // Only scroll to top if a dropdown is being opened and it's not projects or services menu
-    if (this.activeMenu && menu !== 'projectsMenu' && menu !== 'servicesMenu') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    this.updateHamburgerMenu();
   }
 
   selectItem(item: string) {
@@ -171,7 +157,8 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  toggleMenu() {
+  toggleMenu(event: MouseEvent) {
+    event.stopPropagation(); // Prevent click event from propagating
     this.isMenuOpen = !this.isMenuOpen; // Toggle the menu open state
     this.updateHamburgerMenu(); // Update the hamburger menu icon state
   }
@@ -188,7 +175,7 @@ export class Hero2Component implements OnInit, OnDestroy, AfterViewInit {
   @HostListener('document:click', ['$event'])
   handleClick(event: Event) {
     const target = event.target as HTMLElement;
-    const isDropdownButton = target.classList.contains('dropdown-btn') || target.closest('.dropdown-menu');
+    const isDropdownButton = target.classList.contains('dropdown-btn') || !!target.closest('.dropdown-menu');
     if (!isDropdownButton) {
       this.activeMenu = null;
       this.isMenuOpen = false; // Close the menu if clicked outside
