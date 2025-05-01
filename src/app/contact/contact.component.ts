@@ -44,14 +44,13 @@ export class ContactComponent implements OnInit, OnDestroy {
   }
 
   sendEmail(): void {
-    this.toastr.success('Thanks for conatcting us. will back to you shortly', 'Success');
     if (this.contactForm.valid) {
       const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
       const body = new URLSearchParams(this.contactForm.value).toString();
 
       this.http.post('send_mail.php', body, { headers, responseType: 'text' }).subscribe(
         response => {
-          this.toastr.success('Thanks for conatcting us. will back to you shortly', 'Success');
+          this.toastr.success('Thanks for contacting us. We will get back to you shortly', 'Success');
           this.contactForm.reset();
         },
         error => {

@@ -96,6 +96,7 @@
 @media (max-width: 768px) {
   .operation-maintenance-container {
     padding: 2vw;
+    margin-top: 12vw;
   }
 
   .text-content, .image-content {
@@ -125,6 +126,9 @@
 }
 
 @media (max-width: 480px) {
+  .operation-maintenance-container {
+    margin-top: 14vw;
+  }
   .background-image {
     height: 20vh;
     font-size: 4vw;
