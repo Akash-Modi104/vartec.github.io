@@ -2,103 +2,49 @@
 @import "ngx-toastr/toastr";
 
 :root {
-  --primary-color: #ffc107;
-  --primary-dark: #d99f00;
-  --primary-soft: #fff7dc;
+  --primary-color: #FFC107;
   --secondary-color: #ffffff;
-  --text-color: #151515;
-  --text-muted: #626262;
+  --text-color: #010101;
   --background-color: #ffffff;
-  --surface-color: #f6f6f3;
-  --surface-dark: #171817;
-  --border-color: rgba(21, 21, 21, 0.12);
-  --hover-background-color: #ffc107;
-  --hover-text-color: #151515;
-  --third-color: #f6f6f3;
+  --hover-background-color: #FFC107;
+  --hover-text-color: #ffffff;
+  --third-color: #f5f5f5b1;
   --header-height: 82px;
-  --content-max: 1440px;
-  --content-copy: 720px;
+  --content-max: 1400px;
   --page-gutter: clamp(1rem, 4vw, 4rem);
-  --section-space: clamp(3.5rem, 7vw, 7.5rem);
-  --radius-sm: 10px;
-  --radius-md: 20px;
-  --radius-lg: 32px;
-  --shadow-sm: 0 10px 30px rgba(15, 16, 15, 0.08);
-  --shadow-lg: 0 24px 70px rgba(15, 16, 15, 0.14);
 }
 
 *,
 *::before,
-*::after {
-  box-sizing: border-box;
-}
+*::after { box-sizing: border-box; }
 
 html {
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-height) + 20px);
-  background: var(--background-color);
+  background-color: var(--background-color);
 }
 
 body {
-  margin: 0;
   min-width: 320px;
+  margin: 0;
   color: var(--text-color);
-  background: var(--background-color);
+  background-color: var(--background-color);
   font-family: "Poppins", sans-serif;
-  font-size: 16px;
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-  margin-top: 0;
+h1, h2, h3, h4, h5, h6, p { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6,
+a, button, input, textarea, select {
+  font-family: "Poppins", sans-serif;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  line-height: 1.15;
-  text-wrap: balance;
-}
-
-p,
-li {
-  text-wrap: pretty;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
-
-button,
-a {
-  -webkit-tap-highlight-color: transparent;
-}
-
-img,
-video {
-  display: block;
-  max-width: 100%;
-}
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font: inherit; }
+img, video { display: block; max-width: 100%; }
 
 :focus-visible {
   outline: 3px solid rgba(255, 193, 7, 0.75);
@@ -107,204 +53,132 @@ video {
 
 ::selection {
   color: var(--text-color);
-  background: var(--primary-color);
+  background-color: var(--primary-color);
 }
 
-@media (max-width: 900px) {
-  :root {
-    --header-height: 70px;
-    --page-gutter: clamp(1rem, 5vw, 2rem);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Shared project-page system */
+/* Original project-page theme with responsive alignment guardrails. */
 :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) {
   display: block;
-  background: var(--background-color);
+  background-color: var(--background-color);
 }
 
 :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .intro-section {
-  position: relative;
-  isolation: isolate;
-  min-height: clamp(320px, 40vw, 520px);
-  padding: clamp(4rem, 8vw, 8rem) var(--page-gutter);
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  color: #fff;
+  padding: clamp(4rem, 7vw, 7rem) var(--page-gutter);
   text-align: center;
-  background:
-    radial-gradient(circle at 85% 20%, rgba(255, 193, 7, 0.28), transparent 28rem),
-    linear-gradient(135deg, #111211 0%, #282925 100%);
-}
-
-:where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .intro-section::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  right: -8rem;
-  bottom: -12rem;
-  width: 30rem;
-  height: 30rem;
-  border: 1px solid rgba(255, 193, 7, 0.26);
-  border-radius: 50%;
-  box-shadow: 0 0 0 4rem rgba(255, 193, 7, 0.04), 0 0 0 8rem rgba(255, 193, 7, 0.025);
+  background-color: var(--third-color);
+  border-bottom: 1px solid #ddd;
+  animation: fadeIn 1s ease-in-out;
 }
 
 :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .intro-container {
-  width: min(100%, 980px);
+  width: min(100%, 1120px);
   margin: 0 auto;
 }
 
 :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .intro-section h1 {
-  margin-bottom: 1.4rem;
-  color: var(--primary-color);
-  font-size: clamp(2.25rem, 5.4vw, 5.3rem);
-  font-weight: 780;
-  letter-spacing: -0.055em;
+  margin-bottom: 1.25rem;
+  color: var(--text-color);
+  font-size: clamp(2rem, 2.8vw, 3rem);
+  animation: slideInLeft 1s ease-in-out;
 }
 
 :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .intro-section p {
-  max-width: 850px;
   margin: 0 auto;
-  color: rgba(255, 255, 255, 0.78);
-  font-size: clamp(0.98rem, 1.45vw, 1.2rem);
-  line-height: 1.75;
+  color: #666;
+  font-size: clamp(1rem, 1.45vw, 1.35rem);
+  line-height: 1.6;
+  animation: slideInRight 1s ease-in-out;
 }
 
 :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .project-section {
-  padding: clamp(3.5rem, 7vw, 7rem) var(--page-gutter);
+  padding: clamp(2.5rem, 5vw, 5rem) var(--page-gutter);
+  animation: fadeIn 1s ease-in-out;
 }
 
 :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .white-background {
   color: var(--text-color);
-  background: var(--secondary-color);
+  background-color: var(--secondary-color);
 }
 
 :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .black-background {
-  color: #fff;
-  background: var(--surface-dark);
+  color: var(--secondary-color);
+  background-color: var(--primary-color);
 }
 
 :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .container {
   width: min(100%, var(--content-max));
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, 0.82fr) minmax(420px, 1.18fr);
+  display: flex;
   align-items: center;
-  gap: clamp(2.5rem, 7vw, 7rem);
+  justify-content: space-between;
+  gap: clamp(1.5rem, 4vw, 4rem);
 }
 
-:where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .text-content {
+:where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .text-content,
+:where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .image-content {
+  flex: 1 1 0;
   min-width: 0;
+  animation: fadeIn 1s ease-in-out;
+}
+
+:where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .text-content,
+:where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .image-content {
+  padding: clamp(0.25rem, 1.5vw, 1.25rem);
 }
 
 :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .text-content h2 {
-  position: relative;
-  margin: 0;
-  padding-top: 1.5rem;
-  color: inherit;
-  font-size: clamp(1.6rem, 3vw, 3.15rem);
-  font-weight: 720;
-  letter-spacing: -0.04em;
-  line-height: 1.25;
-}
-
-:where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .text-content h2::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 58px;
-  height: 5px;
-  background: var(--primary-color);
-  border-radius: 999px;
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+  font-size: clamp(1.35rem, 1.7vw, 2rem);
 }
 
 :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .text-content p {
-  margin: 1.2rem 0 0;
-  color: var(--text-muted);
-  font-size: clamp(0.95rem, 1.15vw, 1.08rem);
-  line-height: 1.75;
-}
-
-:where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .black-background .text-content p {
-  color: rgba(255, 255, 255, 0.68);
+  margin-bottom: 0;
+  color: var(--text-color);
+  font-size: clamp(0.95rem, 1.15vw, 1.15rem);
 }
 
 :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .image-content {
-  min-width: 0;
-  padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(21, 21, 21, 0.1);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-}
-
-:where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .black-background .image-content {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.12);
+  animation: fadeInUp 1s ease-in-out;
 }
 
 :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .image-content img {
   width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  border-radius: calc(var(--radius-lg) - 8px);
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 900px) {
-  :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .container {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+@media (max-width: 768px) {
+  :root {
+    --header-height: 70px;
+    --page-gutter: clamp(1rem, 5vw, 2rem);
   }
 
-  :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .image-content {
-    grid-row: 1;
-  }
-
-  :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .text-content {
-    grid-row: 2;
-  }
-}
-
-@media (max-width: 600px) {
   :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .intro-section {
-    min-height: 360px;
+    padding-block: 3.5rem;
   }
 
-  :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .project-section {
-    padding-block: 4rem;
+  :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
   }
 
-  :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .image-content {
-    padding: 0.5rem;
-    border-radius: var(--radius-md);
-  }
-
-  :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .image-content img {
-    aspect-ratio: 4 / 3;
-    border-radius: calc(var(--radius-md) - 5px);
-  }
+  :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .text-content { order: 2; }
+  :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .image-content { order: 1; }
 }
 
-@media (min-width: 1800px) {
-  :where(app-batterystorage, app-carpots, app-evcharging, app-floatingsolar, app-securitysystem, app-solarparks) .container {
-    width: min(100%, 1560px);
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideInLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
