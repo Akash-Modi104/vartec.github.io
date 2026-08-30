@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/language.service';
-import { ConfigService } from 'src/app/config.service';
 import { Subscription } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -19,7 +18,6 @@ export class ContactComponent implements OnInit, OnDestroy {
   constructor(
     private languageService: LanguageService,
     private translate: TranslateService,
-    private configService: ConfigService,
     private http: HttpClient,
     private fb: FormBuilder,
     private toastr: ToastrService
@@ -49,11 +47,11 @@ export class ContactComponent implements OnInit, OnDestroy {
       const body = new URLSearchParams(this.contactForm.value).toString();
 
       this.http.post('send_mail.php', body, { headers, responseType: 'text' }).subscribe(
-        response => {
+        () => {
           this.toastr.success('Thanks for contacting us. We will get back to you shortly', 'Success');
           this.contactForm.reset();
         },
-        error => {
+        () => {
           this.toastr.error('An error occurred while sending email. Please try again.', 'Error');
         }
       );

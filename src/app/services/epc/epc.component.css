@@ -1,153 +1,101 @@
+:host {
+  display: block;
+  padding: var(--section-space) var(--page-gutter);
+  background: var(--surface-color);
+}
+
 .operation-maintenance-container {
-  display: flex;
-  flex-wrap: wrap; /* Ensure flex items wrap on smaller screens */
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 4vw;
-  background-color: #f9f9f9;
-  margin-top: 6vw;
+  width: min(100%, var(--content-max));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(440px, 1.15fr);
+  align-items: start;
+  gap: clamp(2.5rem, 6vw, 6rem);
 }
 
-.text-content {
-  flex: 2;
-  margin-right: 2vw;
-  display: flex;
-  flex-direction: column;
+.text-content h1 {
+  position: relative;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.15rem;
+  color: var(--text-color);
+  font-size: clamp(2rem, 3.8vw, 4rem);
+  font-weight: 750;
+  letter-spacing: -0.045em;
 }
 
-.text-content h2 {
-  font-size: 2.5vw; /* Adjusted to match the Battery Storage CSS */
-  color: #000;
-  margin-bottom: 2vw;
-  margin-left: 4vw;
+.text-content h1::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 70px;
+  height: 5px;
+  background: var(--primary-color);
+  border-radius: 999px;
 }
 
 .text-content p {
-  font-size: 2vw; /* Adjusted to match the Battery Storage CSS */
-  color: #000;
-  line-height: 1.8;
-  margin: 4vw;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: clamp(0.98rem, 1.15vw, 1.1rem);
+  line-height: 1.85;
 }
 
 .image-content {
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }
 
 .image-item {
-  margin-bottom: 2vw;
-  text-align: center;
+  padding: 0.7rem;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .image-item img {
   width: 100%;
-  max-width: 50vw;
-  border-radius: 1vw;
-  box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: calc(var(--radius-md) - 7px);
 }
 
 .image-item p {
-  font-size: 1.8vw; /* Adjusted to match the Battery Storage CSS */
-  color: #000;
-  margin-top: 1vw;
-  font-weight: bold;
+  margin: 0.85rem 0 0.2rem;
+  color: var(--text-color);
+  font-size: clamp(0.82rem, 1vw, 0.95rem);
+  font-weight: 700;
+  line-height: 1.45;
+  text-align: center;
 }
 
 .background-image {
-  width: 100%;
-  height: 30vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 1vw;
-  margin-top: 2vw;
-  color: #fff;
-  font-size: 24px; /* Adjusted to match the Battery Storage CSS */
-  font-weight: bold;
-  text-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.3);
+  width: min(100%, var(--content-max));
+  height: clamp(260px, 36vw, 520px);
+  margin: clamp(3rem, 7vw, 7rem) auto 0;
   overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
 }
 
 .background-image img {
-  width: 98%;
+  width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 1vw;
-  box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1);
 }
 
-/* Media Queries for Responsiveness */
-@media (max-width: 1200px) 
-{  .operation-maintenance-container {
-  margin-top: 10vw; /* Adjust top margin for medium screens */
-}
-
-
-  .text-content, .image-content {
-    flex: 1 1 48%;
-    margin-right: 0;
-    margin-bottom: 2vw;
-  }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 1020px) {
   .operation-maintenance-container {
-    padding: 2vw;
-    margin-top: 12vw;
+    grid-template-columns: 1fr;
   }
 
-  .text-content, .image-content {
-    flex: 1 1 100%;
-  }
-
-  .text-content {
-    margin-right: 0;
-  }
-
-  .text-content h2 {
-    font-size: 4vw;
-  }
-
-  .text-content p {
-    font-size: 2.2vw;
-    margin: 2vw 0; /* Adjusted margin for better spacing on mobile */
-  }
-
-  .image-item img {
-    max-width: 90vw; /* Ensure images are responsive on mobile */
-  }
-
-  .image-item p {
-    font-size: 4vw;
-  }
+  .text-content { max-width: 800px; }
 }
 
-@media (max-width: 480px) {
-  .operation-maintenance-container {
-    margin-top: 14vw;
-  }
-  .background-image {
-    height: 20vh;
-    font-size: 4vw;
-  }
-
-  .text-content h2 {
-    font-size: 5vw;
-    text-align: center;
-  }
-
-  .text-content p {
-    font-size: 4vw;
-  }
-
-  .image-item img {
-    max-width: 100%;
-  }
-
-  .image-item p {
-    font-size: 3.5vw;
-  }
+@media (max-width: 600px) {
+  :host { padding-block: 4rem; }
+  .image-content { grid-template-columns: 1fr; }
+  .background-image { margin-top: 4rem; border-radius: var(--radius-md); }
 }

@@ -1,155 +1,112 @@
-/* ===== FOOTER ===== */
+:host {
+  display: block;
+}
+
 .footer {
-  background-color: var(--primary-color);
-  color: var(--secondary-color);
-  padding: clamp(1.5rem, 3vw, 3rem) clamp(1.5rem, 4vw, 4rem);
-  box-sizing: border-box;
+  padding: clamp(3.5rem, 7vw, 6.5rem) var(--page-gutter) 1.75rem;
+  color: rgba(255, 255, 255, 0.82);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(255, 193, 7, 0.16), transparent 30rem),
+    var(--surface-dark);
+}
+
+.footer-content,
+.footer-divider,
+.footer-bottom {
+  width: min(100%, var(--content-max));
+  margin-inline: auto;
 }
 
 .footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  max-width: 1400px;
-  margin: 0 auto;
-  flex-wrap: wrap;
+  position: relative;
 }
 
-.footer-logo {
-  margin-left: auto;
+.footer-content::before {
+  content: "VARTEC";
+  display: block;
+  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+  color: var(--primary-color);
+  font-size: clamp(2.5rem, 7vw, 6.75rem);
+  font-weight: 800;
+  letter-spacing: -0.07em;
+  line-height: 0.9;
 }
 
-.footer-logo img {
-  height: clamp(36px, 3vw, 50px);
-  width: auto;
-}
+.footer-logo { display: none; }
 
 .footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  justify-content: space-between;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: 0.7fr 1.4fr 1.6fr 0.8fr;
+  gap: clamp(1.5rem, 4vw, 4rem);
 }
 
-.footer-column {
-  flex: 1;
-  min-width: 150px;
-  margin: 0.5rem 1rem;
-}
+.footer-column { min-width: 0; }
 
 .footer-column h4 {
-  font-size: clamp(0.95rem, 1.5vw, 1.3rem);
-  margin: 0 0 0.6rem;
-  color: var(--hover-text-color);
-  cursor: pointer;
+  margin-bottom: 1.1rem;
+  color: #fff;
+  font-size: 0.82rem;
   font-weight: 700;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  transition: opacity 0.2s;
+  cursor: pointer;
+  transition: color 180ms ease;
 }
 
-.footer-column h4:hover {
-  opacity: 0.8;
-}
+.footer-column h4:hover { color: var(--primary-color); }
 
 .footer-column a {
   display: block;
-  color: var(--hover-text-color);
-  font-size: clamp(0.8rem, 1.1vw, 1rem);
-  text-decoration: none;
-  margin: 0.4rem 0;
-  padding: 0.15rem 0;
-  transition: opacity 0.2s;
+  width: fit-content;
+  margin: 0.55rem 0;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: clamp(0.83rem, 0.95vw, 0.96rem);
+  line-height: 1.5;
   cursor: pointer;
+  transition: color 180ms ease, transform 180ms ease;
 }
 
 .footer-column a:hover {
-  opacity: 0.75;
+  color: var(--primary-color);
+  transform: translateX(3px);
 }
 
 .footer-divider {
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.35);
-  margin: clamp(1rem, 2vw, 1.5rem) 0;
-  max-width: 1400px;
+  margin-top: clamp(2.5rem, 5vw, 4.5rem);
+  margin-bottom: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .footer-bottom {
-  font-size: clamp(0.75rem, 1vw, 0.9rem);
-  color: var(--hover-text-color);
-  text-align: center;
-  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.78rem;
 }
 
-/* ===== TABLET (≤992px) ===== */
-@media (max-width: 992px) {
-  .footer-column {
-    min-width: 140px;
+.footer-bottom p { margin: 0; }
+
+@media (max-width: 900px) {
+  .footer-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2.5rem;
   }
 }
 
-/* ===== MOBILE (≤768px) ===== */
-@media (max-width: 768px) {
+@media (max-width: 560px) {
   .footer {
-    padding: 2rem 1.25rem 1.5rem;
+    padding-top: 4rem;
   }
 
-  .footer-content {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .footer-logo {
-    margin: 0 0 1rem;
-    order: -1;
-  }
+  .footer-content::before { margin-bottom: 3rem; }
 
   .footer-links {
-    justify-content: center;
-    gap: 0.5rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
-  .footer-column {
-    margin: 0.5rem;
-    text-align: center;
-    min-width: 130px;
-    flex: 0 1 42%;
-  }
-
-  .footer-column h4 {
-    font-size: clamp(0.9rem, 4vw, 1.1rem);
-  }
+  .footer-column h4 { margin-bottom: 0.75rem; }
 
   .footer-column a {
-    font-size: clamp(0.8rem, 3.5vw, 0.95rem);
-  }
-
-  .footer-bottom {
-    font-size: clamp(0.75rem, 3vw, 0.875rem);
-  }
-}
-
-/* ===== SMALL MOBILE (≤480px) ===== */
-@media (max-width: 480px) {
-  .footer {
-    padding: 1.5rem 1rem 1rem;
-  }
-
-  .footer-column {
-    flex: 0 1 100%;
-    margin: 0.4rem 0;
-  }
-
-  .footer-column h4 {
-    font-size: 1rem;
-  }
-
-  .footer-column a {
-    font-size: 0.875rem;
-  }
-
-  .footer-bottom {
-    font-size: 0.75rem;
+    width: 100%;
+    margin-block: 0.7rem;
   }
 }

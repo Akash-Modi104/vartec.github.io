@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://akash-modi104.github.io/vartec.github.io/sitemap.xml

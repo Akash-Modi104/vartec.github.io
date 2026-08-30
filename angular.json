@@ -20,23 +20,20 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/robots.txt",
+              "src/sitemap.xml",
+              "src/.nojekyll"
             ],
             "styles": [
               "src/styles.css",
-              "node_modules/owl.carousel/dist/assets/owl.carousel.css",
-    "node_modules/owl.carousel/dist/assets/owl.theme.default.css",
-     "node_modules/material-design-icons/iconfont/material-icons.css",
-      "node_modules/ngx-toastr/toastr.css"
-    
+              "node_modules/ngx-toastr/toastr.css"
             ],
-            "scripts": [
-               "node_modules/jquery/dist/jquery.min.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
-               "baseHref": "https://akash-modi104.github.io/vartec.github.io/",
+               "baseHref": "/vartec.github.io/",
               "budgets": [
                 {
                   "type": "initial",
@@ -146,7 +143,16 @@
           "builder": "@nguniversal/builders:prerender",
           "options": {
             "routes": [
-              "/"
+              "/",
+              "/services/epc",
+              "/services/consulting",
+              "/services/operation-maintenance",
+              "/project/battery-storage",
+              "/project/carports",
+              "/project/ev-charging",
+              "/project/floating-solar",
+              "/project/security-systems",
+              "/project/solar-parks"
             ]
           },
           "configurations": {
@@ -163,5 +169,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
