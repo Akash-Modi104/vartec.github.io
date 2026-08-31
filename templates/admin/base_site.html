@@ -1,0 +1,5 @@
+{% extends "admin/base.html" %}{% load static %}
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | VARTEC Admin{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static 'website/css/admin.css' %}">{% endblock %}
+{% block branding %}<div id="site-name"><a href="{% url 'admin:index' %}">VARTEC Website Administration</a></div>{% endblock %}
+{% block nav-global %}<a class="view-site-link" href="{% url 'website:home' %}">View website</a>{% endblock %}

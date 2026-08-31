@@ -1,0 +1,33 @@
+{% if site_settings.contact_enabled %}
+<section class="contact-section" id="contact">
+  <div class="shell contact-grid">
+    <div class="contact-copy">
+      <p class="eyebrow">{{ texts.CONTACT_US }}</p>
+      <h2>{{ texts.CONTACT_DETAILS }}</h2>
+      <p>{{ texts.CONTACT_MESSAGE }}</p>
+      <p>{{ texts.CONTACT_ADDITIONAL_INFO }}</p>
+      <dl>
+        <div><dt>{{ texts.PHONE }}</dt><dd><a href="tel:{{ site_settings.uk_phone }}">UK {{ site_settings.uk_phone }}</a><br><a href="tel:{{ site_settings.nl_phone }}">NL {{ site_settings.nl_phone }}</a></dd></div>
+        <div><dt>{{ texts.OFFICE_HOURS }}</dt><dd>{{ texts.WEEKDAYS_HOURS }}<br>{{ texts.WEEKEND_HOURS }}</dd></div>
+        <div><dt>{{ texts.EMAIL }}</dt><dd><a href="mailto:{{ site_settings.contact_email }}">{{ site_settings.contact_email }}</a></dd></div>
+      </dl>
+    </div>
+    <div class="contact-panel">
+      <h2>{{ texts.GET_IN_TOUCH }}</h2>
+      <form method="post" action="{{ request.path }}#contact">
+        {% csrf_token %}
+        {{ contact_form.website }}
+        <div class="field-row">
+          <label>{{ texts.FIRST_NAME }}{{ contact_form.first_name }}</label>
+          <label>{{ texts.LAST_NAME }}{{ contact_form.last_name }}</label>
+        </div>
+        <label>{{ texts.EMAIL_ADDRESS }}{{ contact_form.email }}</label>
+        <label>{{ texts.PHONE_NUMBER }}{{ contact_form.phone }}</label>
+        <label>{{ texts.MESSAGE }}{{ contact_form.message }}</label>
+        {% if contact_form.errors %}<div class="form-errors">{{ texts.CONTACT_FORM_ERROR }}</div>{% endif %}
+        <button class="button button-dark" type="submit">{{ texts.SUBMIT }}</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endif %}

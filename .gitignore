@@ -37,6 +37,15 @@ yarn-error.log
 testem.log
 /typings
 
+# Django/Python runtime
+/.venv/
+/db.sqlite3
+/media/
+/staticfiles/
+/.env
+__pycache__/
+*.py[cod]
+
 # System files
 .DS_Store
 Thumbs.db

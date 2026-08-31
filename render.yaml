@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: vartec-cms
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    preDeployCommand: python manage.py migrate && python manage.py seed_vartec --if-empty
+    startCommand: gunicorn vartec_cms.wsgi:application --bind 0.0.0.0:$PORT
+    healthCheckPath: /
+    disk:
+      name: vartec-media
+      mountPath: /var/data/media
+      sizeGB: 10
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ALLOWED_HOSTS
+        sync: false
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        sync: false
+      - key: DJANGO_MEDIA_ROOT
+        value: /var/data/media
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vartec-db
+          property: connectionString
+
+databases:
+  - name: vartec-db
+    databaseName: vartec
+    user: vartec

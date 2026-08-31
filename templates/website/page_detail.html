@@ -1,0 +1,15 @@
+{% extends 'website/base.html' %}
+{% block content %}
+<section class="page-hero"><div class="shell"><p class="eyebrow">{% if page.kind == 'service' %}{{ texts.SERVICES }}{% else %}{{ texts.PROJECTS }}{% endif %}</p><h1>{{ page.localized_title }}</h1>{% if page.localized_intro %}<p>{{ page.localized_intro }}</p>{% endif %}</div></section>
+{% for section in page.localized_sections %}
+<section class="detail-section theme-{{ section.background }}">
+  <div class="shell detail-grid layout-{{ section.layout }}">
+    <div class="detail-copy">{% if section.localized_title %}<h2>{{ section.localized_title }}</h2>{% endif %}{% if section.localized_body %}<p>{{ section.localized_body }}</p>{% endif %}
+      {% if section.localized_items %}<div class="section-items">{% for item in section.localized_items %}{% if item.item_type == 'subheading' %}<h3>{{ item.localized_text }}</h3>{% elif item.item_type == 'bullet' or item.item_type == 'numbered' %}<p class="list-item {% if item.item_type == 'numbered' %}numbered{% endif %}">{{ item.localized_text }}</p>{% else %}<p>{{ item.localized_text }}</p>{% endif %}{% endfor %}</div>{% endif %}
+    </div>
+    {% if section.media_url %}<div class="detail-media"><img loading="lazy" decoding="async" src="{{ section.media_url }}" alt="{{ section.localized_title }}"></div>{% elif section.video_url %}<div class="detail-media"><video controls preload="none"><source src="{{ section.video_url }}"></video></div>{% endif %}
+  </div>
+</section>
+{% empty %}<section class="section"><div class="shell"><p>{{ texts.CONTENT_ADMIN_HELP }}</p></div></section>{% endfor %}
+{% include 'website/_contact.html' %}
+{% endblock %}

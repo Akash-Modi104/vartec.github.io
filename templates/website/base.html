@@ -1,0 +1,79 @@
+{% load static %}<!doctype html>
+<html lang="{{ language.code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ seo_title|default:site_settings.default_seo_title }}</title>
+  <meta name="description" content="{{ seo_description|default:site_settings.default_seo_description }}">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
+  {% for option in language_options %}<link rel="alternate" hreflang="{{ option.language.code }}" href="{{ option.absolute_url }}">{% endfor %}
+  {% if language_options %}<link rel="alternate" hreflang="x-default" href="{{ language_options.0.absolute_url }}">{% endif %}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ seo_title|default:site_settings.default_seo_title }}">
+  <meta property="og:description" content="{{ seo_description|default:site_settings.default_seo_description }}">
+  <meta property="og:site_name" content="{{ site_settings.brand_name }}">
+  {% if canonical_url %}<meta property="og:url" content="{{ canonical_url }}">{% endif %}
+  <link rel="icon" href="{{ site_settings.logo_url }}">
+  <link rel="preload" href="{% static 'website/css/site.css' %}" as="style">
+  <link rel="stylesheet" href="{% static 'website/css/site.css' %}">
+  <style>:root{--gold:{{ site_settings.primary_colour }}}</style>
+  {% if site_settings.organisation_schema_enabled %}
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"{{ site_settings.brand_name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}/","email":"{{ site_settings.contact_email|escapejs }}","telephone":"{{ site_settings.uk_phone|escapejs }}","areaServed":["GB","NL"]}</script>
+  {% endif %}
+</head>
+<body>
+  <a class="skip-link" href="#main-content">{{ texts.SKIP_TO_CONTENT }}</a>
+  <header class="site-header" data-header>
+    <div class="shell header-inner">
+      <a class="brand" href="{% if language.is_default %}{% url 'website:home' %}{% else %}{% url 'website:home_i18n' language.code %}{% endif %}" aria-label="{{ site_settings.brand_name }} home">
+        <img src="{{ site_settings.logo_url }}" width="74" height="62" alt="{{ site_settings.brand_name }}">
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation"><span></span><span></span><span></span><span class="sr-only">{{ texts.MENU }}</span></button>
+      <nav id="primary-navigation" class="primary-nav" aria-label="Primary navigation">
+        <a href="{% if language.is_default %}{% url 'website:home' %}{% else %}{% url 'website:home_i18n' language.code %}{% endif %}">{{ texts.HOME }}</a>
+        {% if site_settings.services_enabled %}
+        <div class="nav-group">
+          <button type="button" aria-expanded="false">{{ texts.SERVICES }} <span aria-hidden="true">⌄</span></button>
+          <div class="nav-dropdown">
+            {% for item in navigation_services %}<a href="{% if language.is_default %}{{ item.get_absolute_url }}{% else %}{% url 'website:service_detail_i18n' language.code item.slug %}{% endif %}">{{ item.localized_title }}</a>{% endfor %}
+          </div>
+        </div>
+        {% endif %}
+        {% if site_settings.projects_enabled %}
+        <div class="nav-group">
+          <button type="button" aria-expanded="false">{{ texts.PROJECTS }} <span aria-hidden="true">⌄</span></button>
+          <div class="nav-dropdown">
+            {% for item in navigation_projects %}<a href="{% if language.is_default %}{{ item.get_absolute_url }}{% else %}{% url 'website:project_detail_i18n' language.code item.slug %}{% endif %}">{{ item.localized_title }}</a>{% endfor %}
+          </div>
+        </div>
+        {% endif %}
+        {% if site_settings.contact_enabled %}<a href="#contact">{{ texts.CONTACT_US }}</a>{% endif %}
+        <div class="language-menu">
+          {% for option in language_options %}
+          <a href="{{ option.url }}" {% if option.is_current %}aria-current="true"{% endif %}>
+            {% if option.language.flag_url %}<img src="{{ option.language.flag_url }}" width="22" height="15" alt="">{% endif %}{{ option.language.code|upper }}
+          </a>
+          {% endfor %}
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  {% if messages %}<div class="messages shell" role="status">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
+  <main id="main-content">{% block content %}{% endblock %}</main>
+
+  {% if site_settings.footer_enabled %}
+  <footer class="site-footer">
+    <div class="shell footer-grid">
+      <div><img src="{{ site_settings.logo_url }}" width="88" height="74" alt="{{ site_settings.brand_name }}"><p>{{ texts.VARTEC_DESC }}</p></div>
+      <div><h2>{{ texts.SERVICES }}</h2>{% for item in navigation_services %}<a href="{% if language.is_default %}{{ item.get_absolute_url }}{% else %}{% url 'website:service_detail_i18n' language.code item.slug %}{% endif %}">{{ item.localized_title }}</a>{% endfor %}</div>
+      <div><h2>{{ texts.PROJECTS }}</h2>{% for item in navigation_projects %}<a href="{% if language.is_default %}{{ item.get_absolute_url }}{% else %}{% url 'website:project_detail_i18n' language.code item.slug %}{% endif %}">{{ item.localized_title }}</a>{% endfor %}</div>
+      <div><h2>{{ texts.CONTACT_US }}</h2><a href="tel:{{ site_settings.uk_phone }}">UK {{ site_settings.uk_phone }}</a><a href="tel:{{ site_settings.nl_phone }}">NL {{ site_settings.nl_phone }}</a><a href="mailto:{{ site_settings.contact_email }}">{{ site_settings.contact_email }}</a></div>
+    </div>
+    <div class="shell footer-bottom">© {{ site_settings.brand_name }} B.V. {% now 'Y' %}. {{ texts.ALL_RIGHTS_RESERVED }}</div>
+  </footer>
+  {% endif %}
+  <script src="{% static 'website/js/site.js' %}" defer></script>
+</body>
+</html>
