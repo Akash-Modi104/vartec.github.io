@@ -74,6 +74,34 @@ class CmsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Website content and configuration")
 
+    def test_angular_cms_shell_and_session_are_available(self):
+        response = self.client.get(reverse("cms"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"<cms-root>", b"".join(response.streaming_content))
+        session = self.client.get(reverse("cms-session"))
+        self.assertEqual(session.status_code, 200)
+        self.assertFalse(session.json()["authenticated"])
+
+    def test_cms_api_requires_staff_access(self):
+        response = self.client.get(reverse("cms-dashboard"))
+        self.assertEqual(response.status_code, 401)
+
+    def test_cms_api_can_list_and_update_page_visibility(self):
+        user = get_user_model().objects.create_superuser("cms-admin", "cms@example.com", "test-password")
+        self.client.force_login(user)
+        response = self.client.get(reverse("cms-resource-list", kwargs={"resource": "pages"}))
+        self.assertEqual(response.status_code, 200)
+        self.assertGreater(response.json()["pagination"]["total"], 0)
+        page = Page.objects.get(kind=Page.PROJECT, slug="solar-parks")
+        response = self.client.patch(
+            reverse("cms-resource-detail", kwargs={"resource": "pages", "pk": page.pk}),
+            data='{"is_active": false}',
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        page.refresh_from_db()
+        self.assertFalse(page.is_active)
+
     def test_site_settings_is_singleton(self):
         self.assertEqual(SiteSettings.load().pk, 1)
         self.assertEqual(SiteSettings.objects.count(), 1)

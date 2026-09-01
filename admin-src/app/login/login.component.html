@@ -1,0 +1,20 @@
+<main class="login-page">
+  <a class="login-logo" href="/" aria-label="VARTEC website"><span class="brand-mark">V</span><span><strong>VARTEC</strong><small>Content management</small></span></a>
+  <div class="login-shell">
+    <section class="login-story">
+      <span class="story-number">01</span>
+      <div><p class="eyebrow">VARTEC administration</p><h1>Every update.<br>One workspace.</h1><p>Manage pages, projects, languages, media, website settings and customer enquiries through a secure content platform.</p></div>
+      <p class="secure-note"><span></span> Secure administrator access</p>
+    </section>
+    <section class="login-form-panel">
+      <div><p class="eyebrow">Welcome back</p><h2>Sign in to continue</h2><p>Use your VARTEC administrator account.</p></div>
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="alert error" *ngIf="error">{{ error }}</div>
+        <label><span>Username</span><input type="text" formControlName="username" autocomplete="username" placeholder="Your username"><small *ngIf="form.controls.username.touched && form.controls.username.invalid">Username is required.</small></label>
+        <label><span>Password</span><div class="password-field"><input [type]="showPassword ? 'text' : 'password'" formControlName="password" autocomplete="current-password" placeholder="Your password"><button type="button" (click)="showPassword=!showPassword">{{ showPassword ? 'Hide' : 'Show' }}</button></div><small *ngIf="form.controls.password.touched && form.controls.password.invalid">Password is required.</small></label>
+        <button class="primary-button login-button" type="submit" [disabled]="loading"><span>{{ loading ? 'Signing in…' : 'Sign in' }}</span><b>→</b></button>
+      </form>
+      <a class="back-link" href="/">← Return to the website</a>
+    </section>
+  </div>
+</main>

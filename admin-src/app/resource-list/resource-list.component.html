@@ -1,0 +1,32 @@
+<div class="page-heading list-heading">
+  <div><p class="eyebrow">{{ meta?.group || 'Content' }}</p><h1>{{ meta?.plural || 'Loading…' }}</h1><p>{{ meta?.description }}</p></div>
+  <button *ngIf="meta && !meta.singleton" class="primary-button" type="button" (click)="create()"><span>Add {{ meta.label | lowercase }}</span><b>＋</b></button>
+</div>
+
+<section class="data-card">
+  <div class="list-toolbar">
+    <label class="search-field"><span aria-hidden="true">⌕</span><input #searchInput type="search" [value]="query" (input)="search(searchInput.value)" placeholder="Search {{ meta?.plural | lowercase }}…"></label>
+    <div class="list-summary"><strong>{{ pagination?.total || 0 }}</strong><span>items</span><i></i><span *ngIf="hasActive()">Use the switch to show or hide content</span></div>
+  </div>
+
+  <div class="alert error inset" *ngIf="error">{{ error }} <button type="button" (click)="load()">Try again</button></div>
+  <div class="loading-panel inset" *ngIf="loading"><span></span> Loading content…</div>
+  <div class="empty-state large" *ngIf="!loading && !items.length"><strong>No {{ meta?.plural | lowercase }} found.</strong><span>Try a different search or add the first item.</span></div>
+
+  <div class="table-wrap" *ngIf="!loading && items.length">
+    <table>
+      <thead><tr><th *ngFor="let field of fields">{{ field.label }}</th><th class="actions-column"><span class="sr-only">Actions</span></th></tr></thead>
+      <tbody>
+        <tr *ngFor="let item of items" (click)="edit(item)" tabindex="0" (keyup.enter)="edit(item)">
+          <td *ngFor="let field of fields" [attr.data-label]="field.label">
+            <button *ngIf="isActive(field); else normalCell" class="toggle" type="button" [class.on]="item.fields[field.name]" [attr.aria-label]="item.fields[field.name] ? 'Hide item' : 'Show item'" (click)="toggle(item, $event)"><span></span><em>{{ item.fields[field.name] ? 'Visible' : 'Hidden' }}</em></button>
+            <ng-template #normalCell><span [class.type-badge]="isStatus(field)" [attr.data-value]="item.fields[field.name]">{{ item.cells[field.name] }}</span></ng-template>
+          </td>
+          <td class="row-actions"><button type="button" title="Edit" (click)="edit(item); $event.stopPropagation()">Edit</button><button *ngIf="!meta?.singleton" class="danger-link" type="button" title="Delete" (click)="remove(item, $event)">Delete</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="pagination" *ngIf="pagination && pagination.pages > 1"><span>Page {{ pagination.page }} of {{ pagination.pages }}</span><div><button type="button" [disabled]="pagination.page <= 1" (click)="page(-1)">← Previous</button><button type="button" [disabled]="pagination.page >= pagination.pages" (click)="page(1)">Next →</button></div></footer>
+</section>

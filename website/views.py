@@ -1,6 +1,6 @@
 from django.conf import settings as django_settings
 from django.contrib import messages
-from django.http import Http404, HttpResponse
+from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
@@ -9,6 +9,16 @@ from django.views.static import serve
 from .forms import ContactForm
 from .models import HeroSlide, Language, Page, SiteSettings
 from .services import active_language, base_context, localized_home_blocks, localized_pages, localize_page, send_contact_notification, text_map
+
+
+def cms_shell(request, path=""):
+    """Return the Angular CMS shell; Angular handles client-side admin routes."""
+    index_path = django_settings.BASE_DIR / "static" / "cms" / "index.html"
+    if not index_path.exists():
+        return HttpResponse("Angular CMS build is not available. Run npm run build:admin.", status=503)
+    response = FileResponse(index_path.open("rb"), content_type="text/html")
+    response["Cache-Control"] = "no-store"
+    return response
 
 
 def _language_or_404(lang_code=None):
@@ -88,7 +98,7 @@ def page_detail(request, kind, slug, lang_code=None):
 
 def robots(request):
     sitemap_url = request.build_absolute_uri(reverse("website:sitemap"))
-    return HttpResponse(f"User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: {sitemap_url}\n", content_type="text/plain")
+    return HttpResponse(f"User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /django-admin/\nDisallow: /cms-api/\nSitemap: {sitemap_url}\n", content_type="text/plain")
 
 
 def sitemap(request):

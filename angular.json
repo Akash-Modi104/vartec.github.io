@@ -168,6 +168,61 @@
           "defaultConfiguration": "production"
         }
       }
+    },
+    "VartecAdmin": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "admin-src",
+      "prefix": "cms",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "static/cms",
+            "index": "admin-src/index.html",
+            "main": "admin-src/main.ts",
+            "polyfills": "admin-src/polyfills.ts",
+            "tsConfig": "admin-tsconfig.app.json",
+            "assets": [],
+            "styles": ["admin-src/styles.css"],
+            "scripts": [],
+            "baseHref": "/admin/",
+            "deployUrl": "/static/cms/"
+          },
+          "configurations": {
+            "production": {
+              "optimization": {
+                "scripts": true,
+                "styles": {"minify": true, "inlineCritical": false},
+                "fonts": true
+              },
+              "budgets": [
+                {"type": "initial", "maximumWarning": "850kb", "maximumError": "1100kb"},
+                {"type": "anyComponentStyle", "maximumWarning": "30kb", "maximumError": "45kb"}
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {"browserTarget": "VartecAdmin:build:production"},
+            "development": {"browserTarget": "VartecAdmin:build:development"}
+          },
+          "defaultConfiguration": "development"
+        }
+      }
     }
   },
   "cli": {

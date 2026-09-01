@@ -1,0 +1,49 @@
+<div class="page-heading editor-heading">
+  <div><button class="back-button" type="button" (click)="cancel()">← {{ meta?.plural || 'Back' }}</button><p class="eyebrow">{{ objectId ? 'Edit content' : 'Create content' }}</p><h1>{{ objectId ? (item?.display || meta?.label) : ('New ' + (meta?.label | lowercase)) }}</h1><p>{{ meta?.description }}</p></div>
+  <div class="editor-actions"><button class="secondary-button" type="button" (click)="cancel()">Cancel</button><button class="primary-button" type="button" [disabled]="saving || loading" (click)="save()"><span>{{ saving ? 'Saving…' : 'Save changes' }}</span><b>✓</b></button></div>
+</div>
+
+<div class="loading-panel" *ngIf="loading"><span></span> Loading editor…</div>
+<div class="alert error" *ngIf="error">{{ error }}</div>
+
+<form class="editor-layout" *ngIf="!loading" [formGroup]="form" (ngSubmit)="save()">
+  <section class="form-card">
+    <div class="form-card-heading"><span>01</span><div><h2>Content details</h2><p>Update the information shown on the website.</p></div></div>
+    <div class="dynamic-form">
+      <label *ngFor="let field of nonBooleanFields()" [class.full-field]="field.type === 'textarea' || field.type === 'file'">
+        <span>{{ field.label }} <b *ngIf="field.required">Required</b></span>
+        <ng-container [ngSwitch]="field.type">
+          <textarea *ngSwitchCase="'textarea'" [formControlName]="field.name" rows="6"></textarea>
+          <select *ngSwitchCase="'select'" [formControlName]="field.name"><option value="" *ngIf="!field.required">Select an option</option><option *ngFor="let option of field.options" [value]="option.value">{{ option.label }}</option></select>
+          <select *ngSwitchCase="'relation'" [formControlName]="field.name"><option value="" *ngIf="!field.required">None</option><option *ngFor="let option of field.options" [value]="option.value">{{ option.label }}</option></select>
+          <div *ngSwitchCase="'file'" class="file-input">
+            <input type="file" [accept]="field.accept || ''" (change)="pickFile(field, $event)">
+            <span *ngIf="files[field.name]">{{ files[field.name].name }}</span>
+            <ng-container *ngIf="!files[field.name]">
+              <a *ngIf="currentFile(field) as existing" [href]="existing.url" target="_blank" rel="noopener">Current: {{ existing.name }} ↗</a>
+            </ng-container>
+          </div>
+          <input *ngSwitchCase="'datetime'" type="datetime-local" [formControlName]="field.name">
+          <input *ngSwitchCase="'date'" type="date" [formControlName]="field.name">
+          <input *ngSwitchCase="'number'" type="number" min="0" [formControlName]="field.name">
+          <input *ngSwitchCase="'email'" type="email" [formControlName]="field.name">
+          <input *ngSwitchDefault type="text" [formControlName]="field.name">
+        </ng-container>
+        <small *ngIf="field.help">{{ field.help }}</small>
+        <small class="field-error" *ngIf="control(field)?.touched && control(field)?.invalid">{{ field.label }} is required.</small>
+        <small class="field-error" *ngFor="let message of fieldErrors[field.name]">{{ message }}</small>
+      </label>
+    </div>
+  </section>
+
+  <aside class="form-side" *ngIf="booleanFields().length">
+    <section class="form-card visibility-card">
+      <div class="form-card-heading"><span>02</span><div><h2>Visibility &amp; options</h2><p>Control how this content behaves.</p></div></div>
+      <label class="switch-row" *ngFor="let field of booleanFields()">
+        <span><strong>{{ field.label }}</strong><small>{{ field.help || 'Enable or disable this option.' }}</small></span>
+        <input type="checkbox" [formControlName]="field.name"><i></i>
+      </label>
+    </section>
+    <div class="save-note"><span>✓</span><p><strong>Changes publish immediately.</strong><small>Review the live website after saving.</small></p></div>
+  </aside>
+</form>

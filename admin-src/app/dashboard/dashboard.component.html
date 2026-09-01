@@ -1,0 +1,49 @@
+<div class="page-heading">
+  <div><p class="eyebrow">Control centre</p><h1>Good to see you.</h1><p>Everything on the VARTEC website can be managed from here.</p></div>
+  <span class="date-chip">Live content workspace</span>
+</div>
+
+<div class="loading-panel" *ngIf="loading"><span></span> Loading website data…</div>
+<div class="alert error" *ngIf="error">{{ error }} <button type="button" (click)="load()">Try again</button></div>
+
+<ng-container *ngIf="data as dashboard">
+  <section class="stat-grid" aria-label="Website summary">
+    <article><span class="stat-mark">PG</span><div><strong>{{ dashboard.summary.activePages }}</strong><small>Published pages</small></div><em>{{ dashboard.summary.pages }} total</em></article>
+    <article><span class="stat-mark">LN</span><div><strong>{{ dashboard.summary.languages }}</strong><small>Active languages</small></div><em>Localised</em></article>
+    <article><span class="stat-mark">MD</span><div><strong>{{ dashboard.summary.media }}</strong><small>Media assets</small></div><em>Images &amp; video</em></article>
+    <article class="accent-stat"><span class="stat-mark">EN</span><div><strong>{{ dashboard.summary.newEnquiries }}</strong><small>New enquiries</small></div><a routerLink="/content/enquiries">Open inbox →</a></article>
+  </section>
+
+  <div class="dashboard-columns">
+    <section>
+      <div class="section-title"><div><p class="eyebrow">Quick access</p><h2>Frequently managed</h2></div></div>
+      <div class="quick-grid">
+        <a *ngFor="let key of quickKeys; let index=index" [routerLink]="['/content', key]">
+          <span>0{{ index + 1 }}</span>
+          <div><strong>{{ resource(key)?.plural }}</strong><small>{{ resource(key)?.description }}</small></div>
+          <b>→</b>
+        </a>
+      </div>
+
+      <div class="section-title content-title"><div><p class="eyebrow">Complete control</p><h2>All website modules</h2></div></div>
+      <div class="module-groups">
+        <article *ngFor="let group of groups()">
+          <h3>{{ group }}</h3>
+          <a *ngFor="let item of inGroup(group)" [routerLink]="['/content', item.key]">
+            <span><strong>{{ item.plural }}</strong><small>{{ item.count }} records<span *ngIf="item.activeCount !== undefined"> · {{ item.activeCount }} active</span></small></span><b>›</b>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <aside class="activity-card">
+      <div class="section-title"><div><p class="eyebrow">Inbox</p><h2>Recent enquiries</h2></div><a routerLink="/content/enquiries">View all</a></div>
+      <div class="empty-state" *ngIf="!dashboard.recentEnquiries.length">No enquiries yet.</div>
+      <a class="activity-item" *ngFor="let item of dashboard.recentEnquiries" [routerLink]="['/content/enquiries', item.id]">
+        <span class="avatar small">{{ item.cells['first_name'].charAt(0) }}{{ item.cells['last_name'].charAt(0) }}</span>
+        <span><strong>{{ item.cells['first_name'] }} {{ item.cells['last_name'] }}</strong><small>{{ item.cells['email'] }}</small><em>{{ item.cells['created_at'] }}</em></span>
+        <b class="status-badge" [attr.data-status]="item.fields['status']">{{ item.cells['status'] }}</b>
+      </a>
+    </aside>
+  </div>
+</ng-container>

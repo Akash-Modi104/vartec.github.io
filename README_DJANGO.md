@@ -1,6 +1,6 @@
 # VARTEC Django CMS
 
-This branch contains the new database-driven VARTEC website. It preserves the existing English and Dutch content, images, hero slides and video while replacing the static Angular frontend with a fast server-rendered Django site and authenticated admin.
+This branch contains the database-driven VARTEC website. It preserves the existing English and Dutch content, images, hero slides and video, uses a fast server-rendered Django public site, and provides a dedicated Angular administration application backed by secure Django APIs.
 
 ## Local setup
 
@@ -9,13 +9,17 @@ This branch contains the new database-driven VARTEC website. It preserves the ex
 3. Run migrations: `python manage.py migrate`.
 4. Import existing content and media: `python manage.py seed_vartec --force`.
 5. Create the first administrator: `python manage.py createsuperuser`.
-6. Start the site: `python manage.py runserver`.
-7. Open the public site at `http://127.0.0.1:8000/` and admin at `http://127.0.0.1:8000/admin/`.
+6. Build the Angular CMS: `npm install && npm run build:admin`.
+7. Start the site: `python manage.py runserver`.
+8. Open the public site at `http://127.0.0.1:8000/` and Angular CMS at `http://127.0.0.1:8000/admin/`.
+
+The original Django administration remains available to administrators at `/django-admin/` as a security and maintenance fallback.
 
 Run the seed command once for a new database. Production uses `seed_vartec --if-empty`, which imports the starter content only when no CMS pages exist, so later admin edits and hidden content are never overwritten by a deployment.
 
 ## What administrators can control
 
+- A responsive Angular dashboard with search, content totals, recent enquiries and direct module shortcuts.
 - Every text key and its value for every active language.
 - Languages, flags, ordering, default language and visibility.
 - Homepage hero slides and reusable capability blocks.

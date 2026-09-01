@@ -1,0 +1,43 @@
+<ng-container *ngIf="!isLogin(); else publicRoute">
+  <div class="cms-layout" *ngIf="user$ | async as user; else publicRoute">
+    <aside class="sidebar" [class.is-open]="mobileOpen">
+      <a class="brand" routerLink="/" aria-label="VARTEC CMS dashboard">
+        <span class="brand-mark">V</span>
+        <span><strong>VARTEC</strong><small>Content management</small></span>
+      </a>
+
+      <nav class="side-nav" aria-label="Administration">
+        <a class="dashboard-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+          <span class="nav-mark">DB</span><span>Dashboard</span>
+        </a>
+        <section *ngFor="let group of groups">
+          <p>{{ group.label }}</p>
+          <a *ngFor="let item of group.items" [routerLink]="['/content', item.key]" [class.active]="isActive(item.key)">
+            <span class="nav-mark">{{ item.mark }}</span><span>{{ item.label }}</span>
+          </a>
+        </section>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <a href="/django-admin/auth/user/" class="security-link"><span class="nav-mark">AU</span><span>Users &amp; security</span></a>
+        <div class="user-card">
+          <span class="avatar">{{ initials(user.name) }}</span>
+          <span class="user-copy"><strong>{{ user.name }}</strong><small>Administrator</small></span>
+          <button type="button" title="Sign out" aria-label="Sign out" (click)="signOut()">↗</button>
+        </div>
+      </div>
+    </aside>
+    <div class="sidebar-scrim" [class.is-visible]="mobileOpen" (click)="mobileOpen=false"></div>
+
+    <main class="workspace">
+      <header class="topbar">
+        <button class="mobile-menu" type="button" aria-label="Open navigation" (click)="mobileOpen=true">☰</button>
+        <div><span class="status-dot"></span><span>CMS online</span></div>
+        <a href="/" target="_blank" rel="noopener">View live website <span>↗</span></a>
+      </header>
+      <div class="route-shell"><router-outlet></router-outlet></div>
+    </main>
+  </div>
+</ng-container>
+
+<ng-template #publicRoute><router-outlet></router-outlet></ng-template>

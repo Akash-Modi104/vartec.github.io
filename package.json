@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:admin": "ng build VartecAdmin --configuration production",
+    "start:admin": "ng serve VartecAdmin --configuration development",
     "build:pages": "ng run Vartec:prerender && node scripts/prepare-pages.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
