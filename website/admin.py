@@ -17,6 +17,12 @@ from .models import (
 )
 
 
+admin.site.site_header = "VARTEC Website Administration"
+admin.site.site_title = "VARTEC CMS"
+admin.site.index_title = "Website control centre"
+admin.site.empty_value_display = "—"
+
+
 class TextTranslationInline(admin.StackedInline):
     model = TextTranslation
     extra = 0
