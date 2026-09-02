@@ -111,10 +111,30 @@ class MediaAsset(OrderedActiveModel):
 
 
 class SiteSettings(models.Model):
+    FONT_MONTSERRAT = "montserrat"
+    FONT_HELVETICA = "helvetica"
+    FONT_ARIAL = "arial"
+    FONT_GEORGIA = "georgia"
+    FONT_CHOICES = (
+        (FONT_MONTSERRAT, "Montserrat"),
+        (FONT_HELVETICA, "Helvetica / Segoe UI"),
+        (FONT_ARIAL, "Arial"),
+        (FONT_GEORGIA, "Georgia"),
+    )
+    FONT_STACKS = {
+        FONT_MONTSERRAT: '"Montserrat", "Segoe UI", Arial, sans-serif',
+        FONT_HELVETICA: '"Helvetica Neue", "Segoe UI", Arial, sans-serif',
+        FONT_ARIAL: 'Arial, Helvetica, sans-serif',
+        FONT_GEORGIA: 'Georgia, "Times New Roman", serif',
+    }
+
     brand_name = models.CharField(max_length=80, default="VARTEC")
     logo = models.FileField(upload_to="website/branding/", blank=True)
     legacy_logo_path = models.CharField(max_length=255, default="image/logo.png")
-    primary_colour = models.CharField(max_length=7, default="#FFC107")
+    primary_colour = models.CharField(max_length=7, default="#FFC107", validators=[RegexValidator(r"^#[0-9A-Fa-f]{6}$", "Use a six-digit hex colour such as #FFC107.")], help_text="Primary gold from the VARTEC logo.")
+    secondary_colour = models.CharField(max_length=7, default="#080909", validators=[RegexValidator(r"^#[0-9A-Fa-f]{6}$", "Use a six-digit hex colour such as #080909.")], help_text="Dark logo colour used for headings and panels.")
+    surface_colour = models.CharField(max_length=7, default="#F5F5F2", validators=[RegexValidator(r"^#[0-9A-Fa-f]{6}$", "Use a six-digit hex colour such as #F5F5F2.")], help_text="Light neutral shade used behind content cards.")
+    font_family = models.CharField(max_length=20, choices=FONT_CHOICES, default=FONT_MONTSERRAT, help_text="Typography used across the public website.")
     contact_email = models.EmailField(default="info@vartec.global")
     uk_phone = models.CharField(max_length=40, default="+44 800 772 0316")
     nl_phone = models.CharField(max_length=40, default="+31 6 3834 2809")
@@ -158,6 +178,10 @@ class SiteSettings(models.Model):
     @property
     def video_url(self):
         return self.video.url if self.video else static(self.legacy_video_path)
+
+    @property
+    def font_stack(self):
+        return self.FONT_STACKS.get(self.font_family, self.FONT_STACKS[self.FONT_MONTSERRAT])
 
 
 class HeroSlide(OrderedActiveModel):
@@ -241,12 +265,9 @@ class Page(OrderedActiveModel):
     def __str__(self):
         return f"{self.get_kind_display()}: {self.title_key.default_text}"
 
-    def get_absolute_url(self, language=None):
+    def get_absolute_url(self):
         name = "website:service_detail" if self.kind == self.SERVICE else "website:project_detail"
         kwargs = {"slug": self.slug}
-        if language:
-            name += "_i18n"
-            kwargs["lang_code"] = language.code if hasattr(language, "code") else language
         return reverse(name, kwargs=kwargs)
 
     @property

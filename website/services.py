@@ -1,23 +1,15 @@
 from django.core.mail import send_mail
 from django.db.models import Prefetch
-from django.urls import reverse
 
-from .models import HomeBlock, HomeFeature, Language, Page, PageSection, SectionItem, SiteSettings, TextKey, TextTranslation
+from .models import HomeBlock, HomeFeature, Language, Page, PageSection, SectionItem, SiteSettings, TextKey
 
 
-def active_language(code=None):
-    languages = Language.objects.filter(is_active=True).order_by("sort_order", "name")
-    if code:
-        language = languages.filter(code=code).first()
-        if language:
-            return language
-    return languages.filter(is_default=True).first() or languages.first()
+def active_language():
+    return Language.objects.filter(code="en", is_active=True).first()
 
 
 def text_map(language):
-    translations = TextTranslation.objects.filter(language=language)
-    keys = TextKey.objects.prefetch_related(Prefetch("translations", queryset=translations)).all()
-    return {item.key: item.translated(language) for item in keys}
+    return {item.key: item.default_text for item in TextKey.objects.all()}
 
 
 def localized_pages(kind, language, homepage_only=False, navigation_only=False):
@@ -33,10 +25,10 @@ def localized_pages(kind, language, homepage_only=False, navigation_only=False):
 
 
 def localize_page(page, language, include_sections=True):
-    page.localized_title = page.title_key.translated(language)
-    page.localized_intro = page.intro_key.translated(language) if page.intro_key else ""
-    page.localized_seo_title = page.seo_title_key.translated(language) if page.seo_title_key else f"{page.localized_title} | VARTEC"
-    page.localized_seo_description = page.seo_description_key.translated(language) if page.seo_description_key else page.localized_intro
+    page.localized_title = page.title_key.default_text
+    page.localized_intro = page.intro_key.default_text if page.intro_key else ""
+    page.localized_seo_title = page.seo_title_key.default_text if page.seo_title_key else f"{page.localized_title} | VARTEC"
+    page.localized_seo_description = page.seo_description_key.default_text if page.seo_description_key else page.localized_intro
     if include_sections:
         sections = list(
             page.sections.filter(is_active=True)
@@ -50,11 +42,11 @@ def localize_page(page, language, include_sections=True):
             .order_by("sort_order", "pk")
         )
         for section in sections:
-            section.localized_title = section.title_key.translated(language) if section.title_key else ""
-            section.localized_body = section.body_key.translated(language) if section.body_key else ""
+            section.localized_title = section.title_key.default_text if section.title_key else ""
+            section.localized_body = section.body_key.default_text if section.body_key else ""
             section.localized_items = list(section.items.all())
             for item in section.localized_items:
-                item.localized_text = item.text_key.translated(language)
+                item.localized_text = item.text_key.default_text
         page.localized_sections = sections
     return page
 
@@ -74,24 +66,13 @@ def localized_home_blocks(language):
         .order_by("sort_order", "pk")
     )
     for block in blocks:
-        block.localized_title = block.title_key.translated(language)
-        block.localized_intro = block.intro_key.translated(language) if block.intro_key else ""
+        block.localized_title = block.title_key.default_text
+        block.localized_intro = block.intro_key.default_text if block.intro_key else ""
         block.localized_features = list(block.features.all())
         for feature in block.localized_features:
-            feature.localized_title = feature.title_key.translated(language)
-            feature.localized_body = feature.body_key.translated(language)
+            feature.localized_title = feature.title_key.default_text
+            feature.localized_body = feature.body_key.default_text
     return blocks
-
-
-def language_options(request, current_language, page=None):
-    options = []
-    for language in Language.objects.filter(is_active=True).order_by("sort_order", "name"):
-        if page:
-            url = page.get_absolute_url(language)
-        else:
-            url = reverse("website:home_i18n", kwargs={"lang_code": language.code})
-        options.append({"language": language, "url": url, "absolute_url": request.build_absolute_uri(url), "is_current": language.pk == current_language.pk})
-    return options
 
 
 def send_contact_notification(submission, settings):
@@ -100,7 +81,7 @@ def send_contact_notification(submission, settings):
         return False
     body = (
         f"New website enquiry from {submission.first_name} {submission.last_name}\n\n"
-        f"Email: {submission.email}\nPhone: {submission.phone}\nLanguage: {submission.language_code}\n\n"
+        f"Email: {submission.email}\nPhone: {submission.phone}\n\n"
         f"Message:\n{submission.message}"
     )
     sent = send_mail(
@@ -120,7 +101,6 @@ def base_context(request, language, page=None):
     return {
         "site_settings": settings,
         "language": language,
-        "language_options": language_options(request, language, page),
         "texts": text_map(language),
         "navigation_services": localized_pages(Page.SERVICE, language, navigation_only=True),
         "navigation_projects": localized_pages(Page.PROJECT, language, navigation_only=True),

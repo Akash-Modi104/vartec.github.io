@@ -6,14 +6,12 @@ from .models import (
     HeroSlide,
     HomeBlock,
     HomeFeature,
-    Language,
     MediaAsset,
     Page,
     PageSection,
     SectionItem,
     SiteSettings,
     TextKey,
-    TextTranslation,
 )
 
 
@@ -23,46 +21,15 @@ admin.site.index_title = "Website control centre"
 admin.site.empty_value_display = "—"
 
 
-class TextTranslationInline(admin.StackedInline):
-    model = TextTranslation
-    extra = 0
-    autocomplete_fields = ("language",)
-
-
 @admin.register(TextKey)
 class TextKeyAdmin(admin.ModelAdmin):
-    list_display = ("key", "short_default", "translation_count", "updated_at")
-    search_fields = ("key", "default_text", "translations__value")
+    list_display = ("key", "short_default", "updated_at")
+    search_fields = ("key", "default_text")
     readonly_fields = ("updated_at",)
-    inlines = (TextTranslationInline,)
 
     @admin.display(description="Default text")
     def short_default(self, obj):
         return obj.default_text[:100]
-
-    @admin.display(description="Translations")
-    def translation_count(self, obj):
-        return obj.translations.count()
-
-
-@admin.register(TextTranslation)
-class TextTranslationAdmin(admin.ModelAdmin):
-    list_display = ("text_key", "language", "short_value", "updated_at")
-    list_filter = ("language",)
-    search_fields = ("text_key__key", "value")
-    autocomplete_fields = ("text_key", "language")
-
-    @admin.display(description="Text")
-    def short_value(self, obj):
-        return obj.value[:110]
-
-
-@admin.register(Language)
-class LanguageAdmin(admin.ModelAdmin):
-    list_display = ("native_name", "code", "is_default", "is_active", "sort_order")
-    list_editable = ("is_default", "is_active", "sort_order")
-    search_fields = ("name", "native_name", "code")
-
 
 @admin.register(MediaAsset)
 class MediaAssetAdmin(admin.ModelAdmin):
@@ -82,13 +49,19 @@ class MediaAssetAdmin(admin.ModelAdmin):
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     fieldsets = (
-        ("Brand", {"fields": ("brand_name", "logo", "legacy_logo_path", "primary_colour")}),
-        ("Contact", {"fields": ("contact_email", "uk_phone", "nl_phone", "notification_email")}),
+        ("Appearance", {"fields": ("brand_name", "logo", "logo_preview", "legacy_logo_path", "primary_colour", "secondary_colour", "surface_colour", "font_family")}),
+        ("Contact", {"fields": ("contact_email", "uk_phone", "notification_email")}),
         ("Homepage features", {"fields": ("hero_enabled", "about_enabled", "services_enabled", "projects_enabled", "contact_enabled", "footer_enabled", "video_enabled", "video", "legacy_video_path")}),
         ("SEO", {"fields": ("default_seo_title", "default_seo_description", "organisation_schema_enabled")}),
         ("System", {"fields": ("updated_at",)}),
     )
-    readonly_fields = ("updated_at",)
+    readonly_fields = ("logo_preview", "updated_at")
+
+    @admin.display(description="Logo preview")
+    def logo_preview(self, obj):
+        if obj and obj.logo_url:
+            return format_html('<img src="{}" alt="VARTEC logo preview" style="max-width:180px;max-height:110px;object-fit:contain;border-radius:8px">', obj.logo_url)
+        return "—"
 
     def has_add_permission(self, request):
         return not SiteSettings.objects.exists()
@@ -185,10 +158,10 @@ class SectionItemAdmin(admin.ModelAdmin):
 @admin.register(ContactSubmission)
 class ContactSubmissionAdmin(admin.ModelAdmin):
     list_display = ("full_name", "email", "phone", "status", "email_sent", "created_at")
-    list_filter = ("status", "email_sent", "language_code", "created_at")
+    list_filter = ("status", "email_sent", "created_at")
     list_editable = ("status",)
     search_fields = ("first_name", "last_name", "email", "phone", "message")
-    readonly_fields = ("first_name", "last_name", "email", "phone", "message", "language_code", "email_sent", "created_at", "updated_at")
+    readonly_fields = ("first_name", "last_name", "email", "phone", "message", "email_sent", "created_at", "updated_at")
     date_hierarchy = "created_at"
 
     @admin.display(description="Name")

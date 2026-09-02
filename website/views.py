@@ -7,7 +7,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.static import serve
 
 from .forms import ContactForm
-from .models import HeroSlide, Language, Page, SiteSettings
+from .models import HeroSlide, Page, SiteSettings
 from .services import active_language, base_context, localized_home_blocks, localized_pages, localize_page, send_contact_notification, text_map
 
 
@@ -21,10 +21,8 @@ def cms_shell(request, path=""):
     return response
 
 
-def _language_or_404(lang_code=None):
-    language = active_language(lang_code)
-    if lang_code and (not language or language.code != lang_code):
-        raise Http404("Language is not active")
+def _language_or_404():
+    language = active_language()
     if not language:
         raise Http404("No active language is configured")
     return language
@@ -51,14 +49,14 @@ def _redirect_with_anchor(request):
 
 
 @require_http_methods(["GET", "POST"])
-def home(request, lang_code=None):
-    language = _language_or_404(lang_code)
+def home(request):
+    language = _language_or_404()
     if _process_contact(request, language):
         return _redirect_with_anchor(request)
     context = base_context(request, language)
     slides = list(HeroSlide.objects.filter(is_active=True).select_related("media", "alt_text_key").order_by("sort_order", "pk"))
     for slide in slides:
-        slide.localized_alt = slide.alt_text_key.translated(language) if slide.alt_text_key else slide.title
+        slide.localized_alt = slide.alt_text_key.default_text if slide.alt_text_key else slide.title
     context.update(
         {
             "hero_slides": slides,
@@ -67,19 +65,15 @@ def home(request, lang_code=None):
             "home_blocks": localized_home_blocks(language),
             "seo_title": context["site_settings"].default_seo_title,
             "seo_description": context["site_settings"].default_seo_description,
-            "canonical_url": request.build_absolute_uri(
-                reverse("website:home_i18n", kwargs={"lang_code": language.code})
-                if lang_code
-                else reverse("website:home")
-            ),
+            "canonical_url": request.build_absolute_uri(reverse("website:home")),
         }
     )
     return render(request, "website/home.html", context)
 
 
 @require_http_methods(["GET", "POST"])
-def page_detail(request, kind, slug, lang_code=None):
-    language = _language_or_404(lang_code)
+def page_detail(request, kind, slug):
+    language = _language_or_404()
     page = get_object_or_404(Page.objects.select_related("title_key", "intro_key", "seo_title_key", "seo_description_key", "card_media"), kind=kind, slug=slug, is_active=True)
     page = localize_page(page, language)
     if _process_contact(request, language):
@@ -90,7 +84,7 @@ def page_detail(request, kind, slug, lang_code=None):
             "page": page,
             "seo_title": page.localized_seo_title,
             "seo_description": page.localized_seo_description,
-            "canonical_url": request.build_absolute_uri(page.get_absolute_url(language if lang_code else None)),
+            "canonical_url": request.build_absolute_uri(page.get_absolute_url()),
         }
     )
     return render(request, "website/page_detail.html", context)
@@ -103,14 +97,9 @@ def robots(request):
 
 def sitemap(request):
     pages = Page.objects.filter(is_active=True).select_related("title_key")
-    languages = list(Language.objects.filter(is_active=True))
     urls = [{"location": request.build_absolute_uri(reverse("website:home")), "modified": None}]
     for page in pages:
         urls.append({"location": request.build_absolute_uri(page.get_absolute_url()), "modified": page.updated_at})
-    for language in languages:
-        urls.append({"location": request.build_absolute_uri(reverse("website:home_i18n", kwargs={"lang_code": language.code})), "modified": None})
-        for page in pages:
-            urls.append({"location": request.build_absolute_uri(page.get_absolute_url(language)), "modified": page.updated_at})
     return render(request, "website/sitemap.xml", {"urls": urls}, content_type="application/xml")
 
 

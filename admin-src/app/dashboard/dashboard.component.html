@@ -1,5 +1,5 @@
 <div class="page-heading">
-  <div><p class="eyebrow">Control centre</p><h1>Good to see you.</h1><p>Everything on the VARTEC website can be managed from here.</p></div>
+  <div><p class="eyebrow">Control centre</p><h1>Website overview</h1><p>Manage the English website, visual appearance, media and enquiries from one place.</p></div>
   <span class="date-chip">Live content workspace</span>
 </div>
 
@@ -9,7 +9,7 @@
 <ng-container *ngIf="data as dashboard">
   <section class="stat-grid" aria-label="Website summary">
     <article><span class="stat-mark">PG</span><div><strong>{{ dashboard.summary.activePages }}</strong><small>Published pages</small></div><em>{{ dashboard.summary.pages }} total</em></article>
-    <article><span class="stat-mark">LN</span><div><strong>{{ dashboard.summary.languages }}</strong><small>Active languages</small></div><em>Localised</em></article>
+    <article><span class="stat-mark">SC</span><div><strong>{{ dashboard.summary.sections }}</strong><small>Visible sections</small></div><em>Page content</em></article>
     <article><span class="stat-mark">MD</span><div><strong>{{ dashboard.summary.media }}</strong><small>Media assets</small></div><em>Images &amp; video</em></article>
     <article class="accent-stat"><span class="stat-mark">EN</span><div><strong>{{ dashboard.summary.newEnquiries }}</strong><small>New enquiries</small></div><a routerLink="/content/enquiries">Open inbox →</a></article>
   </section>

@@ -15,9 +15,15 @@
 
   <div class="table-wrap" *ngIf="!loading && items.length">
     <table>
-      <thead><tr><th *ngFor="let field of fields">{{ field.label }}</th><th class="actions-column"><span class="sr-only">Actions</span></th></tr></thead>
+      <thead><tr><th *ngIf="hasPreviews()">Preview</th><th *ngFor="let field of fields">{{ field.label }}</th><th class="actions-column"><span class="sr-only">Actions</span></th></tr></thead>
       <tbody>
         <tr *ngFor="let item of items" (click)="edit(item)" tabindex="0" (keyup.enter)="edit(item)">
+          <td *ngIf="hasPreviews()" data-label="Preview" class="preview-cell">
+            <img *ngIf="item.preview && item.previewType === 'image'" class="table-preview" [src]="item.preview" [alt]="item.display">
+            <span *ngIf="item.preview && item.previewType === 'video'" class="media-placeholder">VIDEO</span>
+            <span *ngIf="item.preview && item.previewType === 'document'" class="media-placeholder">FILE</span>
+            <span *ngIf="!item.preview">—</span>
+          </td>
           <td *ngFor="let field of fields" [attr.data-label]="field.label">
             <button *ngIf="isActive(field); else normalCell" class="toggle" type="button" [class.on]="item.fields[field.name]" [attr.aria-label]="item.fields[field.name] ? 'Hide item' : 'Show item'" (click)="toggle(item, $event)"><span></span><em>{{ item.fields[field.name] ? 'Visible' : 'Hidden' }}</em></button>
             <ng-template #normalCell><span [class.type-badge]="isStatus(field)" [attr.data-value]="item.fields[field.name]">{{ item.cells[field.name] }}</span></ng-template>

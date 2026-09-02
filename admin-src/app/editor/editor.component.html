@@ -27,6 +27,7 @@
           <input *ngSwitchCase="'date'" type="date" [formControlName]="field.name">
           <input *ngSwitchCase="'number'" type="number" min="0" [formControlName]="field.name">
           <input *ngSwitchCase="'email'" type="email" [formControlName]="field.name">
+          <input *ngSwitchCase="'color'" type="color" [formControlName]="field.name">
           <input *ngSwitchDefault type="text" [formControlName]="field.name">
         </ng-container>
         <small *ngIf="field.help">{{ field.help }}</small>
@@ -36,9 +37,17 @@
     </div>
   </section>
 
-  <aside class="form-side" *ngIf="booleanFields().length">
-    <section class="form-card visibility-card">
-      <div class="form-card-heading"><span>02</span><div><h2>Visibility &amp; options</h2><p>Control how this content behaves.</p></div></div>
+  <aside class="form-side" *ngIf="booleanFields().length || previewUrl()">
+    <section class="form-card preview-card" *ngIf="previewUrl()">
+      <div class="form-card-heading"><span>02</span><div><h2>Media preview</h2><p>Check the current or newly selected file.</p></div></div>
+      <div class="editor-preview">
+        <img *ngIf="previewType() === 'image'" [src]="previewUrl()" [alt]="item?.display || 'Selected image preview'">
+        <video *ngIf="previewType() === 'video'" [src]="previewUrl()" controls preload="metadata"></video>
+        <a *ngIf="previewType() === 'document'" [href]="previewUrl()" target="_blank" rel="noopener">Open document ↗</a>
+      </div>
+    </section>
+    <section class="form-card visibility-card" *ngIf="booleanFields().length">
+      <div class="form-card-heading"><span>{{ previewUrl() ? '03' : '02' }}</span><div><h2>Visibility &amp; options</h2><p>Control how this content behaves.</p></div></div>
       <label class="switch-row" *ngFor="let field of booleanFields()">
         <span><strong>{{ field.label }}</strong><small>{{ field.help || 'Enable or disable this option.' }}</small></span>
         <input type="checkbox" [formControlName]="field.name"><i></i>

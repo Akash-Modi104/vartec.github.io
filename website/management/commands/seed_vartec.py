@@ -66,7 +66,7 @@ EXTRA_TEXT = {
 
 
 class Command(BaseCommand):
-    help = "Seed VARTEC's existing English/Dutch content, media, services and projects into the CMS."
+    help = "Seed VARTEC's existing English content, media, services and projects into the CMS."
 
     def add_arguments(self, parser):
         parser.add_argument("--force", action="store_true", help="Replace sections on the seeded VARTEC pages.")
@@ -89,16 +89,16 @@ class Command(BaseCommand):
 
     def _load_translations(self):
         output = {}
-        for code in ("en", "nl"):
+        for code in ("en",):
             path = settings.BASE_DIR / "src" / "assets" / "i18n" / f"{code}.json"
             output[code] = json.loads(path.read_text(encoding="utf-8"))
             output[code].update(EXTRA_TEXT[code])
         return output
 
     def _seed_languages(self):
+        Language.objects.exclude(code="en").update(is_active=False, is_default=False)
         definitions = {
             "en": {"name": "English", "native_name": "English", "is_default": True, "sort_order": 0, "legacy_flag_path": "image/language/english.png"},
-            "nl": {"name": "Dutch", "native_name": "Nederlands", "is_default": False, "sort_order": 1, "legacy_flag_path": "image/language/netherlands.png"},
         }
         return {code: Language.objects.update_or_create(code=code, defaults={**values, "is_active": True})[0] for code, values in definitions.items()}
 

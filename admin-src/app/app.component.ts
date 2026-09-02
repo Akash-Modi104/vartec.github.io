@@ -12,10 +12,9 @@ export class AppComponent implements OnInit {
   currentUrl = this.router.url;
   readonly user$ = this.api.user$;
   readonly groups: NavGroup[] = [
-    { label: 'Website', items: [{ key: 'pages', label: 'Pages', mark: 'PG' }, { key: 'sections', label: 'Page sections', mark: 'SC' }, { key: 'section-items', label: 'Section items', mark: 'IT' }] },
+    { label: 'Content', items: [{ key: 'pages', label: 'Pages', mark: 'PG' }, { key: 'sections', label: 'Page sections', mark: 'SC' }, { key: 'text', label: 'Website text', mark: 'TX' }] },
     { label: 'Homepage', items: [{ key: 'hero-slides', label: 'Hero slides', mark: 'HS' }, { key: 'home-blocks', label: 'Content blocks', mark: 'BL' }, { key: 'home-features', label: 'Feature cards', mark: 'FC' }] },
-    { label: 'Languages', items: [{ key: 'text', label: 'Text library', mark: 'TX' }, { key: 'translations', label: 'Translations', mark: 'TR' }, { key: 'languages', label: 'Languages', mark: 'LN' }] },
-    { label: 'Manage', items: [{ key: 'media', label: 'Media library', mark: 'MD' }, { key: 'enquiries', label: 'Enquiries', mark: 'EN' }, { key: 'settings', label: 'Site settings', mark: 'ST' }] }
+    { label: 'Manage', items: [{ key: 'media', label: 'Media library', mark: 'MD' }, { key: 'enquiries', label: 'Enquiries', mark: 'EN' }, { key: 'settings', label: 'Appearance', mark: 'AP' }] }
   ];
 
   constructor(public api: CmsApiService, private router: Router) {

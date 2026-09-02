@@ -34,7 +34,7 @@
 {% if site_settings.services_enabled %}
 <section class="section services-section" id="services">
   <div class="shell"><div class="section-heading"><p class="eyebrow">{{ texts.SERVICES }}</p><h2>{{ texts.OUR_SERVICES }}</h2></div>
-    <div class="card-grid">{% for item in services %}<a class="media-card" href="{% if language.is_default %}{{ item.get_absolute_url }}{% else %}{% url 'website:service_detail_i18n' language.code item.slug %}{% endif %}">{% if item.card_image_url %}<img loading="lazy" decoding="async" src="{{ item.card_image_url }}" alt="">{% endif %}<div><p>{{ texts.SERVICES }}</p><h3>{{ item.localized_title }}</h3><span>{{ texts.EXPLORE_SERVICE }} →</span></div></a>{% endfor %}</div>
+    <div class="card-grid">{% for item in services %}<a class="media-card" href="{{ item.get_absolute_url }}">{% if item.card_image_url %}<img loading="lazy" decoding="async" src="{{ item.card_image_url }}" alt="">{% endif %}<div><p>{{ texts.SERVICES }}</p><h3>{{ item.localized_title }}</h3><span>{{ texts.EXPLORE_SERVICE }} →</span></div></a>{% endfor %}</div>
   </div>
 </section>
 {% endif %}
@@ -42,7 +42,7 @@
 {% if site_settings.projects_enabled %}
 <section class="section projects-section" id="projects">
   <div class="shell"><div class="section-heading"><p class="eyebrow eyebrow-light">{{ texts.PROJECTS }}</p><h2>{{ texts.SELECTED_PROJECTS }}</h2></div>
-    <div class="project-grid">{% for item in projects %}<a class="project-card" href="{% if language.is_default %}{{ item.get_absolute_url }}{% else %}{% url 'website:project_detail_i18n' language.code item.slug %}{% endif %}">{% if item.card_image_url %}<img loading="lazy" decoding="async" src="{{ item.card_image_url }}" alt="">{% endif %}<div><span>{{ forloop.counter|stringformat:'02d' }}</span><h3>{{ item.localized_title }}</h3><p>{{ item.localized_intro|truncatewords:24 }}</p></div></a>{% endfor %}</div>
+    <div class="project-grid">{% for item in projects %}<a class="project-card" href="{{ item.get_absolute_url }}">{% if item.card_image_url %}<img loading="lazy" decoding="async" src="{{ item.card_image_url }}" alt="">{% endif %}<div><span>{{ forloop.counter|stringformat:'02d' }}</span><h3>{{ item.localized_title }}</h3><p>{{ item.localized_intro|truncatewords:24 }}</p></div></a>{% endfor %}</div>
   </div>
 </section>
 {% endif %}

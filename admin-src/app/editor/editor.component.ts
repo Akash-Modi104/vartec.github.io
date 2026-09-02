@@ -18,6 +18,8 @@ export class EditorComponent implements OnInit {
   saving = false;
   error = '';
   fieldErrors: Record<string, string[]> = {};
+  selectedPreview = '';
+  selectedPreviewType = '';
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private api: CmsApiService) {}
   ngOnInit(): void {
@@ -52,8 +54,18 @@ export class EditorComponent implements OnInit {
   }
   pickFile(field: CmsField, event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files?.length) this.files[field.name] = input.files[0];
+    if (input.files?.length) {
+      const file = input.files[0];
+      this.files[field.name] = file;
+      if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+        if (this.selectedPreview) URL.revokeObjectURL(this.selectedPreview);
+        this.selectedPreview = URL.createObjectURL(file);
+        this.selectedPreviewType = file.type.startsWith('video/') ? 'video' : 'image';
+      }
+    }
   }
+  previewUrl(): string { return this.selectedPreview || this.item?.preview || ''; }
+  previewType(): string { return this.selectedPreviewType || this.item?.previewType || ''; }
   cancel(): void { this.router.navigate(['/content', this.resourceKey]); }
   save(): void {
     if (this.form.invalid || this.saving) { this.form.markAllAsTouched(); return; }

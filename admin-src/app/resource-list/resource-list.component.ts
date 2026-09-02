@@ -49,5 +49,6 @@ export class ResourceListComponent implements OnInit, OnDestroy {
   isStatus(field: ListField): boolean { return ['status', 'kind', 'background', 'item_type'].includes(field.name); }
   isActive(field: ListField): boolean { return field.name === 'is_active'; }
   hasActive(): boolean { return this.fields.some(field => field.name === 'is_active'); }
+  hasPreviews(): boolean { return this.items.some(item => Boolean(item.preview)); }
   page(direction: number): void { if (this.pagination) this.load(this.pagination.page + direction); }
 }

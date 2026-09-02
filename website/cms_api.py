@@ -13,7 +13,7 @@ from django.utils.dateparse import parse_date, parse_datetime
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
-from .models import ContactSubmission, HeroSlide, HomeBlock, HomeFeature, Language, MediaAsset, Page, PageSection, SectionItem, SiteSettings, TextKey, TextTranslation
+from .models import ContactSubmission, HeroSlide, HomeBlock, HomeFeature, MediaAsset, Page, PageSection, SectionItem, SiteSettings, TextKey
 
 
 RESOURCE_SPECS = {
@@ -23,12 +23,10 @@ RESOURCE_SPECS = {
     "hero-slides": {"model": HeroSlide, "label": "Hero slide", "plural": "Hero slides", "group": "Homepage", "description": "Homepage hero imagery, alternative text and display order.", "fields": ("title", "media", "image", "legacy_image_path", "alt_text_key", "is_active", "sort_order"), "list_fields": ("title", "media", "is_active", "sort_order"), "search_fields": ("title",)},
     "home-blocks": {"model": HomeBlock, "label": "Homepage block", "plural": "Homepage blocks", "group": "Homepage", "description": "Homepage content blocks, themes and their order.", "fields": ("admin_name", "title_key", "intro_key", "background", "is_active", "sort_order"), "list_fields": ("admin_name", "title_key", "background", "is_active", "sort_order"), "search_fields": ("admin_name", "title_key__default_text")},
     "home-features": {"model": HomeFeature, "label": "Homepage feature", "plural": "Homepage features", "group": "Homepage", "description": "Feature cards belonging to homepage content blocks.", "fields": ("block", "title_key", "body_key", "media", "is_active", "sort_order"), "list_fields": ("block", "title_key", "media", "is_active", "sort_order"), "search_fields": ("block__admin_name", "title_key__default_text")},
-    "text": {"model": TextKey, "label": "Text entry", "plural": "Text library", "group": "Languages", "description": "Reusable website copy and labels in the default language.", "fields": ("key", "default_text", "description"), "list_fields": ("key", "default_text", "description", "updated_at"), "search_fields": ("key", "default_text", "description")},
-    "translations": {"model": TextTranslation, "label": "Translation", "plural": "Translations", "group": "Languages", "description": "Translated values connected to the central text library.", "fields": ("text_key", "language", "value"), "list_fields": ("text_key", "language", "value", "updated_at"), "search_fields": ("text_key__key", "value", "language__code")},
-    "languages": {"model": Language, "label": "Language", "plural": "Languages", "group": "Languages", "description": "Add, remove, hide and reorder website languages.", "fields": ("code", "name", "native_name", "is_default", "flag", "legacy_flag_path", "is_active", "sort_order"), "list_fields": ("native_name", "code", "is_default", "is_active", "sort_order"), "search_fields": ("code", "name", "native_name")},
+    "text": {"model": TextKey, "label": "Text entry", "plural": "Website text", "group": "Content", "description": "Edit the English wording used throughout the website.", "fields": ("key", "default_text", "description"), "list_fields": ("key", "default_text", "description", "updated_at"), "search_fields": ("key", "default_text", "description")},
     "media": {"model": MediaAsset, "label": "Media asset", "plural": "Media library", "group": "Assets", "description": "Upload and organise images, videos and documents.", "fields": ("title", "kind", "file", "legacy_path", "alt_text_key", "is_active", "sort_order"), "list_fields": ("title", "kind", "file", "is_active", "sort_order", "created_at"), "search_fields": ("title", "legacy_path", "alt_text_key__default_text")},
-    "settings": {"model": SiteSettings, "label": "Site settings", "plural": "Site settings", "group": "Configuration", "description": "Brand, contact, feature visibility and default SEO settings.", "fields": ("brand_name", "logo", "legacy_logo_path", "primary_colour", "contact_email", "uk_phone", "nl_phone", "notification_email", "hero_enabled", "about_enabled", "services_enabled", "projects_enabled", "contact_enabled", "footer_enabled", "video_enabled", "video", "legacy_video_path", "default_seo_title", "default_seo_description", "organisation_schema_enabled"), "list_fields": ("brand_name", "contact_email", "primary_colour", "updated_at"), "search_fields": ("brand_name", "contact_email"), "singleton": True},
-    "enquiries": {"model": ContactSubmission, "label": "Enquiry", "plural": "Enquiries", "group": "Inbox", "description": "Customer messages, follow-up status and private internal notes.", "fields": ("first_name", "last_name", "email", "phone", "message", "language_code", "status", "email_sent", "internal_notes"), "readonly": ("first_name", "last_name", "email", "phone", "message", "language_code", "email_sent"), "list_fields": ("first_name", "last_name", "email", "status", "language_code", "created_at"), "search_fields": ("first_name", "last_name", "email", "phone", "message")},
+    "settings": {"model": SiteSettings, "label": "Appearance & settings", "plural": "Appearance & settings", "group": "Manage", "description": "Choose the logo colours, website font, contact details, visibility and SEO defaults.", "fields": ("brand_name", "logo", "legacy_logo_path", "primary_colour", "secondary_colour", "surface_colour", "font_family", "contact_email", "uk_phone", "notification_email", "hero_enabled", "about_enabled", "services_enabled", "projects_enabled", "contact_enabled", "footer_enabled", "video_enabled", "video", "legacy_video_path", "default_seo_title", "default_seo_description", "organisation_schema_enabled"), "list_fields": ("brand_name", "font_family", "primary_colour", "updated_at"), "search_fields": ("brand_name", "contact_email"), "singleton": True},
+    "enquiries": {"model": ContactSubmission, "label": "Enquiry", "plural": "Enquiries", "group": "Inbox", "description": "Customer messages, follow-up status and private internal notes.", "fields": ("first_name", "last_name", "email", "phone", "message", "status", "email_sent", "internal_notes"), "readonly": ("first_name", "last_name", "email", "phone", "message", "email_sent"), "list_fields": ("first_name", "last_name", "email", "status", "created_at"), "search_fields": ("first_name", "last_name", "email", "phone", "message")},
 }
 
 
@@ -65,6 +63,7 @@ def _field_type(field):
     if isinstance(field, models.DateField): return "date"
     if isinstance(field, models.EmailField): return "email"
     if isinstance(field, models.TextField): return "textarea"
+    if field.name.endswith("colour"): return "color"
     if field.choices: return "select"
     return "text"
 
@@ -103,13 +102,35 @@ def _display_value(obj, field):
     return str(value) if value not in (None, "") else "—"
 
 
+def _preview_details(obj):
+    if isinstance(obj, MediaAsset):
+        return obj.url, obj.kind
+    if isinstance(obj, Page):
+        return obj.card_image_url, MediaAsset.IMAGE
+    if isinstance(obj, PageSection):
+        if obj.media:
+            return obj.media.url, obj.media.kind
+        if obj.media_url:
+            return obj.media_url, MediaAsset.IMAGE
+        if obj.video_url:
+            return obj.video_url, MediaAsset.VIDEO
+    if isinstance(obj, HeroSlide):
+        return obj.image_url, MediaAsset.IMAGE
+    if isinstance(obj, HomeFeature) and obj.media:
+        return obj.media.url, obj.media.kind
+    if isinstance(obj, SiteSettings):
+        return obj.logo_url, MediaAsset.IMAGE
+    return "", ""
+
+
 def _serialize_item(obj, spec):
     fields, cells = {}, {}
     for field_name in set(spec["fields"]) | set(spec["list_fields"]):
         field = obj._meta.get_field(field_name)
         fields[field_name] = _raw_value(obj, field)
         cells[field_name] = _display_value(obj, field)
-    return {"id": obj.pk, "display": str(obj), "fields": fields, "cells": cells}
+    preview, preview_type = _preview_details(obj)
+    return {"id": obj.pk, "display": str(obj), "fields": fields, "cells": cells, "preview": preview, "previewType": preview_type}
 
 
 def _coerce_value(field, value):
@@ -184,7 +205,7 @@ def dashboard_view(request):
         if any(field.name == "is_active" for field in spec["model"]._meta.fields): item["activeCount"] = queryset.filter(is_active=True).count()
         resources.append(item)
     recent = ContactSubmission.objects.order_by("-created_at")[:6]
-    return JsonResponse({"resources": resources, "summary": {"pages": Page.objects.count(), "activePages": Page.objects.filter(is_active=True).count(), "languages": Language.objects.filter(is_active=True).count(), "media": MediaAsset.objects.count(), "newEnquiries": ContactSubmission.objects.filter(status=ContactSubmission.NEW).count()}, "recentEnquiries": [_serialize_item(item, RESOURCE_SPECS["enquiries"]) for item in recent]})
+    return JsonResponse({"resources": resources, "summary": {"pages": Page.objects.count(), "activePages": Page.objects.filter(is_active=True).count(), "sections": PageSection.objects.filter(is_active=True).count(), "media": MediaAsset.objects.count(), "newEnquiries": ContactSubmission.objects.filter(status=ContactSubmission.NEW).count()}, "recentEnquiries": [_serialize_item(item, RESOURCE_SPECS["enquiries"]) for item in recent]})
 
 
 @require_http_methods(["GET", "POST"])
@@ -202,6 +223,8 @@ def resource_list(request, resource):
         filters = Q()
         for field_name in spec["search_fields"]: filters |= Q(**{f"{field_name}__icontains": query})
         queryset = queryset.filter(filters).distinct()
+    if not queryset.ordered:
+        queryset = queryset.order_by("pk")
     page_number = max(int(request.GET.get("page", "1") or 1), 1)
     page_size = min(max(int(request.GET.get("pageSize", "50") or 50), 1), 200)
     paginator = Paginator(queryset, page_size)

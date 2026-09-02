@@ -3,7 +3,7 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import ContactSubmission, Language, Page, SiteSettings, TextKey
+from .models import ContactSubmission, Language, MediaAsset, Page, SiteSettings
 
 
 class CmsTestCase(TestCase):
@@ -18,17 +18,9 @@ class CmsTestCase(TestCase):
         self.assertContains(response, "From design through operation and maintenance")
         self.assertContains(response, "finalmerge.mp4")
 
-    def test_dutch_site_uses_database_translation(self):
-        response = self.client.get(reverse("website:home_i18n", kwargs={"lang_code": "nl"}))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Over Ons")
-        self.assertContains(response, "Van ontwerp tot beheer en onderhoud")
-
-    def test_new_language_falls_back_to_default_text(self):
-        Language.objects.create(code="fr", name="French", native_name="Français", is_active=True, sort_order=3)
-        response = self.client.get(reverse("website:home_i18n", kwargs={"lang_code": "fr"}))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, TextKey.objects.get(key="ABOUT_US").default_text)
+    def test_only_english_is_active_and_language_routes_are_removed(self):
+        self.assertEqual(list(Language.objects.filter(is_active=True).values_list("code", flat=True)), ["en"])
+        self.assertEqual(self.client.get("/nl/").status_code, 404)
 
     def test_hidden_project_returns_404(self):
         page = Page.objects.get(kind=Page.PROJECT, slug="solar-parks")
@@ -61,11 +53,11 @@ class CmsTestCase(TestCase):
         self.assertEqual(ContactSubmission.objects.count(), 1)
         self.assertEqual(ContactSubmission.objects.get().language_code, "en")
 
-    def test_sitemap_contains_active_pages_and_languages(self):
+    def test_sitemap_contains_only_canonical_english_pages(self):
         response = self.client.get(reverse("website:sitemap"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "/projects/solar-parks/")
-        self.assertContains(response, "/nl/projects/solar-parks/")
+        self.assertNotContains(response, "/nl/")
 
     def test_admin_is_available_to_superuser(self):
         user = get_user_model().objects.create_superuser("admin", "admin@example.com", "test-password")
@@ -101,6 +93,31 @@ class CmsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         page.refresh_from_db()
         self.assertFalse(page.is_active)
+
+    def test_cms_is_english_only_and_exposes_media_previews(self):
+        user = get_user_model().objects.create_superuser("preview-admin", "preview@example.com", "test-password")
+        self.client.force_login(user)
+        dashboard = self.client.get(reverse("cms-dashboard")).json()
+        keys = {item["key"] for item in dashboard["resources"]}
+        self.assertNotIn("languages", keys)
+        self.assertNotIn("translations", keys)
+        self.assertIn("sections", dashboard["summary"])
+        media = MediaAsset.objects.filter(kind=MediaAsset.IMAGE).exclude(legacy_path="").first()
+        response = self.client.get(reverse("cms-resource-detail", kwargs={"resource": "media", "pk": media.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["item"]["previewType"], "image")
+        self.assertTrue(response.json()["item"]["preview"])
+
+    def test_cms_appearance_exposes_colours_and_font(self):
+        user = get_user_model().objects.create_superuser("appearance-admin", "appearance@example.com", "test-password")
+        self.client.force_login(user)
+        settings = SiteSettings.load()
+        response = self.client.get(reverse("cms-resource-detail", kwargs={"resource": "settings", "pk": settings.pk}))
+        schema = {field["name"]: field for field in response.json()["schema"]}
+        self.assertEqual(schema["primary_colour"]["type"], "color")
+        self.assertEqual(schema["secondary_colour"]["type"], "color")
+        self.assertEqual(schema["surface_colour"]["type"], "color")
+        self.assertEqual(schema["font_family"]["type"], "select")
 
     def test_site_settings_is_singleton(self):
         self.assertEqual(SiteSettings.load().pk, 1)
