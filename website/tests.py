@@ -17,6 +17,12 @@ class CmsTestCase(TestCase):
         self.assertContains(response, "VARTEC")
         self.assertContains(response, "From design through operation and maintenance")
         self.assertContains(response, "finalmerge.mp4")
+        self.assertContains(response, "Solar energy projects, engineered for performance.")
+        self.assertContains(response, "data-autoplay-video")
+        self.assertContains(response, "autoplay")
+        self.assertContains(response, 'rel="preload" as="image"')
+        self.assertContains(response, "data-chatbot")
+        self.assertContains(response, "VARTEC Assistant")
 
     def test_only_english_is_active_and_language_routes_are_removed(self):
         self.assertEqual(list(Language.objects.filter(is_active=True).values_list("code", flat=True)), ["en"])
@@ -118,6 +124,14 @@ class CmsTestCase(TestCase):
         self.assertEqual(schema["secondary_colour"]["type"], "color")
         self.assertEqual(schema["surface_colour"]["type"], "color")
         self.assertEqual(schema["font_family"]["type"], "select")
+        self.assertEqual(schema["chatbot_enabled"]["type"], "boolean")
+        self.assertEqual(schema["chatbot_title"]["type"], "text")
+
+    def test_chatbot_can_be_hidden_from_site_settings(self):
+        settings = SiteSettings.load()
+        settings.chatbot_enabled = False
+        settings.save(update_fields=("chatbot_enabled", "updated_at"))
+        self.assertNotContains(self.client.get(reverse("website:home")), "data-chatbot")
 
     def test_site_settings_is_singleton(self):
         self.assertEqual(SiteSettings.load().pk, 1)

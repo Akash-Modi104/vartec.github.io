@@ -51,6 +51,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Appearance", {"fields": ("brand_name", "logo", "logo_preview", "legacy_logo_path", "primary_colour", "secondary_colour", "surface_colour", "font_family")}),
         ("Contact", {"fields": ("contact_email", "uk_phone", "notification_email")}),
+        ("Website assistant", {"fields": ("chatbot_enabled", "chatbot_title", "chatbot_welcome")}),
         ("Homepage features", {"fields": ("hero_enabled", "about_enabled", "services_enabled", "projects_enabled", "contact_enabled", "footer_enabled", "video_enabled", "video", "legacy_video_path")}),
         ("SEO", {"fields": ("default_seo_title", "default_seo_description", "organisation_schema_enabled")}),
         ("System", {"fields": ("updated_at",)}),

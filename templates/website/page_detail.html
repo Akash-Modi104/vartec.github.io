@@ -1,6 +1,6 @@
 {% extends 'website/base.html' %}
 {% block content %}
-<section class="page-hero"><div class="shell"><p class="eyebrow">{% if page.kind == 'service' %}{{ texts.SERVICES }}{% else %}{{ texts.PROJECTS }}{% endif %}</p><h1>{{ page.localized_title }}</h1>{% if page.localized_intro %}<p>{{ page.localized_intro }}</p>{% endif %}</div></section>
+<section class="page-hero"><div class="shell"><a class="back-link" href="{% url 'website:home' %}#{% if page.kind == 'service' %}services{% else %}projects{% endif %}">← All {% if page.kind == 'service' %}services{% else %}projects{% endif %}</a><p class="eyebrow">{% if page.kind == 'service' %}{{ texts.SERVICES }}{% else %}{{ texts.PROJECTS }}{% endif %}</p><h1>{{ page.localized_title }}</h1>{% if page.localized_intro %}<p>{{ page.localized_intro }}</p>{% endif %}<a class="button" href="#contact">Discuss your project</a></div></section>
 {% for section in page.localized_sections %}
 <section class="detail-section theme-{{ section.background }}">
   <div class="shell detail-grid layout-{{ section.layout }}">

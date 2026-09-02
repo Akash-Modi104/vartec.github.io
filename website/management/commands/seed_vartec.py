@@ -22,6 +22,8 @@ from website.models import (
 EXTRA_TEXT = {
     "en": {
         "HERO_EYEBROW": "Solar engineering across the UK and Europe",
+        "HERO_TITLE": "Solar energy projects, engineered for performance.",
+        "HERO_SUMMARY": "From early design and procurement through construction, commissioning and long-term maintenance.",
         "LIFECYCLE_EYEBROW": "VARTEC capabilities",
         "LIFECYCLE_TITLE": "From design through operation and maintenance",
         "LIFECYCLE_DESC": "A clear view of the services already available from VARTEC across the solar project lifecycle.",

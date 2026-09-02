@@ -151,6 +151,9 @@ class SiteSettings(models.Model):
     default_seo_title = models.CharField(max_length=180, default="Solar EPC, Battery Storage & O&M in the UK | VARTEC")
     default_seo_description = models.TextField(default="VARTEC delivers solar EPC, battery storage, carports, floating solar and operations and maintenance services across the UK and Europe.")
     organisation_schema_enabled = models.BooleanField(default=True)
+    chatbot_enabled = models.BooleanField(default=True, help_text="Show the website help chat in the bottom corner.")
+    chatbot_title = models.CharField(max_length=80, default="VARTEC Assistant")
+    chatbot_welcome = models.CharField(max_length=240, default="Hello. How can we help with your solar energy project?")
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
