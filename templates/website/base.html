@@ -24,7 +24,7 @@
     @font-face{font-family:"Montserrat";font-style:normal;font-display:swap;font-weight:600;src:url("{% static 'cms/montserrat-latin-600-normal.7acbd96c2196810f.woff2' %}") format("woff2")}
     @font-face{font-family:"Montserrat";font-style:normal;font-display:swap;font-weight:700;src:url("{% static 'cms/montserrat-latin-700-normal.975511c430c02117.woff2' %}") format("woff2")}
     @font-face{font-family:"Montserrat";font-style:normal;font-display:swap;font-weight:800;src:url("{% static 'cms/montserrat-latin-800-normal.388abfc2eb7582ea.woff2' %}") format("woff2")}
-    :root{--gold:{{ site_settings.primary_colour }};--black:{{ site_settings.secondary_colour }};--ink:{{ site_settings.secondary_colour }};--light:{{ site_settings.surface_colour }};--font-sans:{{ site_settings.font_stack|safe }};--font-display:{{ site_settings.font_stack|safe }}}
+    {% with palette=site_settings.accessible_palette %}:root{--gold:{{ palette.primary }};--black:{{ palette.dark }};--ink:{{ palette.dark }};--light:{{ palette.surface }};--font-sans:{{ site_settings.font_stack|safe }};--font-display:{{ site_settings.font_stack|safe }}}{% endwith %}
   </style>
   {% if site_settings.organisation_schema_enabled %}
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"{{ site_settings.brand_name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}/","email":"{{ site_settings.contact_email|escapejs }}","telephone":"{{ site_settings.uk_phone|escapejs }}","areaServed":["GB"]}</script>
@@ -79,7 +79,7 @@
 
   {% if site_settings.chatbot_enabled %}
   <aside class="chatbot" data-chatbot>
-    <section class="chatbot-panel" id="vartec-chat" aria-label="{{ site_settings.chatbot_title }}" aria-hidden="true">
+    <section class="chatbot-panel" id="vartec-chat" aria-label="{{ site_settings.chatbot_title }}" aria-hidden="true" inert>
       <header><span class="chatbot-mark">V</span><div><strong>{{ site_settings.chatbot_title }}</strong><small><i></i> Online help</small></div><button type="button" data-chat-close aria-label="Close chat">×</button></header>
       <div class="chatbot-messages" data-chat-messages aria-live="polite">
         <p class="chatbot-message bot">{{ site_settings.chatbot_welcome }}</p>

@@ -17,7 +17,7 @@
     <table>
       <thead><tr><th *ngIf="hasPreviews()">Preview</th><th *ngFor="let field of fields">{{ field.label }}</th><th class="actions-column"><span class="sr-only">Actions</span></th></tr></thead>
       <tbody>
-        <tr *ngFor="let item of items" (click)="edit(item)" tabindex="0" (keyup.enter)="edit(item)">
+        <tr *ngFor="let item of items" (click)="edit(item)" tabindex="0" (keyup.enter)="$event.target === $event.currentTarget && edit(item)">
           <td *ngIf="hasPreviews()" data-label="Preview" class="preview-cell">
             <img *ngIf="item.preview && item.previewType === 'image'" class="table-preview" [src]="item.preview" [alt]="item.display">
             <span *ngIf="item.preview && item.previewType === 'video'" class="media-placeholder">VIDEO</span>

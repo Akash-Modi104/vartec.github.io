@@ -183,6 +183,29 @@ class SiteSettings(models.Model):
         return self.video.url if self.video else static(self.legacy_video_path)
 
     @property
+    def accessible_palette(self):
+        """Keep saved branding, but never render unsafe foreground/surface pairs."""
+        def luminance(colour):
+            try:
+                channels = [int(colour[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+                linear = [c / 12.92 if c <= .04045 else ((c + .055) / 1.055) ** 2.4 for c in channels]
+                return sum(c * w for c, w in zip(linear, (.2126, .7152, .0722)))
+            except (ValueError, TypeError):
+                return None
+
+        def contrast(a, b):
+            return (max(a, b) + .05) / (min(a, b) + .05)
+
+        primary, dark, surface = self.primary_colour, self.secondary_colour, self.surface_colour
+        if luminance(dark) is None or luminance(dark) > .08:
+            dark = "#080909"
+        if luminance(primary) is None or contrast(luminance(primary), luminance(dark)) < 4.5:
+            primary = "#FFC107"
+        if luminance(surface) is None or luminance(surface) < .8:
+            surface = "#FFFFFF"
+        return {"primary": primary, "dark": dark, "surface": surface}
+
+    @property
     def font_stack(self):
         return self.FONT_STACKS.get(self.font_family, self.FONT_STACKS[self.FONT_MONTSERRAT])
 
@@ -313,13 +336,15 @@ class PageSection(OrderedActiveModel):
     @property
     def media_url(self):
         if self.media:
-            return self.media.url
+            return self.media.url if self.media.kind == MediaAsset.IMAGE else ""
         if self.image:
             return self.image.url
         return static(self.legacy_image_path) if self.legacy_image_path else ""
 
     @property
     def video_url(self):
+        if self.media and self.media.kind == MediaAsset.VIDEO:
+            return self.media.url
         if self.video:
             return self.video.url
         return static(self.legacy_video_path) if self.legacy_video_path else ""

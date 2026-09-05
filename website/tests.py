@@ -48,6 +48,25 @@ class CmsTestCase(TestCase):
         response = self.client.get(page.get_absolute_url())
         self.assertEqual(response.status_code, 404)
 
+    def test_unsafe_saved_colours_have_readable_rendering(self):
+        settings = SiteSettings.load()
+        settings.secondary_colour = '#f8ba4f'
+        settings.surface_colour = '#000000'
+        settings.save()
+        response = self.client.get(reverse('website:home'))
+        self.assertContains(response, '--black:#080909')
+        self.assertContains(response, '--light:#FFFFFF')
+        settings.refresh_from_db()
+        self.assertEqual(settings.secondary_colour, '#f8ba4f')
+
+    def test_palette_retains_safe_brand_colours(self):
+        settings = SiteSettings(primary_colour='#FFC107', secondary_colour='#171817', surface_colour='#FFFFFF')
+        self.assertEqual(settings.accessible_palette, {'primary': '#FFC107', 'dark': '#171817', 'surface': '#FFFFFF'})
+
+    def test_chatbot_is_inert_until_opened(self):
+        response = self.client.get(reverse('website:home'))
+        self.assertContains(response, 'aria-hidden="true" inert')
+
     def test_safe_deploy_seed_does_not_overwrite_admin_visibility(self):
         page = Page.objects.get(kind=Page.PROJECT, slug="solar-parks")
         page.is_active = False
@@ -126,6 +145,30 @@ class CmsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["item"]["previewType"], "image")
         self.assertTrue(response.json()["item"]["preview"])
+
+    def test_project_crud_updates_public_site_without_build(self):
+        user = get_user_model().objects.create_superuser('project-editor', 'editor@example.com', 'test-password')
+        self.client.force_login(user)
+        title = TextKey.objects.create(key='TEST_NEW_PROJECT', default_text='New solar project test')
+        response = self.client.post(reverse('cms-resource-list', kwargs={'resource': 'pages'}),
+            data={'kind': Page.PROJECT, 'slug': 'test-new-project', 'title_key': title.pk}, content_type='application/json')
+        self.assertEqual(response.status_code, 201, response.content)
+        pk = response.json()['item']['id']
+        endpoint = reverse('cms-resource-detail', kwargs={'resource': 'pages', 'pk': pk})
+        page_url = Page.objects.get(pk=pk).get_absolute_url()
+        self.assertContains(self.client.get('/'), 'New solar project test')
+        self.assertContains(self.client.get(reverse('website:sitemap')), page_url)
+        for visible in (False, True):
+            self.assertEqual(self.client.patch(endpoint, data={'is_active': visible}, content_type='application/json').status_code, 200)
+            self.assertEqual(self.client.get(page_url).status_code, 200 if visible else 404)
+            if visible:
+                self.assertContains(self.client.get('/'), 'New solar project test')
+            else:
+                self.assertNotContains(self.client.get('/'), 'New solar project test')
+                self.assertNotContains(self.client.get(reverse('website:sitemap')), page_url)
+        self.assertEqual(self.client.delete(endpoint).status_code, 200)
+        self.assertNotContains(self.client.get('/'), 'New solar project test')
+        self.assertEqual(self.client.get(page_url).status_code, 404)
 
     def test_cms_appearance_exposes_colours_and_font(self):
         user = get_user_model().objects.create_superuser("appearance-admin", "appearance@example.com", "test-password")

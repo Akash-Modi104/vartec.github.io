@@ -36,7 +36,7 @@ export class EditorComponent implements OnInit {
     this.meta = meta; this.fields = fields; this.item = item;
     const controls: Record<string, FormControl> = {};
     for (const field of fields) {
-      let value = item?.fields[field.name] ?? (field.type === 'boolean' ? false : '');
+      let value = item?.fields[field.name] ?? field.default ?? (field.type === 'boolean' ? false : '');
       if (field.type === 'file') value = '';
       if (field.type === 'datetime' && typeof value === 'string') value = value.slice(0, 16);
       controls[field.name] = new FormControl({ value, disabled: field.readonly }, field.required && field.type !== 'file' ? Validators.required : []);

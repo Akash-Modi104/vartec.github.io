@@ -17,17 +17,19 @@ export class ResourceListComponent implements OnInit, OnDestroy {
   error = '';
   private search$ = new Subject<string>();
   private subscriptions = new Subscription();
+  private listRequest?: Subscription;
 
   constructor(private route: ActivatedRoute, private router: Router, private api: CmsApiService) {}
   ngOnInit(): void {
     this.subscriptions.add(this.route.paramMap.subscribe(params => { this.resourceKey = params.get('resource') || ''; this.query = ''; this.load(1); }));
     this.subscriptions.add(this.search$.pipe(debounceTime(300), distinctUntilChanged()).subscribe(() => this.load(1)));
   }
-  ngOnDestroy(): void { this.subscriptions.unsubscribe(); }
+  ngOnDestroy(): void { this.subscriptions.unsubscribe(); this.listRequest?.unsubscribe(); }
   search(value: string): void { this.query = value; this.search$.next(value); }
   load(page = 1): void {
     this.loading = true; this.error = '';
-    this.api.list(this.resourceKey, this.query, page).subscribe({
+    this.listRequest?.unsubscribe();
+    this.listRequest = this.api.list(this.resourceKey, this.query, page).subscribe({
       next: response => { this.meta = response.resource; this.items = response.items; this.fields = response.listFields; this.pagination = response.pagination; this.loading = false; },
       error: error => { this.error = error.error?.detail || 'This content could not be loaded.'; this.loading = false; }
     });
@@ -39,7 +41,7 @@ export class ResourceListComponent implements OnInit, OnDestroy {
     const value = !Boolean(item.fields['is_active']);
     item.fields['is_active'] = value;
     item.cells['is_active'] = value ? 'Yes' : 'No';
-    this.api.update(this.resourceKey, item.id, { is_active: value }).subscribe({ error: () => { item.fields['is_active'] = !value; item.cells['is_active'] = !value ? 'Yes' : 'No'; } });
+    this.api.update(this.resourceKey, item.id, { is_active: value }).subscribe({ error: () => { item.fields['is_active'] = !value; item.cells['is_active'] = !value ? 'Yes' : 'No'; this.error = 'Visibility could not be saved. Please try again.'; } });
   }
   remove(item: CmsItem, event: Event): void {
     event.stopPropagation();

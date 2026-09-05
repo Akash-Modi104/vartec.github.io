@@ -1,32 +1,49 @@
 (() => {
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('.primary-nav');
+  const mobileLayout = window.matchMedia('(max-width: 1000px)');
+  const syncNavFocus = () => { if (nav) nav.inert = mobileLayout.matches && !nav.classList.contains('open'); };
+  syncNavFocus();
+  mobileLayout.addEventListener('change', () => { closeMenu(); syncNavFocus(); });
+  const closeDropdowns = () => document.querySelectorAll('.nav-group').forEach((group) => {
+    group.classList.remove('open');
+    group.querySelector('button')?.setAttribute('aria-expanded', 'false');
+  });
   const closeMenu = () => {
+    closeDropdowns();
     if (!toggle || !nav) return;
     toggle.setAttribute('aria-expanded', 'false');
     nav.classList.remove('open');
     document.body.classList.remove('menu-open');
+    syncNavFocus();
   };
   toggle?.addEventListener('click', () => {
     const open = toggle.getAttribute('aria-expanded') !== 'true';
     toggle.setAttribute('aria-expanded', String(open));
     nav.classList.toggle('open', open);
     document.body.classList.toggle('menu-open', open);
+    syncNavFocus();
   });
   document.querySelectorAll('.nav-group > button').forEach((button) => {
     button.addEventListener('click', () => {
       const group = button.closest('.nav-group');
       const open = !group.classList.contains('open');
-      document.querySelectorAll('.nav-group.open').forEach((item) => item.classList.remove('open'));
+      closeDropdowns();
       group.classList.toggle('open', open);
       button.setAttribute('aria-expanded', String(open));
     });
   });
   nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
   document.addEventListener('click', (event) => {
-    if (!event.target.closest('.nav-group')) document.querySelectorAll('.nav-group.open').forEach((item) => item.classList.remove('open'));
+    if (!event.target.closest('.nav-group')) closeDropdowns();
   });
-  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      const wasOpen = nav?.classList.contains('open');
+      closeMenu();
+      if (wasOpen) toggle?.focus();
+    }
+  });
 
   const hero = document.querySelector('[data-hero]');
   const media = hero?.querySelector('.hero-media');
@@ -93,8 +110,10 @@
     const setOpen = (open) => {
       chatbot.classList.toggle('open', open);
       panel.setAttribute('aria-hidden', String(!open));
+      panel.inert = !open;
       launcher.setAttribute('aria-expanded', String(open));
       if (open) window.setTimeout(() => input.focus(), 50);
+      else launcher.focus();
     };
     launcher.addEventListener('click', () => setOpen(!chatbot.classList.contains('open')));
     close.addEventListener('click', () => setOpen(false));

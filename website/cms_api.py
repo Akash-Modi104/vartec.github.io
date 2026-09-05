@@ -77,6 +77,8 @@ def _field_schema(spec, field_name):
         schema["options"] = [{"value": item.pk, "label": str(item)} for item in field.remote_field.model._default_manager.all()[:1500]]
     if isinstance(field, models.FileField):
         schema["accept"] = "image/*" if "image" in field.name or field.name in {"logo", "flag"} else ""
+    if field.has_default():
+        schema["default"] = field.get_default()
     return schema
 
 

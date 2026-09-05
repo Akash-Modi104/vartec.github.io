@@ -5,6 +5,7 @@
 
 <div class="loading-panel" *ngIf="loading"><span></span> Loading editor…</div>
 <div class="alert error" *ngIf="error">{{ error }}</div>
+<p class="save-note" *ngIf="resourceKey === 'settings'">Readability protection: light text colours and dark content surfaces are replaced with safe colours on the website. Your saved choices are retained; gold remains the brand accent.</p>
 
 <form class="editor-layout" *ngIf="!loading" [formGroup]="form" (ngSubmit)="save()">
   <section class="form-card">
