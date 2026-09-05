@@ -60,6 +60,7 @@ def home(request):
     context.update(
         {
             "hero_slides": slides,
+            "social_image_url": request.build_absolute_uri(slides[0].image_url) if slides else "",
             "services": localized_pages(Page.SERVICE, language, homepage_only=True),
             "projects": localized_pages(Page.PROJECT, language, homepage_only=True),
             "home_blocks": localized_home_blocks(language),
@@ -82,6 +83,7 @@ def page_detail(request, kind, slug):
     context.update(
         {
             "page": page,
+            "social_image_url": request.build_absolute_uri(page.card_image_url) if page.card_image_url else "",
             "seo_title": page.localized_seo_title,
             "seo_description": page.localized_seo_description,
             "canonical_url": request.build_absolute_uri(page.get_absolute_url()),

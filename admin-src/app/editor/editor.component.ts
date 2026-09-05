@@ -66,7 +66,10 @@ export class EditorComponent implements OnInit {
   }
   previewUrl(): string { return this.selectedPreview || this.item?.preview || ''; }
   previewType(): string { return this.selectedPreviewType || this.item?.previewType || ''; }
-  cancel(): void { this.router.navigate(['/content', this.resourceKey]); }
+  cancel(): void {
+    if ((this.form.dirty || Object.keys(this.files).length) && !window.confirm('Discard your unsaved changes?')) return;
+    this.router.navigate(['/content', this.resourceKey]);
+  }
   save(): void {
     if (this.form.invalid || this.saving) { this.form.markAllAsTouched(); return; }
     this.saving = true; this.error = ''; this.fieldErrors = {};

@@ -9,12 +9,12 @@
     <p class="eyebrow eyebrow-light">{{ texts.HERO_EYEBROW }}</p>
     <h1>{{ texts.HERO_TITLE }}</h1>
     <p>{{ texts.HERO_SUMMARY }}</p>
-    <div class="hero-actions"><a class="button" href="#services">{{ texts.OUR_SERVICES }}</a><a class="button button-outline" href="#contact">Discuss a project</a></div>
+    <div class="hero-actions">{% if site_settings.services_enabled %}<a class="button" href="#services">{{ texts.OUR_SERVICES }}</a>{% endif %}{% if site_settings.contact_enabled %}<a class="button button-outline" href="#contact">{{ texts.DISCUSS_PROJECT }}</a>{% endif %}</div>
     <div class="hero-proof" aria-label="VARTEC project capabilities">
-      <span><b>01</b><strong>Engineering &amp; design</strong></span>
-      <span><b>02</b><strong>EPC delivery</strong></span>
-      <span><b>03</b><strong>Commissioning</strong></span>
-      <span><b>04</b><strong>Operations &amp; maintenance</strong></span>
+      <span><b>01</b><strong>{{ texts.CAPABILITY_DESIGN }}</strong></span>
+      <span><b>02</b><strong>{{ texts.CAPABILITY_EPC }}</strong></span>
+      <span><b>03</b><strong>{{ texts.CAPABILITY_COMMISSIONING }}</strong></span>
+      <span><b>04</b><strong>{{ texts.CAPABILITY_MAINTENANCE }}</strong></span>
     </div>
   </div>
   <div class="hero-slides" hidden>{% for slide in hero_slides %}<span data-src="{{ slide.image_url }}" data-alt="{{ slide.localized_alt }}"></span>{% endfor %}</div>
@@ -25,7 +25,7 @@
 <section class="section" id="about">
   <div class="shell split-layout">
     <div class="section-copy"><p class="eyebrow">{{ texts.ABOUT_US }}</p><h2>{{ texts.ABOUT_US }}</h2><p>{{ texts.ABOUT_US_DESCRIPTION1 }}</p><p>{{ texts.ABOUT_US_DESCRIPTION2 }}</p></div>
-    {% if site_settings.video_enabled %}<div class="media-frame video-frame"><span class="video-label"><i></i> VARTEC in action</span><video data-autoplay-video autoplay muted loop playsinline controls preload="auto" disablepictureinpicture poster="{% if hero_slides %}{{ hero_slides.2.image_url|default:hero_slides.0.image_url }}{% endif %}" aria-label="VARTEC solar engineering project overview"><source src="{{ site_settings.video_url }}" type="video/mp4"></video></div>{% endif %}
+    {% if site_settings.video_enabled %}<div class="media-frame video-frame"><span class="video-label"><i></i> {{ texts.VIDEO_LABEL }}</span><video data-autoplay-video autoplay muted loop playsinline controls preload="auto" disablepictureinpicture poster="{% if hero_slides %}{{ hero_slides.2.image_url|default:hero_slides.0.image_url }}{% endif %}" aria-label="VARTEC solar engineering project overview"><source src="{{ site_settings.video_url }}" type="video/mp4"></video></div>{% endif %}
   </div>
 </section>
 {% endif %}
@@ -33,7 +33,7 @@
 {% for block in home_blocks %}
 <section class="section feature-section theme-{{ block.background }}">
   <div class="shell"><div class="section-heading"><p class="eyebrow">{{ texts.LIFECYCLE_EYEBROW }}</p><h2>{{ block.localized_title }}</h2>{% if block.localized_intro %}<p>{{ block.localized_intro }}</p>{% endif %}</div>
-    <div class="feature-grid">{% for feature in block.localized_features %}<article class="feature-card"><span>{{ forloop.counter|stringformat:'02d' }}</span><h3>{{ feature.localized_title }}</h3><p>{{ feature.localized_body }}</p></article>{% endfor %}</div>
+    <div class="feature-grid">{% for feature in block.localized_features %}<article class="feature-card">{% if feature.media and feature.media.kind == "image" %}<img loading="lazy" decoding="async" src="{{ feature.media.url }}" alt="{{ feature.localized_title }}">{% endif %}<span>{{ forloop.counter|stringformat:'02d' }}</span><h3>{{ feature.localized_title }}</h3><p>{{ feature.localized_body }}</p></article>{% endfor %}</div>
   </div>
 </section>
 {% endfor %}
@@ -49,7 +49,7 @@
 {% if site_settings.projects_enabled %}
 <section class="section projects-section" id="projects">
   <div class="shell"><div class="section-heading"><p class="eyebrow eyebrow-light">{{ texts.PROJECTS }}</p><h2>{{ texts.SELECTED_PROJECTS }}</h2></div>
-    <div class="project-grid">{% for item in projects %}<a class="project-card" href="{{ item.get_absolute_url }}">{% if item.card_image_url %}<img loading="lazy" decoding="async" src="{{ item.card_image_url }}" alt="{{ item.localized_title }}">{% endif %}<div><span>{{ forloop.counter|stringformat:'02d' }}</span><h3>{{ item.localized_title }}</h3><p>{{ item.localized_intro|truncatewords:24 }}</p><strong>View project →</strong></div></a>{% endfor %}</div>
+    <div class="project-grid">{% for item in projects %}<a class="project-card" href="{{ item.get_absolute_url }}">{% if item.card_image_url %}<img loading="lazy" decoding="async" src="{{ item.card_image_url }}" alt="{{ item.localized_title }}">{% endif %}<div><span>{{ forloop.counter|stringformat:'02d' }}</span><h3>{{ item.localized_title }}</h3><p>{{ item.localized_intro|truncatewords:24 }}</p><strong>{{ texts.VIEW_PROJECT }} →</strong></div></a>{% endfor %}</div>
   </div>
 </section>
 {% endif %}

@@ -3,7 +3,7 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import ContactSubmission, Language, MediaAsset, Page, SiteSettings
+from .models import ContactSubmission, Language, MediaAsset, Page, SiteSettings, TextKey
 
 
 class CmsTestCase(TestCase):
@@ -27,6 +27,19 @@ class CmsTestCase(TestCase):
     def test_only_english_is_active_and_language_routes_are_removed(self):
         self.assertEqual(list(Language.objects.filter(is_active=True).values_list("code", flat=True)), ["en"])
         self.assertEqual(self.client.get("/nl/").status_code, 404)
+
+    def test_landing_labels_are_editable(self):
+        TextKey.objects.update_or_create(key="DISCUSS_PROJECT", defaults={"default_text": "Plan your solar project"})
+        response = self.client.get(reverse("website:home"))
+        self.assertContains(response, "Plan your solar project")
+        self.assertContains(response, 'property="og:locale" content="en_GB"')
+
+    def test_hidden_about_has_no_navigation_link(self):
+        settings = SiteSettings.load()
+        settings.about_enabled = False
+        settings.save()
+        response = self.client.get(reverse("website:home"))
+        self.assertNotContains(response, 'href="/#about"')
 
     def test_hidden_project_returns_404(self):
         page = Page.objects.get(kind=Page.PROJECT, slug="solar-parks")
