@@ -1,18 +1,55 @@
 <div class="page-heading editor-heading">
-  <div><button class="back-button" type="button" (click)="cancel()">← {{ meta?.plural || 'Back' }}</button><p class="eyebrow">{{ objectId ? 'Edit content' : 'Create content' }}</p><h1>{{ objectId ? (item?.display || meta?.label) : ('New ' + (meta?.label | lowercase)) }}</h1><p>{{ meta?.description }}</p></div>
-  <div class="editor-actions"><button class="secondary-button" type="button" (click)="cancel()">Cancel</button><button class="primary-button" type="button" [disabled]="saving || loading" (click)="save()"><span>{{ saving ? 'Saving…' : 'Save changes' }}</span><b>✓</b></button></div>
+  <div><button class="back-button" type="button" (click)="cancel()">← {{ backLabel() }}</button><p class="eyebrow">{{ objectId ? 'Edit content' : 'Create content' }}</p><h1>{{ objectId ? (item?.display || meta?.label) : ('New ' + (filters['kind'] || meta?.label || 'item') | lowercase) }}</h1><p>{{ meta?.description }}</p></div>
+  <div class="editor-actions"><button class="secondary-button" type="button" (click)="cancel()">Cancel</button><button class="primary-button" type="button" [disabled]="saving || loading" (click)="save()">{{ saving ? 'Saving…' : 'Save changes' }} <b>✓</b></button></div>
 </div>
-
 <div class="loading-panel" *ngIf="loading"><span></span> Loading editor…</div>
-<div class="alert error" *ngIf="error">{{ error }}</div>
-<p class="save-note" *ngIf="resourceKey === 'settings'">Readability protection: light text colours and dark content surfaces are replaced with safe colours on the website. Your saved choices are retained; gold remains the brand accent.</p>
-
+<div class="alert error" role="alert" *ngIf="error">{{ error }}</div>
+<div class="context-note" role="status" *ngIf="success">{{ success }}</div>
+<div class="context-note" *ngIf="!loading && parentLabel()"><a [routerLink]="parentRoute()">← {{ parentLabel() }}</a><br>This content is already linked to the item above.</div>
+<div class="context-note" *ngIf="!loading && resourceKey !== 'enquiries'">Changes appear on the website after saving.</div>
+<nav class="editor-jump-links" *ngIf="!loading" aria-label="Editor sections">
+  <a *ngFor="let group of groups()" href="#" (click)="jumpTo(groups().indexOf(group), $event)">{{ group }}</a>
+</nav>
 <form class="editor-layout" *ngIf="!loading" [formGroup]="form" (ngSubmit)="save()">
-  <section class="form-card">
-    <div class="form-card-heading"><span>01</span><div><h2>Content details</h2><p>Update the information shown on the website.</p></div></div>
-    <div class="dynamic-form">
-      <label *ngFor="let field of nonBooleanFields()" [class.full-field]="field.type === 'textarea' || field.type === 'file'">
-        <span>{{ field.label }} <b *ngIf="field.required">Required</b></span>
+  <div class="form-main">
+    <ng-container *ngFor="let group of groups(); let index=index">
+      <section class="form-card grouped-card" *ngIf="group !== 'Advanced'" [attr.id]="'group-' + index">
+        <div class="form-card-heading"><span>0{{ index + 1 }}</span><div><h2>{{ group }}</h2><p>{{ description(group) }}</p></div></div>
+        <ng-container *ngTemplateOutlet="groupForm; context: {$implicit:group}"></ng-container>
+      </section>
+      <details class="form-card advanced-card" *ngIf="group === 'Advanced'" [attr.id]="'group-' + index">
+        <summary>Advanced options</summary><p>{{ description(group) }}</p>
+        <ng-container *ngTemplateOutlet="groupForm; context: {$implicit:group}"></ng-container>
+      </details>
+    </ng-container>
+  </div>
+  <aside class="form-side">
+    <section class="form-card related-card" *ngIf="objectId && children() as child">
+      <h2>{{ child.label }}</h2><p>Edit the content belonging to this item.</p>
+      <button class="primary-button" type="button" (click)="addChild()">{{ resourceKey === 'pages' ? 'Add section' : resourceKey === 'sections' ? 'Add paragraph or list' : 'Add feature card' }} ＋</button>
+      <button class="secondary-button" type="button" (click)="openChildren()">Manage {{ child.label | lowercase }} →</button>
+    </section>
+    <section class="form-card preview-card" *ngIf="previewUrl()">
+      <h2>Media preview</h2>
+      <div class="editor-preview">
+        <img *ngIf="previewType() === 'image'" [src]="previewUrl()" [alt]="item?.display || 'Selected image preview'">
+        <video *ngIf="previewType() === 'video'" [src]="previewUrl()" controls preload="metadata"></video>
+        <a *ngIf="previewType() === 'document'" [href]="previewUrl()" target="_blank" rel="noopener">Open document ↗</a>
+      </div>
+    </section>
+    <div class="save-note"><p><strong>{{ resourceKey === 'enquiries' ? 'Private enquiry workspace' : 'Ready to save?' }}</strong><small>{{ resourceKey === 'enquiries' ? 'Status and internal notes are only visible to administrators.' : 'Review your wording and visibility, then save your changes.' }}</small></p></div>
+  </aside>
+  <ng-template #groupForm let-group>
+    <div class="dynamic-form" [formGroup]="form">
+      <ng-container *ngFor="let field of groupFields(group)">
+        <label *ngIf="field.type === 'boolean'; else regularField" class="switch-row full-field">
+          <span><strong>{{ field.label }}</strong><small>{{ field.help || 'Show or hide this option.' }}</small></span>
+          <input type="checkbox" [formControlName]="field.name"><i></i>
+          <small class="field-error" *ngFor="let message of fieldErrors[field.name]">{{ message }}</small>
+        </label>
+        <ng-template #regularField>
+          <label [class.full-field]="field.type === 'textarea' || field.type === 'file'">
+            <span>{{ fieldLabel(field) }} <b *ngIf="field.required || (!objectId && resourceKey === 'sections' && field.name === 'title_key_text')">Required</b></span>
         <ng-container [ngSwitch]="field.type">
           <textarea *ngSwitchCase="'textarea'" [formControlName]="field.name" rows="6"></textarea>
           <select *ngSwitchCase="'select'" [formControlName]="field.name"><option value="" *ngIf="!field.required">Select an option</option><option *ngFor="let option of field.options" [value]="option.value">{{ option.label }}</option></select>
@@ -34,26 +71,10 @@
         <small *ngIf="field.help">{{ field.help }}</small>
         <small class="field-error" *ngIf="control(field)?.touched && control(field)?.invalid">{{ field.label }} is required.</small>
         <small class="field-error" *ngFor="let message of fieldErrors[field.name]">{{ message }}</small>
-      </label>
-    </div>
-  </section>
 
-  <aside class="form-side" *ngIf="booleanFields().length || previewUrl()">
-    <section class="form-card preview-card" *ngIf="previewUrl()">
-      <div class="form-card-heading"><span>02</span><div><h2>Media preview</h2><p>Check the current or newly selected file.</p></div></div>
-      <div class="editor-preview">
-        <img *ngIf="previewType() === 'image'" [src]="previewUrl()" [alt]="item?.display || 'Selected image preview'">
-        <video *ngIf="previewType() === 'video'" [src]="previewUrl()" controls preload="metadata"></video>
-        <a *ngIf="previewType() === 'document'" [href]="previewUrl()" target="_blank" rel="noopener">Open document ↗</a>
-      </div>
-    </section>
-    <section class="form-card visibility-card" *ngIf="booleanFields().length">
-      <div class="form-card-heading"><span>{{ previewUrl() ? '03' : '02' }}</span><div><h2>Visibility &amp; options</h2><p>Control how this content behaves.</p></div></div>
-      <label class="switch-row" *ngFor="let field of booleanFields()">
-        <span><strong>{{ field.label }}</strong><small>{{ field.help || 'Enable or disable this option.' }}</small></span>
-        <input type="checkbox" [formControlName]="field.name"><i></i>
-      </label>
-    </section>
-    <div class="save-note"><span>✓</span><p><strong>Changes publish immediately.</strong><small>Review the live website after saving.</small></p></div>
-  </aside>
+          </label>
+        </ng-template>
+      </ng-container>
+    </div>
+  </ng-template>
 </form>

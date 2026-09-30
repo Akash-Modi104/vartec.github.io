@@ -49,9 +49,10 @@ export class CmsApiService {
     return this.http.get<DashboardResponse>(`${this.base}/dashboard/`);
   }
 
-  list(resource: string, query = '', page = 1): Observable<ResourceResponse> {
+  list(resource: string, query = '', page = 1, filters: Record<string, string> = {}): Observable<ResourceResponse> {
     let params = new HttpParams().set('page', page).set('pageSize', 50);
     if (query) params = params.set('q', query);
+    for (const [name, value] of Object.entries(filters)) if (value) params = params.set(name, value);
     return this.http.get<ResourceResponse>(`${this.base}/resources/${resource}/`, { params });
   }
 

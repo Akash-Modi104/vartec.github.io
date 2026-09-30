@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, Subscription } from 'rxjs';
+import { combineLatest, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CmsApiService } from '../cms-api.service';
 import { CmsItem, ListField, Pagination, ResourceMeta } from '../models';
@@ -15,13 +15,19 @@ export class ResourceListComponent implements OnInit, OnDestroy {
   query = '';
   loading = true;
   error = '';
+  filters: Record<string, string> = {};
+  contextLabel = '';
   private search$ = new Subject<string>();
   private subscriptions = new Subscription();
   private listRequest?: Subscription;
 
   constructor(private route: ActivatedRoute, private router: Router, private api: CmsApiService) {}
   ngOnInit(): void {
-    this.subscriptions.add(this.route.paramMap.subscribe(params => { this.resourceKey = params.get('resource') || ''; this.query = ''; this.load(1); }));
+    this.subscriptions.add(combineLatest([this.route.paramMap, this.route.queryParamMap]).subscribe(([params, query]) => {
+      this.resourceKey = params.get('resource') || ''; this.query = query.get('q') || ''; this.filters = {}; this.contextLabel = '';
+      for (const name of ['kind', 'page', 'section', 'block']) { const value = query.get(name); if (value) this.filters[name] = value; }
+      this.load(1);
+    }));
     this.subscriptions.add(this.search$.pipe(debounceTime(300), distinctUntilChanged()).subscribe(() => this.load(1)));
   }
   ngOnDestroy(): void { this.subscriptions.unsubscribe(); this.listRequest?.unsubscribe(); }
@@ -29,13 +35,21 @@ export class ResourceListComponent implements OnInit, OnDestroy {
   load(page = 1): void {
     this.loading = true; this.error = '';
     this.listRequest?.unsubscribe();
-    this.listRequest = this.api.list(this.resourceKey, this.query, page).subscribe({
-      next: response => { this.meta = response.resource; this.items = response.items; this.fields = response.listFields; this.pagination = response.pagination; this.loading = false; },
+    this.listRequest = this.api.list(this.resourceKey, this.query, page, this.filters).subscribe({
+      next: response => {
+        this.meta = response.resource; this.items = response.items; this.fields = response.listFields; this.pagination = response.pagination; this.loading = false;
+        if (this.resourceKey === 'pages' && this.filters['kind']) this.fields = this.fields.filter(field => ['title_key','is_active','updated_at'].includes(field.name));
+        else this.fields = this.fields.filter(field => !this.filters[field.name]);
+        const parent = ['page', 'section', 'block'].find(name => this.filters[name]);
+        this.contextLabel = parent ? response.schema.find(field => field.name === parent)?.options?.find(option => String(option.value) === this.filters[parent])?.label || '' : '';
+      },
       error: error => { this.error = error.error?.detail || 'This content could not be loaded.'; this.loading = false; }
     });
   }
-  create(): void { this.router.navigate(['/content', this.resourceKey, 'new']); }
-  edit(item: CmsItem): void { this.router.navigate(['/content', this.resourceKey, item.id]); }
+  title(): string { if (this.resourceKey === 'home-blocks') return 'Homepage'; if (this.filters['kind'] === 'service') return 'Services'; if (this.filters['kind'] === 'project') return 'Projects'; return this.meta?.plural || 'Loading…'; }
+  label(): string { return this.filters['kind'] || this.meta?.label || 'item'; }
+  create(): void { this.router.navigate(['/content', this.resourceKey, 'new'], {queryParams:this.filters}); }
+  edit(item: CmsItem): void { this.router.navigate(['/content', this.resourceKey, item.id], {queryParams:this.filters}); }
   toggle(item: CmsItem, event: Event): void {
     event.stopPropagation();
     const value = !Boolean(item.fields['is_active']);

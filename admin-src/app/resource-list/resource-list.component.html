@@ -1,11 +1,30 @@
 <div class="page-heading list-heading">
-  <div><p class="eyebrow">{{ meta?.group || 'Content' }}</p><h1>{{ meta?.plural || 'Loading…' }}</h1><p>{{ meta?.description }}</p></div>
-  <button *ngIf="meta && !meta.singleton" class="primary-button" type="button" (click)="create()"><span>Add {{ meta.label | lowercase }}</span><b>＋</b></button>
+  <div><p class="eyebrow">{{ contextLabel || meta?.group || 'Content' }}</p><h1>{{ title() }}</h1><p>{{ resourceKey === 'home-blocks' ? 'Edit the homepage sections below. Open a section to manage its feature cards.' : meta?.description }}</p></div>
+  <button *ngIf="meta && !meta.singleton" class="primary-button" type="button" (click)="create()"><span>Add {{ label() | lowercase }}</span><b>＋</b></button>
 </div>
 
+<nav class="context-tabs" *ngIf="resourceKey === 'home-blocks' || resourceKey === 'hero-slides'" aria-label="Homepage editing">
+  <a routerLink="/content/home-blocks" [class.selected]="resourceKey === 'home-blocks'">Homepage sections</a>
+  <a routerLink="/content/hero-slides" [class.selected]="resourceKey === 'hero-slides'">Banner images</a>
+  <a routerLink="/content/text" [queryParams]="{q:'HERO'}">Banner wording</a>
+  <a routerLink="/content/settings/1" [queryParams]="{group:'Homepage sections'}">Section visibility &amp; video</a>
+  <a routerLink="/content/text" [queryParams]="{q:'ABOUT'}">About Us wording</a>
+</nav>
+<nav class="context-tabs" *ngIf="resourceKey === 'text'" aria-label="Shared wording">
+  <a routerLink="/content/home-blocks">← Homepage</a>
+  <a routerLink="/content/text" [queryParams]="{q:'HERO'}">Banner</a>
+  <a routerLink="/content/text" [queryParams]="{q:'ABOUT'}">About Us</a>
+  <a routerLink="/content/text" [queryParams]="{q:'CONTACT'}">Contact</a>
+  <a routerLink="/content/text">All shared wording</a>
+</nav>
+<div class="context-note" *ngIf="resourceKey === 'text'">Shared wording includes the homepage introduction, About Us, navigation and contact labels. Page-specific wording can be edited inside its service or project.</div>
+
+<div class="context-note" *ngIf="contextLabel && filters['page']"><a [routerLink]="['/content/pages', filters['page']]">← Back to {{ contextLabel }}</a></div>
+<div class="context-note" *ngIf="contextLabel && filters['section']"><a [routerLink]="['/content/sections', filters['section']]">← Back to {{ contextLabel }}</a></div>
+<div class="context-note" *ngIf="contextLabel && filters['block']"><a [routerLink]="['/content/home-blocks', filters['block']]">← Back to {{ contextLabel }}</a></div>
 <section class="data-card">
   <div class="list-toolbar">
-    <label class="search-field"><span aria-hidden="true">⌕</span><input #searchInput type="search" [value]="query" (input)="search(searchInput.value)" placeholder="Search {{ meta?.plural | lowercase }}…"></label>
+    <label class="search-field"><span aria-hidden="true">⌕</span><input #searchInput type="search" [value]="query" (input)="search(searchInput.value)" [attr.aria-label]="'Search ' + title()" placeholder="Search {{ title() | lowercase }}…"></label>
     <div class="list-summary"><strong>{{ pagination?.total || 0 }}</strong><span>items</span><i></i><span *ngIf="hasActive()">Use the switch to show or hide content</span></div>
   </div>
 

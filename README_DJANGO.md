@@ -15,6 +15,18 @@ This branch contains the database-driven VARTEC website. It preserves the existi
 
 The original Django administration remains available to administrators at `/django-admin/` as a security and maintenance fallback.
 
+## Editing workflow
+
+The admin sidebar follows everyday tasks: Homepage, Services, Projects, Shared website wording, Media library, Enquiries and Website settings.
+
+- Open a service or project to edit its title, introduction, image and visibility directly. No text identifier needs to be created first. For a new project, the website address is generated from its name; saving opens its editor with an Add section button. New sections are automatically linked to that project.
+- Use **Manage page sections** inside the page editor to see only that page's sections. Each section provides **Manage paragraphs & lists** for its own detailed content.
+- Open a homepage section to edit its title and introduction, then **Manage feature cards**. Homepage shortcuts also provide banner images, banner wording, About Us wording and section visibility.
+- Website settings groups appearance, contact details, homepage controls, assistant and search settings. Older asset paths and technical identifiers are under Advanced options.
+- Shared website wording is for global labels and homepage text. Editing wording inside a page creates a separate text entry when needed so another page sharing the previous entry is not changed accidentally.
+
+Saving applies content immediately. Display order uses lower numbers first. Existing content, media and settings are retained; a small settings migration replaces the previous default yellow with the gold sampled from the logo. Custom saved colours are retained. No content reseed is needed.
+
 Run the seed command once for a new database. Production uses `seed_vartec --if-empty`, which imports the starter content only when no CMS pages exist, so later admin edits and hidden content are never overwritten by a deployment.
 
 ## What administrators can control

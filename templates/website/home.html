@@ -7,7 +7,7 @@
   <div class="hero-shade"></div>
   <div class="shell hero-content">
     <p class="eyebrow eyebrow-light">{{ texts.HERO_EYEBROW }}</p>
-    <h1>{{ texts.HERO_TITLE }}</h1>
+    <h1{% if texts.HERO_TITLE|length < 30 %} class="hero-title-compact"{% endif %}>{{ texts.HERO_TITLE }}</h1>
     <p>{{ texts.HERO_SUMMARY }}</p>
     <div class="hero-actions">{% if site_settings.services_enabled %}<a class="button" href="#services">{{ texts.OUR_SERVICES }}</a>{% endif %}{% if site_settings.contact_enabled %}<a class="button button-outline" href="#contact">{{ texts.DISCUSS_PROJECT }}</a>{% endif %}</div>
     <div class="hero-proof" aria-label="VARTEC project capabilities">

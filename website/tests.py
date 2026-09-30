@@ -192,3 +192,101 @@ class CmsTestCase(TestCase):
     def test_site_settings_is_singleton(self):
         self.assertEqual(SiteSettings.load().pk, 1)
         self.assertEqual(SiteSettings.objects.count(), 1)
+
+    def login_editor(self):
+        user = get_user_model().objects.create_superuser('workflow-editor', 'workflow@example.com', 'test-password')
+        self.client.force_login(user)
+
+    def test_editor_exposes_wording_instead_of_internal_text_relations(self):
+        self.login_editor()
+        page = Page.objects.first()
+        response = self.client.get(reverse('cms-resource-detail', kwargs={'resource': 'pages', 'pk': page.pk})).json()
+        schema = {field['name']: field for field in response['schema']}
+        self.assertIn('title_key_text', schema)
+        self.assertNotIn('title_key', schema)
+        self.assertEqual(response['item']['fields']['title_key_text'], page.title_key.default_text)
+
+    def test_direct_wording_edit_preserves_other_owners_of_shared_text(self):
+        self.login_editor()
+        page = Page.objects.first()
+        shared = page.title_key
+        other = Page.objects.exclude(pk=page.pk).first()
+        other.title_key = shared
+        other.save()
+        endpoint = reverse('cms-resource-detail', kwargs={'resource': 'pages', 'pk': page.pk})
+        response = self.client.patch(endpoint, {'title_key_text': 'Updated page wording'}, content_type='application/json')
+        self.assertEqual(response.status_code, 200, response.content)
+        page.refresh_from_db(); other.refresh_from_db(); shared.refresh_from_db()
+        self.assertEqual(page.title_key.default_text, 'Updated page wording')
+        self.assertEqual(other.title_key_id, shared.pk)
+        self.assertNotEqual(shared.default_text, 'Updated page wording')
+        self.assertContains(self.client.get(page.get_absolute_url()), 'Updated page wording')
+
+    def test_new_page_can_be_created_without_a_text_identifier(self):
+        self.login_editor()
+        response = self.client.post(reverse('cms-resource-list', kwargs={'resource': 'pages'}),
+            {'kind': 'project', 'slug': 'direct-wording', 'title_key_text': 'A new project'}, content_type='application/json')
+        self.assertEqual(response.status_code, 201, response.content)
+        self.assertEqual(Page.objects.get(slug='direct-wording').title_key.default_text, 'A new project')
+
+    def test_project_and_section_can_be_created_from_their_names(self):
+        from .models import PageSection
+        self.login_editor()
+        endpoint = reverse('cms-resource-list', kwargs={'resource': 'pages'})
+        payload = {'kind':'project', 'title_key_text':'New solar project'}
+        first = self.client.post(endpoint, payload, content_type='application/json')
+        second = self.client.post(endpoint, payload, content_type='application/json')
+        self.assertEqual(first.status_code, 201, first.content)
+        self.assertEqual(second.status_code, 201, second.content)
+        project = Page.objects.get(pk=first.json()['item']['id'])
+        other = Page.objects.get(pk=second.json()['item']['id'])
+        self.assertEqual(project.slug, 'new-solar-project')
+        self.assertEqual(other.slug, 'new-solar-project-2')
+        response = self.client.post(reverse('cms-resource-list', kwargs={'resource':'sections'}),
+            {'page':project.pk,'title_key_text':'Project overview','body_key_text':'Details of the solar project.'}, content_type='application/json')
+        self.assertEqual(response.status_code, 201, response.content)
+        section = PageSection.objects.get(pk=response.json()['item']['id'])
+        self.assertEqual(section.page_id, project.pk)
+        self.assertEqual(section.admin_name, 'Project overview')
+        self.assertContains(self.client.get(project.get_absolute_url()), 'Details of the solar project.')
+
+    def test_invalid_page_rolls_back_generated_wording(self):
+        self.login_editor()
+        page = Page.objects.first()
+        before = TextKey.objects.count()
+        response = self.client.patch(reverse('cms-resource-detail', kwargs={'resource': 'pages', 'pk': page.pk}),
+            {'title_key_text': 'Must not be saved', 'slug': 'not a valid slug'}, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(TextKey.objects.count(), before)
+        page.refresh_from_db()
+        self.assertNotEqual(page.title_key.default_text, 'Must not be saved')
+
+    def test_blank_required_wording_has_a_visible_editor_error(self):
+        self.login_editor()
+        page = Page.objects.first()
+        response = self.client.patch(reverse('cms-resource-detail', kwargs={'resource': 'pages', 'pk': page.pk}),
+            {'title_key_text': ''}, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('title_key_text', response.json()['errors'])
+
+    def test_page_and_child_lists_are_scoped_to_the_selected_owner(self):
+        from .models import HomeFeature, PageSection, SectionItem
+        self.login_editor()
+        listing = lambda resource, filters: self.client.get(reverse('cms-resource-list', kwargs={'resource': resource}), filters).json()['items']
+        services = listing('pages', {'kind': 'service'})
+        self.assertTrue(services)
+        self.assertTrue(all(item['fields']['kind'] == 'service' for item in services))
+        section = PageSection.objects.first()
+        sections = listing('sections', {'page': section.page_id})
+        self.assertTrue(sections)
+        self.assertTrue(all(item['fields']['page'] == section.page_id for item in sections))
+        item = SectionItem.objects.first()
+        paragraphs = listing('section-items', {'section': item.section_id})
+        self.assertTrue(paragraphs)
+        self.assertTrue(all(row['fields']['section'] == item.section_id for row in paragraphs))
+        feature = HomeFeature.objects.first()
+        features = listing('home-features', {'block': feature.block_id})
+        self.assertTrue(features)
+        self.assertTrue(all(row['fields']['block'] == feature.block_id for row in features))
+        invalid = self.client.get(reverse('cms-resource-list', kwargs={'resource': 'sections'}), {'page': 'invalid'})
+        self.assertEqual(invalid.status_code, 400)

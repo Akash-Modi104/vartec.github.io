@@ -1,4 +1,5 @@
 import json
+from uuid import uuid4
 from functools import wraps
 
 from django.contrib.auth import authenticate, login, logout
@@ -10,6 +11,7 @@ from django.db.models.deletion import ProtectedError
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.utils.dateparse import parse_date, parse_datetime
+from django.utils.text import slugify
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
@@ -28,6 +30,30 @@ RESOURCE_SPECS = {
     "settings": {"model": SiteSettings, "label": "Appearance & settings", "plural": "Appearance & settings", "group": "Manage", "description": "Choose the logo colours, website font, help chat, contact details, visibility and SEO defaults.", "fields": ("brand_name", "logo", "legacy_logo_path", "primary_colour", "secondary_colour", "surface_colour", "font_family", "contact_email", "uk_phone", "notification_email", "chatbot_enabled", "chatbot_title", "chatbot_welcome", "hero_enabled", "about_enabled", "services_enabled", "projects_enabled", "contact_enabled", "footer_enabled", "video_enabled", "video", "legacy_video_path", "default_seo_title", "default_seo_description", "organisation_schema_enabled"), "list_fields": ("brand_name", "font_family", "primary_colour", "updated_at"), "search_fields": ("brand_name", "contact_email"), "singleton": True},
     "enquiries": {"model": ContactSubmission, "label": "Enquiry", "plural": "Enquiries", "group": "Inbox", "description": "Customer messages, follow-up status and private internal notes.", "fields": ("first_name", "last_name", "email", "phone", "message", "status", "email_sent", "internal_notes"), "readonly": ("first_name", "last_name", "email", "phone", "message", "email_sent"), "list_fields": ("first_name", "last_name", "email", "status", "created_at"), "search_fields": ("first_name", "last_name", "email", "phone", "message")},
 }
+
+# Present editable wording alongside its owner instead of requiring text-key lookups.
+TEXT_LABELS = {"title_key": "Title", "intro_key": "Introduction", "body_key": "Body text", "text_key": "Text", "alt_text_key": "Image description", "seo_title_key": "Search title", "seo_description_key": "Search description"}
+FIELD_LABELS = {"admin_name": "Name in the admin", "is_active": "Visible on website", "sort_order": "Display order", "kind": "Type", "card_media": "Card image from library", "card_image": "Upload card image", "media": "Image or video from library", "image": "Upload image", "video": "Upload video", "published_at": "Publication date", "default_text": "Website wording", "key": "Internal text identifier"}
+
+
+def _label(name, model):
+    return TEXT_LABELS.get(name) or FIELD_LABELS.get(name) or str(model._meta.get_field(name).verbose_name).replace("_", " ").title()
+
+
+def _editor_schema(spec):
+    result = []
+    for name in spec["fields"]:
+        schema = _field_schema(spec, name)
+        field = spec["model"]._meta.get_field(name)
+        if isinstance(field, models.ForeignKey) and field.remote_field.model is TextKey:
+            schema.update(name=name + "_text", label=TEXT_LABELS.get(name, "Text"), type="textarea" if name in {"body_key", "intro_key", "text_key", "seo_description_key"} else "text", help="Edit the wording directly. No text identifier is needed.")
+            schema.pop("options", None)
+        if spec['model'] is Page and name == 'slug':
+            schema.update(required=False, help='Generated from the project or service name when left blank for a new page. Changing an existing address can break links.')
+        if spec['model'] is PageSection and name == 'admin_name':
+            schema.update(required=False, help='Generated from the section heading for a new section. Use this only to give it a different name in the admin.')
+        result.append(schema)
+    return result
 
 
 def _staff_api(view):
@@ -70,11 +96,11 @@ def _field_type(field):
 
 def _field_schema(spec, field_name):
     field = spec["model"]._meta.get_field(field_name)
-    schema = {"name": field.name, "label": str(field.verbose_name).replace("_", " ").title(), "type": _field_type(field), "required": not field.blank and not field.null and not isinstance(field, models.BooleanField), "readonly": field.name in spec.get("readonly", ()) or not field.editable, "help": str(field.help_text or "")}
+    schema = {"name": field.name, "label": _label(field.name, spec["model"]), "type": _field_type(field), "required": not field.blank and not field.null and not isinstance(field, models.BooleanField), "readonly": field.name in spec.get("readonly", ()) or not field.editable, "help": str(field.help_text or "")}
     if field.choices:
         schema["options"] = [{"value": value, "label": str(label)} for value, label in field.choices]
     elif isinstance(field, models.ForeignKey):
-        schema["options"] = [{"value": item.pk, "label": str(item)} for item in field.remote_field.model._default_manager.all()[:1500]]
+        schema["options"] = [{"value": item.pk, "label": item.default_text[:120] if isinstance(item, TextKey) else str(item)} for item in field.remote_field.model._default_manager.all()[:1500]]
     if isinstance(field, models.FileField):
         schema["accept"] = "image/*" if "image" in field.name or field.name in {"logo", "flag"} else ""
     if field.has_default():
@@ -95,7 +121,7 @@ def _raw_value(obj, field):
 
 def _display_value(obj, field):
     value = getattr(obj, field.name)
-    if isinstance(field, models.ForeignKey): return str(value) if value else "—"
+    if isinstance(field, models.ForeignKey): return (value.default_text if isinstance(value, TextKey) else str(value)) if value else "—"
     if isinstance(field, models.FileField): return value.name.rsplit("/", 1)[-1] if value else "—"
     if field.choices and value not in (None, ""): return str(getattr(obj, f"get_{field.name}_display")())
     if isinstance(field, models.BooleanField): return "Yes" if value else "No"
@@ -131,8 +157,12 @@ def _serialize_item(obj, spec):
         field = obj._meta.get_field(field_name)
         fields[field_name] = _raw_value(obj, field)
         cells[field_name] = _display_value(obj, field)
+        if isinstance(field, models.ForeignKey) and field.remote_field.model is TextKey:
+            text = getattr(obj, field_name)
+            fields[field_name + "_text"] = text.default_text if text else ""
     preview, preview_type = _preview_details(obj)
-    return {"id": obj.pk, "display": str(obj), "fields": fields, "cells": cells, "preview": preview, "previewType": preview_type}
+    display = obj.default_text[:100] if isinstance(obj, TextKey) else str(obj)
+    return {"id": obj.pk, "display": display, "fields": fields, "cells": cells, "preview": preview, "previewType": preview_type}
 
 
 def _coerce_value(field, value):
@@ -162,6 +192,34 @@ def _save_object(request, spec, obj=None):
         else: setattr(obj, field_name, value)
     try:
         with transaction.atomic():
+            for name in spec["fields"]:
+                field = obj._meta.get_field(name)
+                virtual = name + "_text"
+                if virtual not in payload or not isinstance(field, models.ForeignKey) or field.remote_field.model is not TextKey:
+                    continue
+                value = str(payload[virtual])
+                if not value.strip() and not field.blank and not field.null:
+                    raise ValidationError({virtual: ["Enter the wording for this field."]})
+                existing = getattr(obj, name, None)
+                if existing and existing.default_text == value:
+                    continue
+                if not value.strip() and (field.blank or field.null):
+                    setattr(obj, name, None)
+                else:
+                    # A page edit must not silently change another page sharing a key.
+                    text = TextKey.objects.create(key="CMS_" + uuid4().hex.upper(), default_text=value)
+                    setattr(obj, name, text)
+            if isinstance(obj, Page) and not obj.pk and not obj.slug:
+                title = getattr(obj, 'title_key', None)
+                base = slugify(title.default_text if title else '')[:110] or 'page'
+                candidate, suffix = base, 2
+                while Page.objects.filter(kind=obj.kind, slug=candidate).exists():
+                    candidate = f'{base}-{suffix}'
+                    suffix += 1
+                obj.slug = candidate
+            if isinstance(obj, PageSection) and not obj.pk and not obj.admin_name:
+                title = getattr(obj, 'title_key', None)
+                obj.admin_name = (title.default_text if title else 'New section')[:140]
             obj.full_clean()
             obj.save()
     except ValidationError as exc:
@@ -220,6 +278,13 @@ def resource_list(request, resource):
         if error: return error
         return JsonResponse({"item": _serialize_item(obj, spec)}, status=201)
     queryset = spec["model"]._default_manager.all()
+    filters = {"pages": ("kind",), "sections": ("page",), "section-items": ("section",), "home-features": ("block",)}.get(resource, ())
+    for name in filters:
+        value = request.GET.get(name)
+        if value:
+            if name != "kind" and not value.isdecimal():
+                return JsonResponse({"detail": "Choose a valid parent item."}, status=400)
+            queryset = queryset.filter(**{name: value})
     query = request.GET.get("q", "").strip()
     if query and spec.get("search_fields"):
         filters = Q()
@@ -231,7 +296,7 @@ def resource_list(request, resource):
     page_size = min(max(int(request.GET.get("pageSize", "50") or 50), 1), 200)
     paginator = Paginator(queryset, page_size)
     page = paginator.get_page(page_number)
-    return JsonResponse({"resource": _resource_payload(resource, spec), "schema": [_field_schema(spec, name) for name in spec["fields"]], "listFields": [{"name": name, "label": str(spec["model"]._meta.get_field(name).verbose_name).replace("_", " ").title()} for name in spec["list_fields"]], "items": [_serialize_item(item, spec) for item in page.object_list], "pagination": {"page": page.number, "pages": paginator.num_pages, "total": paginator.count, "pageSize": page_size}})
+    return JsonResponse({"resource": _resource_payload(resource, spec), "schema": _editor_schema(spec), "listFields": [{"name": name, "label": _label(name, spec["model"])} for name in spec["list_fields"]], "items": [_serialize_item(item, spec) for item in page.object_list], "pagination": {"page": page.number, "pages": paginator.num_pages, "total": paginator.count, "pageSize": page_size}})
 
 
 @require_http_methods(["GET", "PATCH", "POST", "DELETE"])
@@ -241,7 +306,7 @@ def resource_detail(request, resource, pk):
     if not spec: return JsonResponse({"detail": "Unknown content type."}, status=404)
     try: obj = spec["model"]._default_manager.get(pk=pk)
     except spec["model"].DoesNotExist: return JsonResponse({"detail": "Item not found."}, status=404)
-    if request.method == "GET": return JsonResponse({"resource": _resource_payload(resource, spec), "schema": [_field_schema(spec, name) for name in spec["fields"]], "item": _serialize_item(obj, spec)})
+    if request.method == "GET": return JsonResponse({"resource": _resource_payload(resource, spec), "schema": _editor_schema(spec), "item": _serialize_item(obj, spec)})
     if request.method == "DELETE":
         if spec.get("singleton"): return JsonResponse({"detail": "Global settings cannot be deleted."}, status=400)
         try: obj.delete()

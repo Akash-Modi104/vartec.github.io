@@ -12,7 +12,7 @@
         </a>
         <section *ngFor="let group of groups">
           <p>{{ group.label }}</p>
-          <a *ngFor="let item of group.items" [routerLink]="['/content', item.key]" [class.active]="isActive(item.key)">
+          <a *ngFor="let item of group.items" [routerLink]="item.key === 'settings' ? ['/content/settings/1'] : ['/content', item.key]" [queryParams]="item.kind ? {kind:item.kind} : {}" [class.active]="isActive(item.key, item.kind)">
             <span class="nav-mark">{{ item.mark }}</span><span>{{ item.label }}</span>
           </a>
         </section>

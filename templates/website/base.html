@@ -26,6 +26,7 @@
     @font-face{font-family:"Montserrat";font-style:normal;font-display:swap;font-weight:800;src:url("{% static 'cms/montserrat-latin-800-normal.388abfc2eb7582ea.woff2' %}") format("woff2")}
     {% with palette=site_settings.accessible_palette %}:root{--gold:{{ palette.primary }};--black:{{ palette.dark }};--ink:{{ palette.dark }};--light:{{ palette.surface }};--font-sans:{{ site_settings.font_stack|safe }};--font-display:{{ site_settings.font_stack|safe }}}{% endwith %}
   </style>
+  <link rel="stylesheet" href="{% static 'website/css/redesign.css' %}">
   {% if site_settings.organisation_schema_enabled %}
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"{{ site_settings.brand_name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}/","email":"{{ site_settings.contact_email|escapejs }}","telephone":"{{ site_settings.uk_phone|escapejs }}","areaServed":["GB"]}</script>
   {% endif %}

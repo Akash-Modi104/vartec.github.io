@@ -131,7 +131,7 @@ class SiteSettings(models.Model):
     brand_name = models.CharField(max_length=80, default="VARTEC")
     logo = models.FileField(upload_to="website/branding/", blank=True)
     legacy_logo_path = models.CharField(max_length=255, default="image/logo.png")
-    primary_colour = models.CharField(max_length=7, default="#FFC107", validators=[RegexValidator(r"^#[0-9A-Fa-f]{6}$", "Use a six-digit hex colour such as #FFC107.")], help_text="Primary gold from the VARTEC logo.")
+    primary_colour = models.CharField(max_length=7, default="#E19F26", validators=[RegexValidator(r"^#[0-9A-Fa-f]{6}$", "Use a six-digit hex colour such as #FFC107.")], help_text="Primary gold from the VARTEC logo.")
     secondary_colour = models.CharField(max_length=7, default="#080909", validators=[RegexValidator(r"^#[0-9A-Fa-f]{6}$", "Use a six-digit hex colour such as #080909.")], help_text="Dark logo colour used for headings and panels.")
     surface_colour = models.CharField(max_length=7, default="#F5F5F2", validators=[RegexValidator(r"^#[0-9A-Fa-f]{6}$", "Use a six-digit hex colour such as #F5F5F2.")], help_text="Light neutral shade used behind content cards.")
     font_family = models.CharField(max_length=20, choices=FONT_CHOICES, default=FONT_MONTSERRAT, help_text="Typography used across the public website.")
@@ -200,7 +200,7 @@ class SiteSettings(models.Model):
         if luminance(dark) is None or luminance(dark) > .08:
             dark = "#080909"
         if luminance(primary) is None or contrast(luminance(primary), luminance(dark)) < 4.5:
-            primary = "#FFC107"
+            primary = "#E19F26"
         if luminance(surface) is None or luminance(surface) < .8:
             surface = "#FFFFFF"
         return {"primary": primary, "dark": dark, "surface": surface}

@@ -1,5 +1,5 @@
 <div class="page-heading">
-  <div><p class="eyebrow">Control centre</p><h1>Website overview</h1><p>Manage the English website, visual appearance, media and enquiries from one place.</p></div>
+  <div><p class="eyebrow">Control centre</p><h1>Website overview</h1><p>Choose what you want to update. Each page keeps its wording, images and sections together.</p></div>
   <span class="date-chip">Live content workspace</span>
 </div>
 
@@ -16,24 +16,16 @@
 
   <div class="dashboard-columns">
     <section>
-      <div class="section-title"><div><p class="eyebrow">Quick access</p><h2>Frequently managed</h2></div></div>
-      <div class="quick-grid">
-        <a *ngFor="let key of quickKeys; let index=index" [routerLink]="['/content', key]">
-          <span>0{{ index + 1 }}</span>
-          <div><strong>{{ resource(key)?.plural }}</strong><small>{{ resource(key)?.description }}</small></div>
-          <b>→</b>
-        </a>
+      <div class="section-title"><div><p class="eyebrow">Start here</p><h2>What would you like to update?</h2></div></div>
+      <div class="quick-grid task-grid">
+        <a routerLink="/content/home-blocks"><span>⌂</span><div><strong>Homepage</strong><small>Banner images, capability sections and feature cards.</small></div><b>→</b></a>
+        <a routerLink="/content/pages" [queryParams]="{kind:'service'}"><span>S</span><div><strong>Services</strong><small>Edit a service, then open its page sections.</small></div><b>→</b></a>
+        <a routerLink="/content/pages" [queryParams]="{kind:'project'}"><span>P</span><div><strong>Projects</strong><small>Project descriptions, images and visibility.</small></div><b>→</b></a>
+        <a routerLink="/content/media"><span>▧</span><div><strong>Media library</strong><small>Upload and find images, videos and documents.</small></div><b>→</b></a>
+        <a routerLink="/content/text"><span>T</span><div><strong>Shared website wording</strong><small>About Us, banner copy, navigation and contact labels.</small></div><b>→</b></a>
+        <a routerLink="/content/settings/1"><span>⚙</span><div><strong>Website settings</strong><small>Brand, contact details, homepage visibility and search.</small></div><b>→</b></a>
       </div>
-
-      <div class="section-title content-title"><div><p class="eyebrow">Complete control</p><h2>All website modules</h2></div></div>
-      <div class="module-groups">
-        <article *ngFor="let group of groups()">
-          <h3>{{ group }}</h3>
-          <a *ngFor="let item of inGroup(group)" [routerLink]="['/content', item.key]">
-            <span><strong>{{ item.plural }}</strong><small>{{ item.count }} records<span *ngIf="item.activeCount !== undefined"> · {{ item.activeCount }} active</span></small></span><b>›</b>
-          </a>
-        </article>
-      </div>
+      <div class="editing-guide"><h3>How to edit a page</h3><ol><li>Open Services or Projects and choose a page.</li><li>Update its title, introduction or image.</li><li>Open Page sections for the detailed content.</li><li>Save your changes, then check the live website.</li></ol></div>
     </section>
 
     <aside class="activity-card">
