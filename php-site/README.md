@@ -21,6 +21,11 @@ Network Solutions Starter hosting. No database, no framework and no build step.
 | `tests/screens.py` | Full-page screenshots at any width, reporting sideways overflow, broken images and script errors. `python tests/screens.py <address> <folder> 'home-390\|/\|390' …` |
 | `tests/seo.py` | Search-engine audit of every page in the sitemap (titles, descriptions, canonical, headings, image sizes, structured data). `python tests/seo.py <address> vartec.global` |
 | `deploy/vps-test/install.sh` | One-command install on a test server. |
+| `tools/export_static.py` | Saves the public pages as plain HTML files (used by the next script). |
+| `tools/build_static_package.sh` | Builds `static-site.zip`, the plain-HTML copy of the public site that is live while PHP on the hosting is unreliable. |
+| `tools/check_live.sh` | Checks the live site as a visitor sees it: pages, redirects, 404, private paths, files. Read-only. Run after every upload. |
+| `tools/php_health.sh` | Measures whether PHP on the hosting answers every request. GET only. Run before switching to the PHP version. |
+| `deploy/go-live/` | Where the live site stands, what to do for every change, how to roll back, and the four `.htaccess` versions. |
 
 Content lives in a private data folder: `vartec-data/` beside the web root when the server allows
 it, otherwise `public/data/`. Every data file is a `.php` file that exits immediately, so it reveals
@@ -75,14 +80,10 @@ uses a stand-in `send_mail.php` that records messages instead of emailing them.
 
 ## Go live on Network Solutions
 
-1. Keep the backup `vartec-backup-2026-11-15.zip` to hand. It restores the current site exactly.
-2. In File Manager open `/htdocs`. **Leave `send_mail.php` and the `log` folder where they are.**
-3. Delete the old site's files: `index.html`, every `main.*.js`, `styles.*.css`, `runtime.*.js`,
-   `polyfills.*.js`, `scripts.*.js`, the font files, `3rdpartylicenses.txt`, the old `.htaccess*`
-   files and the old `assets` folder.
-4. Upload everything inside `public/` (including the hidden `.htaccess` and `.user.ini`).
-5. Open `https://vartec.global/admin/`. Read the setup code from `vartec-data/setup-code.php`
-   (beside `htdocs`) or `htdocs/data/setup-code.php`, and create the first account.
-6. Check the home page, one service, one project, and send a test enquiry.
+Everything about the live hosting is in [`deploy/go-live/GO-LIVE.md`](deploy/go-live/GO-LIVE.md):
+where things stand, what to do every time the site changes, how to roll back, and how to switch
+to this PHP version once Network Solutions has fixed PHP on their server.
 
-To go back: delete what step 4 uploaded and re-upload `site-files/` from the backup.
+Since 15 Nov 2026 visitors get a plain-HTML copy of the public pages built from this project
+(`tools/build_static_package.sh`). The PHP version with the admin is uploaded but only reachable
+with the tester cookie.
