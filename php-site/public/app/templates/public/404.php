@@ -1,1 +1,2 @@
-<section class="page-hero"><div class="shell"><p class="eyebrow">404</p><h1>Page not found</h1><p>The page you are looking for has moved or no longer exists.</p><a class="button" href="/">Back to the home page</a></div></section>
+<?php /** @var array $content */ ?>
+<section class="not-found"><div class="shell"><p class="code" aria-hidden="true">404</p><h1>Page not found</h1><p>The page you are looking for has moved or no longer exists.</p><div class="hero-actions"><a class="button" href="/">Back to the home page</a><a class="button button-quiet" href="/#services">Our services</a><a class="button button-quiet" href="/#projects">Our projects</a></div></div></section>

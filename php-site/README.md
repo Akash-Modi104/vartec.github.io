@@ -14,6 +14,9 @@ Network Solutions Starter hosting. No database, no framework and no build step.
 | `public/media/` | Images and video. Admin uploads go to `media/uploads/`. |
 | `tools/build_seed.py` | Rebuilds the starting content from the approved Django redesign. |
 | `tests/e2e.py` | Browser test of the public site, contact form, admin and security (52 checks). |
+| `tests/public.py` | Public-site behaviour: phone menu, dropdowns, banner slider, scroll effects, help chat, video (17 checks). `python tests/public.py <address> <folder for screenshots>` |
+| `tests/screens.py` | Full-page screenshots at any width, reporting sideways overflow, broken images and script errors. `python tests/screens.py <address> <folder> 'home-390\|/\|390' …` |
+| `tests/seo.py` | Search-engine audit of every page in the sitemap (titles, descriptions, canonical, headings, image sizes, structured data). `python tests/seo.py <address> vartec.global` |
 | `deploy/vps-test/install.sh` | One-command install on a test server. |
 
 Content lives in a private data folder: `vartec-data/` beside the web root when the server allows

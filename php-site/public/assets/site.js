@@ -45,32 +45,92 @@
     }
   });
 
+  const header = document.querySelector('[data-header]');
+  const banner = document.querySelector('[data-hero]');
+  const onScroll = () => {
+    header?.classList.toggle('scrolled', window.scrollY > 8);
+    // Over the banner the help button shrinks to its icon so it never covers the banner text.
+    document.querySelector('[data-chatbot]')?.classList.toggle('compact', !!banner && window.scrollY < banner.offsetHeight - 160);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Full-width banner: cross-fades through the chosen photos; arrows and dots let visitors choose.
   const hero = document.querySelector('[data-hero]');
-  const media = hero?.querySelector('.hero-media');
-  const slides = [...(hero?.querySelectorAll('.hero-slides [data-src]') || [])];
-  if (media && slides.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const stage = hero?.querySelector('[data-hero-stage]');
+  const list = [...(hero?.querySelectorAll('[data-hero-list] [data-src]') || [])];
+  const controls = hero?.querySelector('[data-hero-controls]');
+  if (stage && controls && list.length > 1) {
+    const images = [stage.querySelector('.hero-img')];
+    const dots = controls.querySelector('[data-hero-dots]');
     let index = 0;
-    const preload = (next) => { const image = new Image(); image.src = slides[next].dataset.src; };
-    preload(1);
-    window.setInterval(() => {
-      index = (index + 1) % slides.length;
-      media.style.opacity = '0.55';
-      window.setTimeout(() => {
-        const safeUrl = slides[index].dataset.src.replace(/"/g, '%22');
-        media.style.backgroundImage = 'url("' + safeUrl + '")';
-        media.style.opacity = '1';
-        preload((index + 1) % slides.length);
-      }, 300);
-    }, 6500);
+    let timer = null;
+    const imageFor = (n) => {
+      if (!images[n]) {
+        const image = document.createElement('img');
+        image.className = 'hero-img';
+        image.alt = list[n].dataset.alt || '';
+        image.decoding = 'async';
+        image.src = list[n].dataset.src;
+        stage.appendChild(image);
+        images[n] = image;
+      }
+      return images[n];
+    };
+    const show = (n) => {
+      index = (n + list.length) % list.length;
+      const next = imageFor(index);
+      const reveal = () => {
+        images.forEach((image, i) => image?.classList.toggle('is-active', i === index));
+        [...dots.children].forEach((dot, i) => dot.setAttribute('aria-current', String(i === index)));
+      };
+      if (next.complete) reveal(); else next.addEventListener('load', reveal, { once: true });
+      imageFor((index + 1) % list.length); // have the following photo ready
+    };
+    const stop = () => { window.clearInterval(timer); timer = null; };
+    const start = () => { if (!calm && !timer) timer = window.setInterval(() => show(index + 1), 6500); };
+    list.forEach((item, n) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', 'Photo ' + (n + 1) + ' of ' + list.length + (item.dataset.alt ? ': ' + item.dataset.alt : ''));
+      dot.setAttribute('aria-current', String(n === 0));
+      dot.addEventListener('click', () => { stop(); show(n); start(); });
+      dots.appendChild(dot);
+    });
+    controls.querySelector('[data-hero-prev]').addEventListener('click', () => { stop(); show(index - 1); start(); });
+    controls.querySelector('[data-hero-next]').addEventListener('click', () => { stop(); show(index + 1); start(); });
+    controls.addEventListener('focusin', stop);
+    controls.addEventListener('focusout', start);
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+    controls.hidden = false;
+    window.setTimeout(() => imageFor(1), 2500);
+    start();
   }
 
-  const autoplayVideo = document.querySelector('[data-autoplay-video]');
-  if (autoplayVideo) {
-    autoplayVideo.muted = true;
-    autoplayVideo.playsInline = true;
-    const startVideo = () => autoplayVideo.play().catch(() => {});
-    if (autoplayVideo.readyState >= 2) startVideo();
-    else autoplayVideo.addEventListener('canplay', startVideo, { once: true });
+  // The video only loads and plays once it is on screen, so it does not slow the first view.
+  const video = document.querySelector('[data-inview-video]');
+  if (video && 'IntersectionObserver' in window) {
+    let visible = false;
+    let userPaused = false;
+    video.addEventListener('pause', () => { if (visible && !video.ended) userPaused = true; });
+    video.addEventListener('play', () => { userPaused = false; });
+    new IntersectionObserver((entries) => entries.forEach((entry) => {
+      visible = entry.isIntersecting;
+      if (visible && !userPaused && !calm) video.play().catch(() => {});
+      else if (!visible) video.pause();
+    }), { threshold: 0.35 }).observe(video);
+  }
+
+  // Sections below the first screen ease in as they are scrolled to.
+  if (!calm && 'IntersectionObserver' in window) {
+    const watcher = new IntersectionObserver((entries) => entries.forEach((entry) => {
+      if (entry.isIntersecting) { entry.target.classList.add('in'); watcher.unobserve(entry.target); }
+    }), { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('[data-reveal]').forEach((element) => {
+      if (element.getBoundingClientRect().top > window.innerHeight) { element.classList.add('reveal'); watcher.observe(element); }
+    });
   }
 
   const chatbot = document.querySelector('[data-chatbot]');

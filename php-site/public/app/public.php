@@ -66,11 +66,14 @@ function public_dispatch(string $path): void
         echo "</urlset>\n";
         return;
     }
+    $org = ['@id' => $base['site'] . '/#organization'];
     if ($path === '/') {
         echo render('public/layout', $base + [
-            'seo_title' => $content['settings']['seo_title'], 'seo_description' => $content['settings']['seo_description'],
+            'seo_title' => $content['settings']['seo_title'], 'seo_description' => meta_description($content['settings']['seo_description']),
             'canonical' => $base['site'] . '/', 'social_image' => $content['home']['hero']['slides'][0] ?? '', 'return_path' => '/',
-            'preload_image' => $content['home']['hero']['slides'][0] ?? '', 'body' => render('public/home', $base),
+            'preload_image' => $content['home']['hero']['slides'][0] ?? '', 'active' => 'home',
+            'schema' => [['@type' => 'WebSite', '@id' => $base['site'] . '/#website', 'url' => $base['site'] . '/', 'name' => $content['settings']['brand_name'], 'inLanguage' => 'en-GB', 'publisher' => $org]],
+            'body' => render('public/home', $base),
         ]);
         return;
     }
@@ -80,20 +83,36 @@ function public_dispatch(string $path): void
             if ($m[3] === '') {
                 redirect(page_path($page), 301);
             }
+            $isService = $page['kind'] === 'service';
+            $url = $base['site'] . page_path($page);
+            $description = meta_description($page['seo_description'] ?: $page['intro']);
+            $image = media_url($content, $page['card_image'] ?? '');
+            $schema = [
+                ['@type' => 'BreadcrumbList', 'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => $base['site'] . '/'],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => $isService ? 'Services' : 'Projects', 'item' => $base['site'] . '/#' . $m[1]],
+                    ['@type' => 'ListItem', 'position' => 3, 'name' => $page['title'], 'item' => $url],
+                ]],
+                array_filter(['@type' => $isService ? 'Service' : 'WebPage', '@id' => $url . '#page', 'url' => $url, 'name' => $page['title'],
+                    'description' => $description, 'image' => $image ? $base['site'] . $image : null,
+                    $isService ? 'provider' : 'publisher' => $org, 'areaServed' => $isService ? 'GB' : null,
+                    'serviceType' => $isService ? $page['title'] : null, 'inLanguage' => $isService ? null : 'en-GB']),
+            ];
             echo render('public/layout', $base + [
-                'seo_title' => $page['seo_title'] ?: $page['title'] . ' | ' . $content['settings']['brand_name'],
-                'seo_description' => $page['seo_description'] ?: $page['intro'],
-                'canonical' => $base['site'] . page_path($page), 'social_image' => $page['card_image'] ?? '', 'return_path' => page_path($page),
-                'preload_image' => '', 'body' => render('public/page', $base + ['page' => $page]),
+                'seo_title' => $page['seo_title'] ?: page_title($page['title'], $isService ? 'Solar services' : 'Solar projects', $content['settings']['brand_name']),
+                'seo_description' => $description,
+                'canonical' => $url, 'social_image' => $page['card_image'] ?? '', 'return_path' => page_path($page),
+                'preload_image' => page_banner($content, $page), 'active' => page_path($page), 'schema' => $schema,
+                'body' => render('public/page', $base + ['page' => $page]),
             ]);
             return;
         }
     }
     http_response_code(404);
-    echo render('public/layout', $base + [
+    echo render('public/layout', [
         'indexable' => false, 'seo_title' => 'Page not found | ' . $content['settings']['brand_name'], 'seo_description' => '',
         'canonical' => '', 'social_image' => '', 'return_path' => '/', 'preload_image' => '', 'body' => render('public/404', $base),
-    ]);
+    ] + $base);
 }
 
 /**
@@ -131,6 +150,25 @@ function public_enquiry(): void
     echo '{"ok":true}';
 }
 
+/** Browser/search title: "Page | Group | Brand", dropping the group when that would be cut off in search results. */
+function page_title(string $title, string $group, string $brand): string
+{
+    $full = $title . ' | ' . $group . ' | ' . $brand;
+    return mb_strlen($full) <= 60 ? $full : $title . ' | ' . $brand;
+}
+
+/** Search-result summary: one line, cut at a word, no longer than search engines show. */
+function meta_description(string $text, int $max = 158): string
+{
+    $text = trim(preg_replace('/\s+/u', ' ', $text) ?? '');
+    if (mb_strlen($text) <= $max) {
+        return $text;
+    }
+    $cut = mb_substr($text, 0, $max - 1);
+    $space = strrpos($cut, ' ');
+    return rtrim($space ? substr($cut, 0, $space) : $cut, " ,;:.-") . '…';
+}
+
 /** <img> with its real size, so the page does not jump while loading. */
 function img_tag(array $content, ?string $id, string $alt, bool $lazy = true): string
 {
@@ -140,6 +178,18 @@ function img_tag(array $content, ?string $id, string $alt, bool $lazy = true): s
     }
     $size = isset($item['w'], $item['h']) ? ' width="' . (int) $item['w'] . '" height="' . (int) $item['h'] . '"' : '';
     return '<img' . ($lazy ? ' loading="lazy" decoding="async"' : '') . ' src="' . e(media_url($content, $id)) . '"' . $size . ' alt="' . e($item['alt'] ?: $alt) . '">';
+}
+
+/** The photo behind an inner page's title: the first section photo, otherwise the card picture. */
+function page_banner(array $content, array $page): string
+{
+    foreach ($page['sections'] ?? [] as $section) {
+        $item = media_item($content, $section['image'] ?? '');
+        if ($item && ($item['kind'] ?? 'image') === 'image') {
+            return $section['image'];
+        }
+    }
+    return media_item($content, $page['card_image'] ?? '') ? $page['card_image'] : '';
 }
 
 function visible_pages(array $content, string $kind): array
