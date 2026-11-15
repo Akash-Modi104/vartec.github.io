@@ -2,7 +2,8 @@
 /** @var array $content */
 $menu = [
     ['dashboard', '/admin/', 'Dashboard'], ['home', '/admin/home', 'Home page'], ['service', '/admin/pages?kind=service', 'Services'],
-    ['project', '/admin/pages?kind=project', 'Projects'], ['media', '/admin/media', 'Images and video'],
+    ['project', '/admin/pages?kind=project', 'Projects'], ['info', '/admin/pages?kind=info', 'Other pages'],
+    ['media', '/admin/media', 'Images and video'], ['wording', '/admin/wording', 'Wording'],
     ['enquiries', '/admin/enquiries', 'Enquiries'], ['settings', '/admin/settings', 'Settings'], ['help', '/admin/help', 'Help'],
 ];
 $usage = media_usage($content);

@@ -8,7 +8,7 @@ declare(strict_types=1);
  * starts with GUARD, so it reveals nothing even if a server were to serve the data folder.
  */
 
-const APP_VERSION = '1.3.0';
+const APP_VERSION = '1.4.0';
 const GUARD = "<?php http_response_code(404); exit; ?>\n";
 const HISTORY_KEEP = 30;
 const SESSION_IDLE_SECONDS = 7200;      // signed out after 2 hours without activity
@@ -92,6 +92,87 @@ function seed_content(): array
     return json_decode((string) file_get_contents(APP_DIR . '/seed/content.json'), true);
 }
 
+/** The three kinds of page: [name in the admin menu, word for one page, start of its web address]. */
+const PAGE_KINDS = [
+    'service' => ['Services', 'service', '/services/'],
+    'project' => ['Projects', 'project', '/projects/'],
+    'info' => ['Other pages', 'page', '/'],
+];
+
+/** Addresses an "other page" may not take, because the site itself uses them. */
+const RESERVED_SLUGS = ['admin', 'services', 'projects', 'service', 'project', 'media', 'assets', 'app', 'data', 'vartec-data',
+    'enquiry', 'home', 'index', 'favicon', 'robots', 'sitemap', 'send-mail', 'cgi-bin', 'preview'];
+
+/**
+ * Short fixed wording on the public site that editors may change (Admin > Wording).
+ * key => [group shown in the admin, what it is, the wording used when the box is left empty].
+ */
+const WORDING = [
+    'menu_home' => ['Menu', 'Home link', 'Home'],
+    'menu_about' => ['Menu', 'About link', 'About Us'],
+    'menu_services' => ['Menu', 'Services menu', 'Services'],
+    'menu_projects' => ['Menu', 'Projects menu', 'Projects'],
+    'menu_contact' => ['Menu', 'Contact button', 'Contact Us'],
+    'btn_services' => ['Buttons', 'Banner button to the services', 'Our Services'],
+    'btn_discuss' => ['Buttons', 'Button to the contact form', 'Discuss a project'],
+    'link_service' => ['Buttons', 'Link on a service card', 'Explore service'],
+    'link_project' => ['Buttons', 'Link on a project card', 'View project'],
+    'label_about' => ['Small lines above headings', 'About section', 'Who we are'],
+    'label_services' => ['Small lines above headings', 'Services section', 'Services'],
+    'label_projects' => ['Small lines above headings', 'Projects section', 'Projects'],
+    'label_contact' => ['Small lines above headings', 'Contact section', 'Contact Us'],
+    'more_services' => ['Small lines above headings', 'Heading under a service page', 'More services'],
+    'more_projects' => ['Small lines above headings', 'Heading under a project page', 'More projects'],
+    'form_first' => ['Contact form', 'First name box', 'First Name'],
+    'form_last' => ['Contact form', 'Last name box', 'Last Name'],
+    'form_email' => ['Contact form', 'Email box', 'Email Address'],
+    'form_phone' => ['Contact form', 'Phone box', 'Phone Number'],
+    'form_message' => ['Contact form', 'Message box', 'Message'],
+    'btn_send' => ['Contact form', 'Send button', 'Send message'],
+    'form_thanks' => ['Contact form', 'Shown after a message is sent', 'Thank you. Your message has been received.'],
+    'form_error' => ['Contact form', 'Shown if sending fails', 'Your message could not be sent. Please try again, or email us directly.'],
+    'contact_phone' => ['Contact details', 'Phone', 'Phone'],
+    'contact_email' => ['Contact details', 'Email', 'Email'],
+    'contact_hours' => ['Contact details', 'Office hours', 'Office hours'],
+    'notfound_title' => ['Page not found', 'Heading', 'Page not found'],
+    'notfound_text' => ['Page not found', 'Text', 'The page you are looking for has moved or no longer exists.'],
+];
+
+/** Starting answers for the help chat; editors change them under Settings. */
+const CHAT_ANSWERS = [
+    ['topic' => 'Solar services', 'keywords' => 'service, epc, engineering, design, procurement, construction', 'answer' => 'We provide engineering, detailed design, procurement, construction, commissioning and ongoing maintenance for solar and energy-storage projects.'],
+    ['topic' => 'O&M support', 'keywords' => 'o&m, maintenance, operation, clean, testing, monitor', 'answer' => 'Our operations and maintenance support includes monitoring, diagnostics, electrical testing, panel cleaning and planned site maintenance.'],
+    ['topic' => 'Request a quote', 'keywords' => 'quote, price, cost, contact, phone, email, speak', 'answer' => 'For a project discussion or quotation, please contact our team. We will connect you with the right specialist.'],
+    ['topic' => 'Battery storage', 'keywords' => 'battery, storage, bess', 'answer' => 'VARTEC supports battery energy storage projects alongside solar PV, from engineering and procurement to construction support.'],
+    ['topic' => 'Project experience', 'keywords' => 'project, experience, carport, floating, solar park, ev', 'answer' => 'Our project experience covers solar parks, floating solar, solar carports, EV charging, battery storage and site security systems.'],
+    ['topic' => 'Greeting', 'keywords' => 'hello, hi, hey', 'answer' => 'Hello. I can help with VARTEC services, projects, operations and maintenance, battery storage, or contacting our team.'],
+];
+const CHAT_FALLBACK = 'I can provide general information about VARTEC services and projects. For a detailed answer, please contact our team.';
+const SOCIAL = ['linkedin' => 'LinkedIn', 'facebook' => 'Facebook', 'instagram' => 'Instagram', 'youtube' => 'YouTube'];
+
+/** Fills in anything added to the site after this content was first saved, so older saved content keeps working. */
+function content_defaults(array $content): array
+{
+    $s = $content['settings'] ?? [];
+    $s['wording'] = is_array($s['wording'] ?? null) ? $s['wording'] : [];
+    $s['chat_answers'] = is_array($s['chat_answers'] ?? null) ? $s['chat_answers'] : CHAT_ANSWERS;
+    $s['chat_fallback'] = (string) ($s['chat_fallback'] ?? CHAT_FALLBACK);
+    $s['google_verification'] = (string) ($s['google_verification'] ?? '');
+    $s['social'] = array_intersect_key((is_array($s['social'] ?? null) ? $s['social'] : []) + array_fill_keys(array_keys(SOCIAL), ''), SOCIAL);
+    $content['settings'] = $s;
+    foreach ($content['pages'] ?? [] as $n => $page) {
+        $content['pages'][$n]['banner_image'] = (string) ($page['banner_image'] ?? '');
+    }
+    return $content;
+}
+
+/** One piece of editable wording, falling back to the standard text. */
+function wording(array $content, string $key): string
+{
+    $text = trim((string) ($content['settings']['wording'][$key] ?? ''));
+    return $text !== '' ? $text : (WORDING[$key][2] ?? '');
+}
+
 /** The published website. Created from the seed the first time the site runs. */
 function live_content(): array
 {
@@ -100,13 +181,14 @@ function live_content(): array
         $live = seed_content();
         write_data('live', $live);
     }
-    return $live;
+    return content_defaults($live);
 }
 
 /** The working copy editors change. Starts as a copy of the published site. */
 function draft_content(): array
 {
-    return read_data('draft') ?: live_content();
+    $draft = read_data('draft');
+    return $draft ? content_defaults($draft) : live_content();
 }
 
 function save_draft(array $content): void
@@ -117,7 +199,7 @@ function save_draft(array $content): void
 function has_unpublished_changes(): bool
 {
     $draft = read_data('draft');
-    return $draft && $draft != live_content();
+    return $draft && content_defaults($draft) != live_content();
 }
 
 function publish_draft(string $user): void
@@ -156,7 +238,7 @@ function find_page(array $content, string $kind, string $slug): ?array
 
 function page_path(array $page): string
 {
-    return '/' . ($page['kind'] === 'service' ? 'services' : 'projects') . '/' . $page['slug'] . '/';
+    return (PAGE_KINDS[$page['kind']][2] ?? '/') . $page['slug'] . '/';
 }
 
 function media_item(array $content, ?string $id): ?array
@@ -207,6 +289,7 @@ function media_usage(array $content): array
     $add($content['home']['about']['poster'] ?? '', 'Home page video cover');
     foreach ($content['pages'] as $page) {
         $add($page['card_image'] ?? '', $page['title'] . ' (card)');
+        $add($page['banner_image'] ?? '', $page['title'] . ' (banner)');
         foreach ($page['sections'] as $section) {
             $add($section['image'] ?? '', $page['title'] . ': ' . ($section['heading'] ?: 'section'));
         }

@@ -1,21 +1,24 @@
 <?php
 /** @var array $content @var array $page */
 $isService = $page['kind'] === 'service';
+$isInfo = $page['kind'] === 'info';
 $q = $preview ? '?preview=1' : '';
-$group = $isService ? 'Services' : 'Projects';
+$w = fn (string $key): string => e(wording($content, $key));
+$group = $isService ? $w('menu_services') : $w('menu_projects');
+$anchor = $isService ? 'services' : 'projects';
 $bannerId = page_banner($content, $page);
 $banner = media_item($content, $bannerId);
-$others = array_slice(array_values(array_filter(visible_pages($content, $page['kind']), fn ($p) => $p['id'] !== $page['id'])), 0, 3);
+$others = $isInfo ? [] : array_slice(array_values(array_filter(visible_pages($content, $page['kind']), fn ($p) => $p['id'] !== $page['id'])), 0, 3);
 ?>
 <section class="page-hero<?= $banner ? '' : ' plain' ?>">
   <?php if ($banner): ?><img src="<?= e(media_url($content, $bannerId)) ?>" alt=""<?= isset($banner['w'], $banner['h']) ? ' width="' . (int) $banner['w'] . '" height="' . (int) $banner['h'] . '"' : '' ?> fetchpriority="high" decoding="async"><?php endif; ?>
   <div class="shell">
-    <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="/<?= $q ?>">Home</a></li><li><a href="/<?= $q ?>#<?= strtolower($group) ?>"><?= $group ?></a></li><li aria-current="page"><?= e($page['title']) ?></li></ol></nav>
+    <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="/<?= $q ?>"><?= $w('menu_home') ?></a></li><?php if (!$isInfo): ?><li><a href="/<?= $q ?>#<?= $anchor ?>"><?= $group ?></a></li><?php endif; ?><li aria-current="page"><?= e($page['title']) ?></li></ol></nav>
     <h1><?= e($page['title']) ?></h1>
   </div>
 </section>
 <?php if (trim($page['intro']) !== ''): ?>
-<section class="page-lead"><div class="shell"><p><?= e($page['intro']) ?></p><a class="button" href="#contact">Discuss a project</a></div></section>
+<section class="page-lead"><div class="shell"><p><?= e($page['intro']) ?></p><?php if (!$isInfo): ?><a class="button" href="#contact"><?= $w('btn_discuss') ?></a><?php endif; ?></div></section>
 <?php endif; ?>
 <?php foreach ($page['sections'] as $n => $section): ?>
 <?php $img = img_tag($content, $section['image'] ?? '', $section['heading']); ?>
@@ -30,8 +33,8 @@ $others = array_slice(array_values(array_filter(visible_pages($content, $page['k
 <?php endforeach; ?>
 <?php if ($others): ?>
 <section class="related">
-  <div class="shell"><div class="section-heading"><p class="eyebrow"><?= $group ?></p><h2><?= $isService ? 'More services' : 'More projects' ?></h2></div>
-    <div class="card-grid"><?php foreach ($others as $item): ?><?= render('public/card', ['content' => $content, 'item' => $item, 'q' => $q, 'more' => $isService ? 'Explore service' : 'View project']) ?><?php endforeach; ?></div>
+  <div class="shell"><div class="section-heading"><p class="eyebrow"><?= $group ?></p><h2><?= $isService ? $w('more_services') : $w('more_projects') ?></h2></div>
+    <div class="card-grid"><?php foreach ($others as $item): ?><?= render('public/card', ['content' => $content, 'item' => $item, 'q' => $q, 'more' => wording($content, $isService ? 'link_service' : 'link_project')]) ?><?php endforeach; ?></div>
   </div>
 </section>
 <?php endif; ?>

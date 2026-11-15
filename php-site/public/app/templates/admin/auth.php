@@ -11,6 +11,19 @@
 <body class="auth">
   <main class="auth-card">
     <div class="brand"><span class="brand-mark">V</span><span><strong>VARTEC</strong><small>Website admin</small></span></div>
+    <?php if ($mode === 'change'): ?>
+      <h1>Choose your own password</h1>
+      <p>Welcome, <?= e($user) ?>. The password you were given was only to get you in. Choose a new one that only you know.</p>
+      <?php if ($error): ?><div class="notice notice-error" role="alert"><?= e($error) ?></div><?php endif; ?>
+      <form method="post" action="/admin/settings/password">
+        <?= csrf_field() ?>
+        <label>The password you were given<input type="password" name="current_password" autocomplete="current-password" required autofocus></label>
+        <label>Your new password <small>(at least 10 characters)</small><input type="password" name="new_password" autocomplete="new-password" minlength="10" required></label>
+        <button type="submit" class="btn btn-primary btn-wide">Save and continue</button>
+      </form>
+      <form method="post" action="/admin/logout" class="auth-foot"><?= csrf_field() ?><button type="submit" class="btn btn-small btn-quiet">Sign out</button></form>
+    </main></body></html>
+    <?php return; endif; ?>
     <?php if ($mode === 'code'): ?>
       <h1>Enter your code</h1>
       <p>Open your authenticator app and enter the six-digit code for VARTEC.</p>

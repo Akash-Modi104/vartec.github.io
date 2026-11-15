@@ -32,7 +32,8 @@
     "engineers-floating-solar",
     "cctv-camera-solar-park",
     "electric-vans-charging",
-    "solar-carport-car-park"
+    "solar-carport-car-park",
+    "floating-solar-harbour"
    ]
   },
   "about": {
@@ -425,7 +426,7 @@
      "id": "s2",
      "heading": "'Floating solar project with 6MWp installed capacity, commissioned in 2023",
      "body": "",
-     "image": "",
+     "image": "floating-solar-harbour",
      "items": []
     },
     {
@@ -844,6 +845,15 @@
    "licence": "own",
    "w": 1600,
    "h": 1200
+  },
+  "floating-solar-harbour": {
+   "file": "floating-solar-harbour.webp",
+   "kind": "image",
+   "alt": "Floating solar array in a harbour basin",
+   "source": "YayImages. Licence held (confirmed by the site owner, November 2026); add the licence or order reference here.",
+   "licence": "licensed",
+   "w": 1600,
+   "h": 1067
   }
  }
 }

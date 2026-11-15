@@ -5,6 +5,7 @@ $slides = array_values(array_filter($h['hero']['slides'], fn ($id) => media_url(
 $services = visible_pages($content, 'service');
 $projects = visible_pages($content, 'project');
 $q = $preview ? '?preview=1' : '';
+$w = fn (string $key): string => e(wording($content, $key));
 $video = media_url($content, $h['about']['video'] ?? '');
 $first = $slides ? media_item($content, $slides[0]) : null;
 $points = array_values(array_filter($h['hero']['points'], fn ($p) => trim($p) !== ''));
@@ -17,7 +18,7 @@ $points = array_values(array_filter($h['hero']['points'], fn ($p) => trim($p) !=
   <div class="shell hero-content">
     <h1><?php if (trim($h['hero']['eyebrow']) !== ''): ?><span class="hero-kicker"><?= e($h['hero']['eyebrow']) ?></span> <?php endif; ?><span class="hero-word<?= mb_strlen($h['hero']['title']) < 14 ? ' compact' : '' ?>"><?= e($h['hero']['title']) ?></span></h1>
     <p class="hero-summary"><?= e($h['hero']['summary']) ?></p>
-    <div class="hero-actions"><?php if ($services): ?><a class="button" href="#services">Our Services</a><?php endif; ?><a class="button button-outline" href="#contact">Discuss a project</a></div>
+    <div class="hero-actions"><?php if ($services): ?><a class="button" href="#services"><?= $w('btn_services') ?></a><?php endif; ?><a class="button button-outline" href="#contact"><?= $w('btn_discuss') ?></a></div>
   </div>
   <div class="hero-bar">
     <div class="shell hero-bar-inner">
@@ -36,7 +37,7 @@ $points = array_values(array_filter($h['hero']['points'], fn ($p) => trim($p) !=
 
 <section class="section" id="about">
   <div class="shell split-layout">
-    <div class="section-copy" data-reveal><p class="eyebrow">Who we are</p><h2><?= e($h['about']['heading']) ?></h2><?php foreach ($h['about']['paragraphs'] as $p): ?><?php if (trim($p) !== ''): ?><p><?= e($p) ?></p><?php endif; ?><?php endforeach; ?></div>
+    <div class="section-copy" data-reveal><p class="eyebrow"><?= $w('label_about') ?></p><h2><?= e($h['about']['heading']) ?></h2><?php foreach ($h['about']['paragraphs'] as $p): ?><?php if (trim($p) !== ''): ?><p><?= e($p) ?></p><?php endif; ?><?php endforeach; ?></div>
     <?php if ($video): ?><div class="media-frame" data-reveal><span class="video-label"><i></i> <?= e($h['about']['video_label']) ?></span><video data-inview-video muted loop playsinline controls preload="none" disablepictureinpicture poster="<?= e(media_url($content, $h['about']['poster'] ?? '')) ?>" aria-label="<?= e($content['settings']['brand_name']) ?> solar engineering project overview"><source src="<?= e($video) ?>" type="video/mp4"></video></div><?php endif; ?>
   </div>
 </section>
@@ -51,16 +52,16 @@ $points = array_values(array_filter($h['hero']['points'], fn ($p) => trim($p) !=
 
 <?php if ($services): ?>
 <section class="section" id="services">
-  <div class="shell"><div class="section-heading" data-reveal><p class="eyebrow">Services</p><h2><?= e($h['services_heading']) ?></h2></div>
-    <div class="card-grid"><?php foreach ($services as $item): ?><?= render('public/card', ['content' => $content, 'item' => $item, 'q' => $q, 'tag' => 'Service', 'more' => 'Explore service']) ?><?php endforeach; ?></div>
+  <div class="shell"><div class="section-heading" data-reveal><p class="eyebrow"><?= $w('label_services') ?></p><h2><?= e($h['services_heading']) ?></h2></div>
+    <div class="card-grid"><?php foreach ($services as $item): ?><?= render('public/card', ['content' => $content, 'item' => $item, 'q' => $q, 'tag' => wording($content, 'label_services'), 'more' => wording($content, 'link_service')]) ?><?php endforeach; ?></div>
   </div>
 </section>
 <?php endif; ?>
 
 <?php if ($projects): ?>
 <section class="section section-cream" id="projects">
-  <div class="shell"><div class="section-heading" data-reveal><p class="eyebrow">Projects</p><h2><?= e($h['projects_heading']) ?></h2></div>
-    <div class="project-grid"><?php foreach ($projects as $n => $item): ?><?= render('public/card', ['content' => $content, 'item' => $item, 'q' => $q, 'number' => $n + 1, 'more' => 'View project', 'class' => 'project-card']) ?><?php endforeach; ?></div>
+  <div class="shell"><div class="section-heading" data-reveal><p class="eyebrow"><?= $w('label_projects') ?></p><h2><?= e($h['projects_heading']) ?></h2></div>
+    <div class="project-grid"><?php foreach ($projects as $n => $item): ?><?= render('public/card', ['content' => $content, 'item' => $item, 'q' => $q, 'number' => $n + 1, 'more' => wording($content, 'link_project'), 'class' => 'project-card']) ?><?php endforeach; ?></div>
   </div>
 </section>
 <?php endif; ?>

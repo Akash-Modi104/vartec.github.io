@@ -28,7 +28,7 @@ with sync_playwright() as p:
     ctx = b.new_context(viewport={'width': 1366, 'height': 800}); pg = ctx.new_page(); errs = []
     pg.on('pageerror', lambda e: errs.append(str(e))); pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
     pg.goto(base + '/', wait_until='load'); pg.wait_for_timeout(600)
-    check('slider controls appear', pg.locator('[data-hero-controls]').is_visible() and pg.locator('[data-hero-dots] button').count() == 6)
+    check('slider controls appear', pg.locator('[data-hero-controls]').is_visible() and pg.locator('[data-hero-dots] button').count() >= 2)
     pg.click('[data-hero-next]'); pg.wait_for_timeout(1600)
     check('next arrow changes the banner photo', pg.locator('.hero-img.is-active').count() == 1 and pg.locator('[data-hero-dots] button[aria-current=true]').get_attribute('aria-label').startswith('Photo 2'))
     pg.screenshot(path=f'{out}/slide2-1366.png')

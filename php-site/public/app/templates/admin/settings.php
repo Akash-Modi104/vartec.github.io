@@ -3,7 +3,7 @@
 $s = $content['settings'];
 ?>
 <div class="page-head"><div><h1>Settings</h1></div></div>
-<form method="post">
+<form method="post" data-settings-form>
   <?= csrf_field() ?>
   <section class="card">
     <h2>Contact details</h2>
@@ -26,6 +26,16 @@ $s = $content['settings'];
     <label>Website address <small>(only this address is offered to Google; test addresses stay hidden)</small><input type="url" name="site_url" value="<?= e($s['site_url']) ?>" required></label>
     <label>Home page title in search results <small>(about 60 characters)</small><?= counted_input('seo_title', $s['seo_title'], 60) ?></label>
     <label>Home page description in search results <small>(about 155 characters)</small><?= counted_input('seo_description', $s['seo_description'], 155, true) ?></label>
+    <label>Google Search Console verification code <small>(optional; paste the code or the whole line Google gives you)</small><input type="text" name="google_verification" value="<?= e($s['google_verification']) ?>" maxlength="400" autocomplete="off"></label>
+  </section>
+  <section class="card">
+    <h2>Social media links</h2>
+    <p class="muted">Optional. Any link you fill in is shown at the bottom of every page and passed to search engines.</p>
+    <div class="grid-2">
+      <?php foreach (SOCIAL as $key => $label): ?>
+      <label><?= e($label) ?><input type="url" name="social[<?= e($key) ?>]" value="<?= e($s['social'][$key] ?? '') ?>" placeholder="https://" maxlength="300"></label>
+      <?php endforeach; ?>
+    </div>
   </section>
   <section class="card">
     <h2>Help chat</h2>
@@ -34,6 +44,26 @@ $s = $content['settings'];
       <label>Chat title<input type="text" name="chat_title" value="<?= e($s['chat_title']) ?>" maxlength="80"></label>
       <label>Welcome message<input type="text" name="chat_welcome" value="<?= e($s['chat_welcome']) ?>" maxlength="240"></label>
     </div>
+    <span class="label">Answers <small>(the chat gives the first answer whose words appear in the visitor's question; the first three topics are shown as quick buttons)</small></span>
+    <div data-list data-answers>
+      <?php foreach ($s['chat_answers'] as $i => $a): ?>
+      <div class="item item-answer" data-list-item>
+        <input type="text" name="answers[<?= $i ?>][topic]" data-name="topic" value="<?= e($a['topic'] ?? '') ?>" placeholder="Topic, e.g. Battery storage" aria-label="Topic" maxlength="40">
+        <input type="text" name="answers[<?= $i ?>][keywords]" data-name="keywords" value="<?= e($a['keywords'] ?? '') ?>" placeholder="Words to listen for, separated by commas" aria-label="Words to listen for" maxlength="300">
+        <span class="item-buttons"><button type="button" class="iconbtn" data-move="-1" aria-label="Move up"><?= icon('up') ?></button><button type="button" class="iconbtn" data-move="1" aria-label="Move down"><?= icon('down') ?></button><button type="button" class="iconbtn danger" data-remove aria-label="Remove answer"><?= icon('trash') ?></button></span>
+        <textarea name="answers[<?= $i ?>][answer]" data-name="answer" rows="2" placeholder="The answer the chat gives" aria-label="Answer" maxlength="600"><?= e($a['answer'] ?? '') ?></textarea>
+      </div>
+      <?php endforeach; ?>
+    </div>
+    <button type="button" class="btn btn-small" data-add-answer><?= icon('plus') ?> Add answer</button>
+    <template data-answer-template><div class="item item-answer" data-list-item>
+        <input type="text" data-name="topic" value="" placeholder="Topic, e.g. Battery storage" aria-label="Topic" maxlength="40">
+        <input type="text" data-name="keywords" value="" placeholder="Words to listen for, separated by commas" aria-label="Words to listen for" maxlength="300">
+        <span class="item-buttons"><button type="button" class="iconbtn" data-move="-1" aria-label="Move up"><?= icon('up') ?></button><button type="button" class="iconbtn" data-move="1" aria-label="Move down"><?= icon('down') ?></button><button type="button" class="iconbtn danger" data-remove aria-label="Remove answer"><?= icon('trash') ?></button></span>
+        <textarea data-name="answer" rows="2" placeholder="The answer the chat gives" aria-label="Answer" maxlength="600"></textarea>
+      </div></template>
+    <label>Answer when nothing matches<textarea name="chat_fallback" rows="2" maxlength="600"><?= e($s['chat_fallback']) ?></textarea></label>
+    <p class="muted">Where an answer says "contact our team" or "contact us", the chat turns those words into a link to the contact form.</p>
   </section>
   <div class="savebar"><button type="submit" class="btn btn-primary">Save draft</button></div>
 </form>
@@ -84,8 +114,8 @@ $s = $content['settings'];
   <?php endforeach; ?>
   <form method="post" action="/admin/settings/editors" class="grid-2 add-editor">
     <?= csrf_field() ?>
-    <label>New editor's username<input type="text" name="username" autocomplete="off" pattern="[a-z0-9._-]{3,40}" required></label>
-    <label>Their password <small>(at least 10 characters)</small><input type="password" name="password" autocomplete="new-password" minlength="10" required></label>
+    <label>New editor's username<input type="text" name="username" autocomplete="off" pattern="[a-z0-9._\-]{3,40}" required></label>
+    <label>A temporary password for them <small>(at least 10 characters; they must change it at first sign-in)</small><input type="password" name="password" autocomplete="new-password" minlength="10" required></label>
     <div><button type="submit" class="btn">Add editor</button></div>
   </form>
 </section>

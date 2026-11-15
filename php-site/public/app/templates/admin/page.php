@@ -1,6 +1,7 @@
 <?php
 /** @var array $content @var array $page */
-$kindLabel = $page['kind'] === 'service' ? 'service' : 'project';
+$kindLabel = PAGE_KINDS[$page['kind']][1];
+$isInfo = $page['kind'] === 'info';
 $types = ['paragraph' => 'Paragraph', 'bullet' => 'Bullet point', 'numbered' => 'Numbered point', 'subheading' => 'Small heading'];
 $section_block = function (array $section, int $i) use ($content, $types) { ob_start(); ?>
   <fieldset class="block" data-section>
@@ -38,12 +39,18 @@ $section_block = function (array $section, int $i) use ($content, $types) { ob_s
     <div class="grid-2">
       <div>
         <label>Title<input type="text" name="title" value="<?= e($page['title']) ?>" maxlength="160" required></label>
-        <label>Introduction <small>(shown under the title, and on the home page card)</small><textarea name="intro" rows="4"><?= e($page['intro']) ?></textarea></label>
+        <label>Introduction <small>(shown under the title<?= $isInfo ? '' : ', and on the home page card' ?>)</small><textarea name="intro" rows="4"><?= e($page['intro']) ?></textarea></label>
         <label class="switch"><input type="checkbox" name="visible" value="1"<?= !empty($page['visible']) ? ' checked' : '' ?>><i></i><span>Shown on website</span></label>
       </div>
-      <div><span class="label">Card picture <small>(shown on the home page)</small></span><?= picker_field($content, 'card_image', $page['card_image'] ?? '') ?></div>
+      <?php if (!$isInfo): ?><div><span class="label">Card picture <small>(shown on the home page)</small></span><?= picker_field($content, 'card_image', $page['card_image'] ?? '') ?></div><?php endif; ?>
     </div>
   </section>
+
+  <details class="card"<?= !empty($page['banner_image']) ? ' open' : '' ?>>
+    <summary><h2>Banner picture</h2></summary>
+    <p class="muted">The wide picture behind the page title. Leave it empty and the page uses its first section picture<?= $isInfo ? ', or a plain orange banner if there is none' : '' ?>.</p>
+    <div class="narrow-picker"><?= picker_field($content, 'banner_image', $page['banner_image'] ?? '') ?></div>
+  </details>
 
   <section class="card">
     <div class="card-head"><h2>Sections</h2><small class="muted">Each section is a block of text with an optional picture. They appear on the page in this order.</small></div>
@@ -58,7 +65,7 @@ $section_block = function (array $section, int $i) use ($content, $types) { ob_s
     <p class="muted">Leave these empty to use the page title and introduction.</p>
     <label>Title in search results <small>(about 60 characters)</small><?= counted_input('seo_title', $page['seo_title'], 60) ?></label>
     <label>Description in search results <small>(about 155 characters)</small><?= counted_input('seo_description', $page['seo_description'], 155, true) ?></label>
-    <label>Web address <small>(letters, numbers and hyphens)</small><span class="prefix"><span><?= $page['kind'] === 'service' ? '/services/' : '/projects/' ?></span><input type="text" name="slug" value="<?= e($page['slug']) ?>" maxlength="80" placeholder="made from the title"></span></label>
+    <label>Web address <small>(letters, numbers and hyphens)</small><span class="prefix"><span><?= e(PAGE_KINDS[$page['kind']][2]) ?></span><input type="text" name="slug" value="<?= e($page['slug']) ?>" maxlength="80" placeholder="made from the title"></span></label>
     <?php if (!$isNew): ?><p class="muted">Changing the address of a published page breaks links other sites have made to it.</p><?php endif; ?>
   </details>
 

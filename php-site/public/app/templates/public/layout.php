@@ -3,6 +3,9 @@
 $s = $content['settings'];
 $services = visible_pages($content, 'service');
 $projects = visible_pages($content, 'project');
+$others = visible_pages($content, 'info');
+$w = fn (string $key): string => e(wording($content, $key));
+$social = array_filter($s['social'] ?? []);
 $logo = media_url($content, $s['logo'] ?? '');
 $q = $preview ? '?preview=1' : '';
 $active = $active ?? '';       // 'home', or the address of the page being shown
@@ -30,13 +33,14 @@ $phoneHref = 'tel:' . preg_replace('/[^0-9+]/', '', $s['phone']);
   <?php if ($logo): ?><link rel="icon" href="<?= e($logo) ?>"><?php endif; ?>
   <?php if ($logo): ?><link rel="apple-touch-icon" href="<?= e($logo) ?>"><?php endif; ?>
   <meta name="theme-color" content="#E19F26">
+  <?php if ($active === 'home' && $s['google_verification'] !== ''): ?><meta name="google-site-verification" content="<?= e($s['google_verification']) ?>"><?php endif; ?>
   <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin.woff2" crossorigin>
   <?php if ($active === 'home'): ?><link rel="preload" as="font" type="font/woff2" href="/assets/fonts/tinos-latin-400.woff2" crossorigin><?php endif; ?>
   <link rel="stylesheet" href="/assets/site.css?v=<?= APP_VERSION ?>">
   <?php
   $org = array_filter(['@type' => 'Organization', '@id' => $site . '/#organization', 'name' => $s['brand_name'], 'url' => $site . '/',
       'logo' => $logo ? $site . $logo : null, 'email' => $s['contact_email'], 'telephone' => $s['phone'], 'areaServed' => 'GB',
-      'description' => $s['seo_description'] ?? null,
+      'description' => $s['seo_description'] ?? null, 'sameAs' => $social ? array_values($social) : null,
       'contactPoint' => ['@type' => 'ContactPoint', 'contactType' => 'customer service', 'telephone' => $s['phone'], 'email' => $s['contact_email'], 'areaServed' => 'GB', 'availableLanguage' => 'en']]);
   $graph = array_merge([$org], $schema ?? []);
   ?>
@@ -51,11 +55,11 @@ $phoneHref = 'tel:' . preg_replace('/[^0-9+]/', '', $s['phone']);
       </a>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation"><span></span><span></span><span></span><span class="sr-only">Menu</span></button>
       <nav id="primary-navigation" class="primary-nav" aria-label="Primary navigation">
-        <a href="/<?= $q ?>"<?= $active === 'home' ? ' aria-current="page"' : '' ?>>Home</a>
-        <a href="/<?= $q ?>#about">About Us</a>
+        <a href="/<?= $q ?>"<?= $active === 'home' ? ' aria-current="page"' : '' ?>><?= $w('menu_home') ?></a>
+        <a href="/<?= $q ?>#about"><?= $w('menu_about') ?></a>
         <?php if ($services): ?>
         <div class="nav-group<?= str_starts_with($active, '/services/') ? ' current' : '' ?>">
-          <button type="button" aria-expanded="false" aria-haspopup="true">Services <span aria-hidden="true">▾</span></button>
+          <button type="button" aria-expanded="false" aria-haspopup="true"><?= $w('menu_services') ?> <span aria-hidden="true">▾</span></button>
           <div class="nav-dropdown">
             <?php foreach ($services as $item): ?><a href="<?= e(page_path($item) . $q) ?>"<?= $active === page_path($item) ? ' aria-current="page"' : '' ?>><?= e($item['title']) ?></a><?php endforeach; ?>
           </div>
@@ -63,13 +67,13 @@ $phoneHref = 'tel:' . preg_replace('/[^0-9+]/', '', $s['phone']);
         <?php endif; ?>
         <?php if ($projects): ?>
         <div class="nav-group<?= str_starts_with($active, '/projects/') ? ' current' : '' ?>">
-          <button type="button" aria-expanded="false" aria-haspopup="true">Projects <span aria-hidden="true">▾</span></button>
+          <button type="button" aria-expanded="false" aria-haspopup="true"><?= $w('menu_projects') ?> <span aria-hidden="true">▾</span></button>
           <div class="nav-dropdown">
             <?php foreach ($projects as $item): ?><a href="<?= e(page_path($item) . $q) ?>"<?= $active === page_path($item) ? ' aria-current="page"' : '' ?>><?= e($item['title']) ?></a><?php endforeach; ?>
           </div>
         </div>
         <?php endif; ?>
-        <a class="nav-cta" href="#contact">Contact Us</a>
+        <a class="nav-cta" href="#contact"><?= $w('menu_contact') ?></a>
       </nav>
     </div>
   </header>
@@ -80,25 +84,25 @@ $phoneHref = 'tel:' . preg_replace('/[^0-9+]/', '', $s['phone']);
   <footer class="site-footer">
     <div class="shell footer-grid">
       <div><?php if ($logo): ?><img class="footer-logo" src="<?= e($logo) ?>" width="104" height="104" alt="<?= e($s['brand_name']) ?>" loading="lazy"><?php endif; ?><p><?= e($s['footer_about']) ?></p></div>
-      <?php if ($services): ?><nav aria-label="Services"><h2>Services</h2><?php foreach ($services as $item): ?><a href="<?= e(page_path($item) . $q) ?>"><?= e($item['title']) ?></a><?php endforeach; ?></nav><?php endif; ?>
-      <?php if ($projects): ?><nav aria-label="Projects"><h2>Projects</h2><?php foreach ($projects as $item): ?><a href="<?= e(page_path($item) . $q) ?>"><?= e($item['title']) ?></a><?php endforeach; ?></nav><?php endif; ?>
-      <div><h2>Contact Us</h2><a href="<?= e($phoneHref) ?>"><?= e($s['phone']) ?></a><a href="mailto:<?= e($s['contact_email']) ?>"><?= e($s['contact_email']) ?></a><small><?= e($s['office_hours_weekdays']) ?><br><?= e($s['office_hours_weekend']) ?></small></div>
+      <?php if ($services): ?><nav aria-label="<?= $w('menu_services') ?>"><h2><?= $w('menu_services') ?></h2><?php foreach ($services as $item): ?><a href="<?= e(page_path($item) . $q) ?>"><?= e($item['title']) ?></a><?php endforeach; ?></nav><?php endif; ?>
+      <?php if ($projects): ?><nav aria-label="<?= $w('menu_projects') ?>"><h2><?= $w('menu_projects') ?></h2><?php foreach ($projects as $item): ?><a href="<?= e(page_path($item) . $q) ?>"><?= e($item['title']) ?></a><?php endforeach; ?></nav><?php endif; ?>
+      <div><h2><?= $w('menu_contact') ?></h2><a href="<?= e($phoneHref) ?>"><?= e($s['phone']) ?></a><a href="mailto:<?= e($s['contact_email']) ?>"><?= e($s['contact_email']) ?></a><small><?= e($s['office_hours_weekdays']) ?><br><?= e($s['office_hours_weekend']) ?></small>
+        <?php if ($social): ?><p class="social"><?php foreach ($social as $key => $link): ?><a href="<?= e($link) ?>" target="_blank" rel="noopener me"><?= e(SOCIAL[$key]) ?></a><?php endforeach; ?></p><?php endif; ?></div>
     </div>
-    <div class="footer-bottom-bar"><div class="shell footer-bottom"><span><?= e(str_replace('{year}', date('Y'), $s['footer_copyright'])) ?></span><a href="#main-content">Back to top ↑</a></div></div>
+    <div class="footer-bottom-bar"><div class="shell footer-bottom"><span><?= e(str_replace('{year}', date('Y'), $s['footer_copyright'])) ?></span><?php if ($others): ?><nav class="legal" aria-label="More pages"><?php foreach ($others as $item): ?><a href="<?= e(page_path($item) . $q) ?>"<?= $active === page_path($item) ? ' aria-current="page"' : '' ?>><?= e($item['title']) ?></a><?php endforeach; ?></nav><?php endif; ?><a href="#main-content">Back to top ↑</a></div></div>
   </footer>
 
   <?php if (!empty($s['chat_enabled'])): ?>
-  <aside class="chatbot" data-chatbot>
+  <aside class="chatbot" data-chatbot data-answers="<?= e(json_encode(array_values($s['chat_answers']), JSON_UNESCAPED_UNICODE)) ?>" data-fallback="<?= e($s['chat_fallback']) ?>">
     <section class="chatbot-panel" id="vartec-chat" aria-label="<?= e($s['chat_title']) ?>" aria-hidden="true" inert>
       <header><span class="chatbot-mark">V</span><div><strong><?= e($s['chat_title']) ?></strong><small><i></i> Online help</small></div><button type="button" data-chat-close aria-label="Close chat">×</button></header>
       <div class="chatbot-messages" data-chat-messages aria-live="polite">
         <p class="chatbot-message bot"><?= e($s['chat_welcome']) ?></p>
       </div>
-      <div class="chatbot-prompts" aria-label="Suggested questions">
-        <button type="button" data-chat-question="What solar services do you provide?">Solar services</button>
-        <button type="button" data-chat-question="Tell me about operations and maintenance.">O&amp;M support</button>
-        <button type="button" data-chat-question="How can I request a quote?">Request a quote</button>
-      </div>
+      <?php $quick = array_slice(array_values(array_filter($s['chat_answers'], fn ($a) => trim($a['topic'] ?? '') !== '')), 0, 3); ?>
+      <?php if ($quick): ?><div class="chatbot-prompts" aria-label="Suggested questions">
+        <?php foreach ($quick as $a): ?><button type="button" data-chat-question="<?= e($a['topic']) ?>"><?= e($a['topic']) ?></button><?php endforeach; ?>
+      </div><?php endif; ?>
       <form class="chatbot-form" data-chat-form>
         <label class="sr-only" for="chatbot-input">Ask VARTEC a question</label>
         <input id="chatbot-input" data-chat-input type="text" maxlength="240" autocomplete="off" placeholder="Ask about our services…">

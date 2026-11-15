@@ -37,6 +37,11 @@ function admin_dispatch(string $path): void
     if ($post) {
         csrf_check();
     }
+    // Someone given a password by another editor must choose their own before doing anything else.
+    if (!empty(users()[$user]['must_change']) && !in_array($path, ['/settings/password', '/logout'], true)) {
+        echo render('admin/auth', ['mode' => 'change', 'error' => flash()['message'] ?? '', 'user' => $user]);
+        return;
+    }
     $routes = [
         '/' => 'admin_dashboard', '/publish' => 'admin_publish', '/discard' => 'admin_discard', '/logout' => 'admin_logout',
         '/home' => 'admin_home', '/pages' => 'admin_pages', '/pages/order' => 'admin_pages_order', '/page' => 'admin_page',
@@ -44,7 +49,7 @@ function admin_dispatch(string $path): void
         '/media/edit' => 'admin_media_edit', '/media/delete' => 'admin_media_delete', '/enquiries' => 'admin_enquiries',
         '/settings' => 'admin_settings', '/settings/password' => 'admin_password', '/settings/editors' => 'admin_editors',
         '/settings/two-step' => 'admin_two_step',
-        '/history' => 'admin_history', '/help' => 'admin_help',
+        '/history' => 'admin_history', '/help' => 'admin_help', '/wording' => 'admin_wording', '/guide' => 'admin_guide',
     ];
     if (!isset($routes[$path])) {
         http_response_code(404);
@@ -73,6 +78,12 @@ function clean_text(mixed $value, int $max = 5000): string
 function clean_line(mixed $value, int $max = 300): string
 {
     return trim(preg_replace('/\s+/', ' ', clean_text($value, $max)) ?? '');
+}
+
+/** 'service', 'project' or 'info' from a request value; anything else counts as a service. */
+function page_kind(mixed $value): string
+{
+    return is_string($value) && isset(PAGE_KINDS[$value]) ? $value : 'service';
 }
 
 function valid_media(array $content, mixed $id, ?string $kind = 'image'): string
@@ -189,6 +200,7 @@ function admin_dashboard(bool $post, string $user): void
     $usage = media_usage($content);
     $flagged = array_filter($content['media'], fn ($item, $id) => isset($usage[$id]) && media_needs_check($item), ARRAY_FILTER_USE_BOTH);
     admin_page_out('Dashboard', render('admin/dashboard', ['content' => $content, 'flagged' => $flagged, 'usage' => $usage,
+        'welcome' => empty(users()[$user]['guide_hidden']) && is_file(GUIDE_FILE),
         'enquiries' => array_slice(read_data('enquiries'), 0, 5), 'changes' => has_unpublished_changes()]), $user, 'dashboard');
 }
 
@@ -197,6 +209,7 @@ function admin_publish(bool $post, string $user): void
     if ($post && has_unpublished_changes()) {
         publish_draft($user);
         audit('Published the website', $user);
+        purge_removed_media();
         flash('Published. Your changes are now live on the website.');
     }
     redirect('/admin/');
@@ -207,6 +220,7 @@ function admin_discard(bool $post, string $user): void
     if ($post) {
         @unlink(data_dir() . '/draft.php');
         audit('Discarded unpublished changes', $user);
+        purge_removed_media();
         flash('Unpublished changes were discarded. The admin now matches the live website.');
     }
     redirect('/admin/');
@@ -258,16 +272,16 @@ function admin_home(bool $post, string $user): void
 
 function admin_pages(bool $post, string $user): void
 {
-    $kind = ($_GET['kind'] ?? '') === 'project' ? 'project' : 'service';
+    $kind = page_kind($_GET['kind'] ?? '');
     $content = draft_content();
-    admin_page_out($kind === 'service' ? 'Services' : 'Projects', render('admin/pages', ['content' => $content, 'kind' => $kind,
+    admin_page_out(PAGE_KINDS[$kind][0], render('admin/pages', ['content' => $content, 'kind' => $kind,
         'pages' => array_values(array_filter($content['pages'], fn ($p) => $p['kind'] === $kind))]), $user, $kind);
 }
 
 /** Saves the order (and visibility switches) of the services or projects list. */
 function admin_pages_order(bool $post, string $user): void
 {
-    $kind = ($_POST['kind'] ?? '') === 'project' ? 'project' : 'service';
+    $kind = page_kind($_POST['kind'] ?? '');
     if ($post) {
         $content = draft_content();
         $ids = array_map('strval', (array) ($_POST['ids'] ?? []));
@@ -307,13 +321,13 @@ function admin_page(bool $post, string $user): void
         }
     }
     $isNew = $index === null;
-    $kind = $isNew ? (($_GET['kind'] ?? '') === 'project' ? 'project' : 'service') : $content['pages'][$index]['kind'];
+    $kind = $isNew ? page_kind($_GET['kind'] ?? '') : $content['pages'][$index]['kind'];
     if ($id !== '' && $isNew) {
         flash('That page no longer exists.', 'error');
         redirect('/admin/pages?kind=' . $kind);
     }
     $page = $isNew ? ['id' => '', 'kind' => $kind, 'slug' => '', 'title' => '', 'intro' => '', 'seo_title' => '', 'seo_description' => '',
-        'card_image' => '', 'visible' => true, 'sections' => []] : $content['pages'][$index];
+        'card_image' => '', 'banner_image' => '', 'visible' => true, 'sections' => []] : $content['pages'][$index];
     $errors = [];
 
     if ($post) {
@@ -321,6 +335,7 @@ function admin_page(bool $post, string $user): void
         $page['title'] = clean_line($in['title'] ?? '', 160);
         $page['intro'] = clean_text($in['intro'] ?? '', 1200);
         $page['card_image'] = valid_media($content, $in['card_image'] ?? '');
+        $page['banner_image'] = valid_media($content, $in['banner_image'] ?? '');
         $page['visible'] = !empty($in['visible']);
         $page['seo_title'] = clean_line($in['seo_title'] ?? '', 120);
         $page['seo_description'] = clean_line($in['seo_description'] ?? '', 400);
@@ -347,8 +362,11 @@ function admin_page(bool $post, string $user): void
         $slug = slugify(clean_line($in['slug'] ?? '', 80) ?: $page['title']);
         foreach ($content['pages'] as $n => $other) {
             if ($other['kind'] === $kind && $other['slug'] === $slug && $n !== $index) {
-                $errors[] = 'Another ' . $kind . ' already uses the address "' . $slug . '". Choose a different one.';
+                $errors[] = 'Another ' . PAGE_KINDS[$kind][1] . ' already uses the address "' . $slug . '". Choose a different one.';
             }
+        }
+        if ($kind === 'info' && in_array($slug, RESERVED_SLUGS, true)) {
+            $errors[] = 'The address "' . $slug . '" is used by the website itself. Choose a different one.';
         }
         if (!$errors) {
             $page['slug'] = $slug;
@@ -363,7 +381,7 @@ function admin_page(bool $post, string $user): void
             redirect('/admin/page?id=' . rawurlencode($page['id']));
         }
     }
-    admin_page_out($isNew ? 'New ' . $kind : $page['title'], render('admin/page', ['content' => $content, 'page' => $page, 'isNew' => $isNew,
+    admin_page_out($isNew ? 'New ' . PAGE_KINDS[$kind][1] : $page['title'], render('admin/page', ['content' => $content, 'page' => $page, 'isNew' => $isNew,
         'errors' => $errors]), $user, $kind);
 }
 
@@ -519,6 +537,36 @@ function admin_media_edit(bool $post, string $user): void
         'usage' => media_usage($content)[$id] ?? []]), $user, 'media');
 }
 
+/**
+ * Deletes picture and video files that are in neither the live website's library nor the draft's.
+ * This is what makes "remove" real: a removed photo is no longer reachable at its old address.
+ * Returns how many files were deleted.
+ */
+function purge_removed_media(): int
+{
+    $keep = [];
+    foreach ([live_content(), draft_content()] as $content) {
+        foreach ($content['media'] ?? [] as $item) {
+            $keep[(string) ($item['file'] ?? '')] = true;
+        }
+    }
+    if (count($keep) < 1) {
+        return 0; // never empty the folder because a library could not be read
+    }
+    $deleted = 0;
+    // The starter pictures sit in media/, uploaded ones in media/uploads/.
+    foreach (array_merge(glob(MEDIA_DIR . '/*') ?: [], glob(MEDIA_DIR . '/uploads/*') ?: []) as $file) {
+        $name = substr($file, strlen(MEDIA_DIR) + 1);
+        if (is_file($file) && !isset($keep[$name]) && @unlink($file)) {
+            $deleted++;
+        }
+    }
+    if ($deleted) {
+        audit('Deleted ' . $deleted . ' removed file' . ($deleted === 1 ? '' : 's') . ' from the server');
+    }
+    return $deleted;
+}
+
 function admin_media_delete(bool $post, string $user): void
 {
     $content = draft_content();
@@ -527,11 +575,12 @@ function admin_media_delete(bool $post, string $user): void
         if (!empty(media_usage($content)[$id])) {
             flash('That file is still used on a page. Remove it from the page first.', 'error');
         } else {
-            // The file itself stays on disk until it is also gone from the live site and history,
-            // so publishing or restoring an older version can never show a broken image.
+            // A file the live website still lists stays until the next publish, so the live site never shows
+            // a broken picture. After that it is deleted from the server for good (see purge_removed_media).
             unset($content['media'][$id]);
             save_draft($content);
-            flash('Removed from the library.');
+            $gone = purge_removed_media();
+            flash($gone ? 'Removed from the library and deleted from the server.' : 'Removed from the library. The file is deleted from the server when you next publish.');
         }
     }
     redirect('/admin/media');
@@ -593,6 +642,33 @@ function admin_settings(bool $post, string $user): void
         $s['chat_enabled'] = !empty($in['chat_enabled']);
         $s['chat_title'] = clean_line($in['chat_title'] ?? '', 80);
         $s['chat_welcome'] = clean_line($in['chat_welcome'] ?? '', 240);
+        $answers = [];
+        foreach (array_values((array) ($in['answers'] ?? [])) as $raw) {
+            $answer = ['topic' => clean_line($raw['topic'] ?? '', 40), 'keywords' => strtolower(clean_line($raw['keywords'] ?? '', 300)), 'answer' => clean_text($raw['answer'] ?? '', 600)];
+            if ($answer['answer'] !== '' && ($answer['topic'] !== '' || $answer['keywords'] !== '')) {
+                $answers[] = $answer;
+            }
+        }
+        $s['chat_answers'] = array_slice($answers, 0, 30);
+        $s['chat_fallback'] = clean_text($in['chat_fallback'] ?? '', 600) ?: CHAT_FALLBACK;
+        // Accepts either the bare code or the whole <meta ...> line Google gives.
+        $code = clean_line($in['google_verification'] ?? '', 400);
+        if (preg_match('/content=["\']([^"\']+)["\']/i', $code, $found)) {
+            $code = $found[1];
+        }
+        if ($code !== '' && !preg_match('/^[A-Za-z0-9_-]{10,120}$/', $code)) {
+            flash('The Google verification code should be the long code Google shows, for example abc123XYZ_-…', 'error');
+            redirect('/admin/settings');
+        }
+        $s['google_verification'] = $code;
+        foreach (SOCIAL as $key => $label) {
+            $link = clean_line($in['social'][$key] ?? '', 300);
+            if ($link !== '' && !preg_match('#^https://[a-z0-9.-]+\.[a-z]{2,}(/[^\s"<>]*)?$#i', $link)) {
+                flash('The ' . $label . ' link should start with https://', 'error');
+                redirect('/admin/settings');
+            }
+            $s['social'][$key] = $link;
+        }
         unset($s);
         save_draft($content);
         flash('Settings saved as a draft.');
@@ -612,16 +688,23 @@ function admin_password(bool $post, string $user): void
             flash('Your current password is not right.', 'error');
         } elseif ($problem = password_problem($new, $user)) {
             flash($problem, 'error');
+        } elseif (password_verify($new, $all[$user]['hash'])) {
+            flash('Choose a password that is different from the current one.', 'error');
         } else {
             $all[$user]['hash'] = password_hash($new, PASSWORD_DEFAULT);
             $all[$user]['epoch'] = ($all[$user]['epoch'] ?? 0) + 1; // signs out every other browser
+            $wasFirst = !empty($all[$user]['must_change']);
+            unset($all[$user]['must_change']);
             write_data('users', $all);
             sign_in($user);
             audit('Changed their password', $user);
             flash('Password changed. Any other browser signed in with this account has been signed out.');
+            if ($wasFirst) {
+                redirect('/admin/');
+            }
         }
     }
-    redirect('/admin/settings#account');
+    redirect(!empty(users()[$user]['must_change']) ? '/admin/' : '/admin/settings#account');
 }
 
 function admin_editors(bool $post, string $user): void
@@ -645,10 +728,10 @@ function admin_editors(bool $post, string $user): void
             } elseif ($problem = password_problem($password, $name)) {
                 flash($problem, 'error');
             } else {
-                $all[$name] = ['hash' => password_hash($password, PASSWORD_DEFAULT), 'created' => gmdate('c'), 'epoch' => 0];
+                $all[$name] = ['hash' => password_hash($password, PASSWORD_DEFAULT), 'created' => gmdate('c'), 'epoch' => 0, 'must_change' => true];
                 write_data('users', $all);
                 audit('Added editor "' . $name . '"', $user);
-                flash('Editor added. Give them the username and password privately.');
+                flash('Editor added. Give them the username and password privately. They will be asked to choose their own password the first time they sign in.');
             }
         }
     }
@@ -698,6 +781,12 @@ function admin_history(bool $post, string $user): void
         $id = preg_replace('/[^0-9-]/', '', (string) ($_POST['id'] ?? ''));
         $version = read_data('history/' . $id);
         if (!empty($version['content'])) {
+            // Pictures deleted from the server since that version was saved are left out, not shown broken.
+            foreach ($version['content']['media'] ?? [] as $mediaId => $item) {
+                if (!is_file(MEDIA_DIR . '/' . ($item['file'] ?? ''))) {
+                    unset($version['content']['media'][$mediaId]);
+                }
+            }
             save_draft($version['content']);
             audit('Restored an earlier version as a draft', $user);
             flash('That version is loaded as a draft. Preview it, then publish to make it live.');
@@ -708,7 +797,50 @@ function admin_history(bool $post, string $user): void
     admin_page_out('Earlier versions', render('admin/history', ['versions' => history_versions()]), $user, 'settings');
 }
 
+/** Short fixed wording on the public site: menu names, button texts, form labels. */
+function admin_wording(bool $post, string $user): void
+{
+    $content = draft_content();
+    if ($post) {
+        $saved = [];
+        foreach (WORDING as $key => [$group, $label, $default]) {
+            $text = clean_line($_POST['w'][$key] ?? '', 160);
+            if ($text !== '' && $text !== $default) {
+                $saved[$key] = $text;
+            }
+        }
+        $content['settings']['wording'] = $saved;
+        save_draft($content);
+        flash('Wording saved as a draft. Preview it, then publish when you are happy.');
+        redirect('/admin/wording');
+    }
+    admin_page_out('Wording', render('admin/wording', ['content' => $content]), $user, 'wording');
+}
+
+const GUIDE_FILE = APP_DIR . '/guide/VARTEC-admin-guide.pdf';
+
+/** The illustrated user guide (PDF). Only signed-in editors reach this; the file is not web-accessible itself. */
+function admin_guide(bool $post, string $user): void
+{
+    if ($post) {
+        $all = users();
+        $all[$user]['guide_hidden'] = true;      // "Hide this" on the dashboard welcome card
+        write_data('users', $all);
+        redirect('/admin/');
+    }
+    if (!is_file(GUIDE_FILE)) {
+        http_response_code(404);
+        admin_page_out('Guide', '<div class="card"><h2>The guide is not installed</h2><p><a href="/admin/help">Open Help instead</a></p></div>', $user, 'help');
+        return;
+    }
+    header_remove('Content-Security-Policy');     // lets the browser's own PDF viewer open it
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: inline; filename="VARTEC-admin-guide.pdf"');
+    header('Content-Length: ' . filesize(GUIDE_FILE));
+    readfile(GUIDE_FILE);
+}
+
 function admin_help(bool $post, string $user): void
 {
-    admin_page_out('Help', render('admin/help'), $user, 'help');
+    admin_page_out('Help', render('admin/help', ['has_guide' => is_file(GUIDE_FILE)]), $user, 'help');
 }

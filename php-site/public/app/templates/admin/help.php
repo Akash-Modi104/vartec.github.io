@@ -1,4 +1,5 @@
-<div class="page-head"><div><h1>Help</h1><p>How to do the common jobs. Nothing you do here reaches the live website until you press Publish.</p></div></div>
+<div class="page-head"><div><h1>Help</h1><p>How to do the common jobs. Nothing you do here reaches the live website until you press Publish.</p></div>
+  <?php if (!empty($has_guide)): ?><a class="btn btn-primary" href="/admin/guide" target="_blank" rel="noopener"><?= icon('help') ?> Open the full guide (PDF)</a><?php endif; ?></div>
 <section class="card help">
   <h2>How editing works</h2>
   <ol>
@@ -29,4 +30,20 @@
 <section class="card help">
   <h2>Search engines</h2>
   <p>Each page has a <em>Search engines and web address</em> box. The title should say what the page offers and where, in about 60 characters. The description should be one or two plain sentences, about 155 characters. Leave both empty to use the page title and introduction.</p>
+</section>
+<section class="card help">
+  <h2>Add a privacy policy or another page</h2>
+  <ol><li>Open <em>Other pages</em> and press <em>Add a page</em>.</li><li>Give it a title, for example "Privacy policy". Add one section for each part of the text.</li><li>Save, preview and publish. A link to the page appears at the bottom of every page.</li></ol>
+</section>
+<section class="card help">
+  <h2>Change a menu name, a button or a form label</h2>
+  <p>Open <em>Wording</em>. Each box shows the standard text in grey. Type your own to replace it, or clear the box to go back to the standard text.</p>
+</section>
+<section class="card help">
+  <h2>Change what the help chat says</h2>
+  <p>Open <em>Settings</em>, <em>Help chat</em>. Each answer has a topic, the words to listen for, and the answer itself. The chat gives the first answer whose words appear in the visitor's question, so put the most specific answers first.</p>
+</section>
+<section class="card help">
+  <h2>Choose the wide picture behind a page title</h2>
+  <p>Open the page and the <em>Banner picture</em> box. If you leave it empty the page uses its first section picture.</p>
 </section>

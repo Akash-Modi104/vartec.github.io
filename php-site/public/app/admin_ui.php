@@ -14,6 +14,8 @@ function icon(string $name): string
         'enquiries' => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
         'settings' => '<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
         'help' => '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7"/><path d="M12 17h0"/>',
+        'info' => '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',
+        'wording' => '<path d="M3 18l5-12 5 12M5 14h6"/><path d="M15 18v-5a3 3 0 0 1 6 0v5M15 15h6"/>',
         'up' => '<path d="M6 15l6-6 6 6"/>', 'down' => '<path d="M6 9l6 6 6-6"/>', 'trash' => '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
         'plus' => '<path d="M12 5v14M5 12h14"/>', 'eye' => '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
         'warn' => '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h0"/>', 'out' => '<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>',

@@ -141,16 +141,19 @@
     const messages = chatbot.querySelector('[data-chat-messages]');
     const form = chatbot.querySelector('[data-chat-form]');
     const input = chatbot.querySelector('[data-chat-input]');
-    const contactLink = '<a href="#contact">contact our team</a>';
+    // Answers are written in the admin (Settings > Help chat). The first one whose words appear in the question wins.
+    let answers = [];
+    try { answers = JSON.parse(chatbot.dataset.answers || '[]'); } catch (failure) { answers = []; }
+    const fallback = chatbot.dataset.fallback || '';
+    const escapeHtml = (text) => text.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const withLink = (text) => escapeHtml(text).replace(/\b(contact (?:our team|us))\b/i, '<a href="#contact">$1</a>');
     const replyFor = (question) => {
-      const text = question.toLowerCase();
-      if (/battery|storage|bess/.test(text)) return 'VARTEC supports battery energy storage projects alongside solar PV, from engineering and procurement to construction support.';
-      if (/maintenance|operation|o&m|clean|testing|monitor/.test(text)) return 'Our operations and maintenance support includes monitoring, diagnostics, electrical testing, panel cleaning and planned site maintenance.';
-      if (/epc|engineering|design|procurement|construction|service/.test(text)) return 'We provide engineering, detailed design, procurement, construction, commissioning and ongoing maintenance for solar and energy-storage projects.';
-      if (/project|experience|carport|floating|solar park|ev/.test(text)) return 'Our project experience covers solar parks, floating solar, solar carports, EV charging, battery storage and site security systems.';
-      if (/quote|price|cost|contact|phone|email|speak/.test(text)) return 'For a project discussion or quotation, please ' + contactLink + '. We will connect you with the right specialist.';
-      if (/hello|hi|hey/.test(text)) return 'Hello. I can help with VARTEC services, projects, operations and maintenance, battery storage, or contacting our team.';
-      return 'I can provide general information about VARTEC services and projects. For a detailed answer, please ' + contactLink + '.';
+      const text = question.toLowerCase().trim();
+      const match = answers.find((a) => (a.topic || '').toLowerCase() === text)
+        || answers.find((a) => (a.keywords || '').split(',').map((k) => k.trim()).filter(Boolean)
+          .some((k) => new RegExp('(^|[^a-z0-9])' + escapeRegExp(k), 'i').test(text)));
+      return withLink(match ? match.answer : fallback);
     };
     const addMessage = (content, type, allowLink = false) => {
       const message = document.createElement('p');

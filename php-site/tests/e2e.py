@@ -126,7 +126,7 @@ with sync_playwright() as p:
     page.screenshot(path=f"{SHOTS}/admin-home.png", full_page=True)
     page.click('.savebar button[type="submit"]'); page.wait_for_selector(".notice-ok")
     check("home page saves", guarded("draft")["home"]["hero"]["eyebrow"].endswith("Ireland"))
-    check("home banner keeps its 6 slides", len(guarded("draft")["home"]["hero"]["slides"]) == 6)
+    check("home banner keeps all its slides", len(guarded("draft")["home"]["hero"]["slides"]) == len(guarded("live")["home"]["hero"]["slides"]) >= 6)
 
     # --- discard brings the draft back to the live version
     page.goto(BASE + "/admin/")

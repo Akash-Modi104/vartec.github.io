@@ -181,6 +181,11 @@
       $('.slides').append(node); openPicker($('[data-picker]', node));
       return;
     }
+    if (event.target.closest('[data-add-answer]')) {
+      const node = $('[data-answer-template]').content.firstElementChild.cloneNode(true);
+      $('[data-answers]').append(node); $('[data-name="topic"]', node).focus(); clean = false;
+      return;
+    }
     if (event.target.closest('[data-add-card]')) {
       const node = $('[data-card-template]').content.firstElementChild.cloneNode(true);
       $('[data-cards]').append(node); $('[data-name="title"]', node).focus(); clean = false;
@@ -198,6 +203,10 @@
       $$('[data-name]', section).filter((field) => !field.closest('[data-item]')).forEach((field) => { field.name = 'sections[' + i + '][' + field.dataset.name + ']'; });
       $$('[data-item]', section).forEach((item, j) => $$('[data-name]', item).forEach((field) => { field.name = 'sections[' + i + '][items][' + j + '][' + field.dataset.name + ']'; }));
     });
+  });
+  const settingsForm = $('form[data-settings-form]');
+  if (settingsForm) settingsForm.addEventListener('submit', () => {
+    $$('[data-answers] [data-list-item]', settingsForm).forEach((row, i) => $$('[data-name]', row).forEach((field) => { field.name = 'answers[' + i + '][' + field.dataset.name + ']'; }));
   });
   const homeForm = $('form[data-home-form]');
   if (homeForm) homeForm.addEventListener('submit', () => {

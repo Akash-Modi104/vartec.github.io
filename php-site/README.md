@@ -14,6 +14,9 @@ Network Solutions Starter hosting. No database, no framework and no build step.
 | `public/media/` | Images and video. Admin uploads go to `media/uploads/`. |
 | `tools/build_seed.py` | Rebuilds the starting content from the approved Django redesign. |
 | `tests/e2e.py` | Browser test of the public site, contact form, admin and security (52 checks). |
+| `tests/admin_more.py` | Every admin screen on desktop and phone, plus wording, other pages, banner picture, chat answers, pictures (upload, details, remove and file deletion), enquiries, editors and first-sign-in password change (45 checks). Run it like `e2e.py`, on its own empty data folder. |
+| `tools/build_guide.py` | Rebuilds the illustrated user guide served at `/admin/guide` (`public/app/guide/VARTEC-admin-guide.pdf`). |
+| `tools/add_harbour_photo.php` | One-off for sites set up before the harbour floating-solar photo was restored. |
 | `tests/public.py` | Public-site behaviour: phone menu, dropdowns, banner slider, scroll effects, help chat, video (17 checks). `python tests/public.py <address> <folder for screenshots>` |
 | `tests/screens.py` | Full-page screenshots at any width, reporting sideways overflow, broken images and script errors. `python tests/screens.py <address> <folder> 'home-390\|/\|390' …` |
 | `tests/seo.py` | Search-engine audit of every page in the sitemap (titles, descriptions, canonical, headings, image sizes, structured data). `python tests/seo.py <address> vartec.global` |

@@ -1,13 +1,16 @@
 <?php
 /** @var array $pages */
-$label = $kind === 'service' ? 'service' : 'project';
+$label = PAGE_KINDS[$kind][1];
+$about = $kind === 'info'
+    ? 'Pages that are not a service or a project, such as a privacy policy or terms. Each one gets a link at the bottom of every page.'
+    : 'Open a page to edit it. Use the arrows to change the order shown in the menu and on the home page.';
 ?>
-<div class="page-head"><div><h1><?= $kind === 'service' ? 'Services' : 'Projects' ?></h1><p>Open a page to edit it. Use the arrows to change the order shown in the menu and on the home page.</p></div>
+<div class="page-head"><div><h1><?= e(PAGE_KINDS[$kind][0]) ?></h1><p><?= e($about) ?></p></div>
   <a class="btn btn-primary" href="/admin/page?kind=<?= e($kind) ?>"><?= icon('plus') ?> Add a <?= e($label) ?></a></div>
 
 <form method="post" action="/admin/pages/order" class="card" data-sortable-form>
   <?= csrf_field() ?><input type="hidden" name="kind" value="<?= e($kind) ?>">
-  <?php if (!$pages): ?><p class="muted">Nothing here yet. Add your first <?= e($label) ?>.</p><?php endif; ?>
+  <?php if (!$pages): ?><p class="muted">Nothing here yet. Press "Add a <?= e($label) ?>" to make the first one<?= $kind === 'info' ? ', for example a privacy policy' : '' ?>.</p><?php endif; ?>
   <div data-sortable>
   <?php foreach ($pages as $page): ?>
     <div class="sort-row" data-sort-item>

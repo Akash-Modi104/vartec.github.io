@@ -26,7 +26,7 @@
     if (result === 'Success') {
       form.reset();
       if (status) {
-        status.querySelector('p').textContent = 'Thank you. Your message has been received.';
+        status.querySelector('p').textContent = form.dataset.thanks || 'Thank you. Your message has been received.';
         status.hidden = false;
         status.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
