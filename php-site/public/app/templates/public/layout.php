@@ -47,7 +47,7 @@ $phoneHref = 'tel:' . preg_replace('/[^0-9+]/', '', $s['phone']);
   <header class="site-header" data-header>
     <div class="shell header-inner">
       <a class="brand" href="/<?= $q ?>" aria-label="<?= e($s['brand_name']) ?> home">
-        <?php if ($logo): ?><img src="<?= e($logo) ?>" width="60" height="60" alt="<?= e($s['brand_name']) ?>"><?php endif; ?>
+        <?php if ($logo): ?><img src="<?= e($logo) ?>" width="78" height="78" alt="<?= e($s['brand_name']) ?>"><?php endif; ?>
       </a>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation"><span></span><span></span><span></span><span class="sr-only">Menu</span></button>
       <nav id="primary-navigation" class="primary-nav" aria-label="Primary navigation">
@@ -79,7 +79,7 @@ $phoneHref = 'tel:' . preg_replace('/[^0-9+]/', '', $s['phone']);
 
   <footer class="site-footer">
     <div class="shell footer-grid">
-      <div><?php if ($logo): ?><img class="footer-logo" src="<?= e($logo) ?>" width="84" height="84" alt="<?= e($s['brand_name']) ?>" loading="lazy"><?php endif; ?><p><?= e($s['footer_about']) ?></p></div>
+      <div><?php if ($logo): ?><img class="footer-logo" src="<?= e($logo) ?>" width="104" height="104" alt="<?= e($s['brand_name']) ?>" loading="lazy"><?php endif; ?><p><?= e($s['footer_about']) ?></p></div>
       <?php if ($services): ?><nav aria-label="Services"><h2>Services</h2><?php foreach ($services as $item): ?><a href="<?= e(page_path($item) . $q) ?>"><?= e($item['title']) ?></a><?php endforeach; ?></nav><?php endif; ?>
       <?php if ($projects): ?><nav aria-label="Projects"><h2>Projects</h2><?php foreach ($projects as $item): ?><a href="<?= e(page_path($item) . $q) ?>"><?= e($item['title']) ?></a><?php endforeach; ?></nav><?php endif; ?>
       <div><h2>Contact Us</h2><a href="<?= e($phoneHref) ?>"><?= e($s['phone']) ?></a><a href="mailto:<?= e($s['contact_email']) ?>"><?= e($s['contact_email']) ?></a><small><?= e($s['office_hours_weekdays']) ?><br><?= e($s['office_hours_weekend']) ?></small></div>
