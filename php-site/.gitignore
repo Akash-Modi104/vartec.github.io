@@ -1,0 +1,5 @@
+# Runtime data never belongs in the repository
+/vartec-data/
+/public/data/
+/public/media/uploads/
+/public/send_mail.php

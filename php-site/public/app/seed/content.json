@@ -1,0 +1,849 @@
+{
+ "settings": {
+  "brand_name": "VARTEC",
+  "site_url": "https://vartec.global",
+  "contact_email": "info@vartec.global",
+  "phone": "+44 800 772 0316",
+  "office_hours_weekdays": "Mon - Fri: 9:00 - 18:00",
+  "office_hours_weekend": "Sat - Sun: Closed",
+  "footer_about": "Design, Development, EPC, Operation and Maintenance of solar PV-Systems (Solar Parks, Carports, Floating) and Battery Storage Systems",
+  "footer_copyright": "© VARTEC B.V. {year}. All rights reserved.",
+  "seo_title": "Solar EPC, Battery Storage & O&M in the UK | VARTEC",
+  "seo_description": "VARTEC delivers solar EPC, battery storage, carports, floating solar and operations and maintenance services across the UK and Europe.",
+  "logo": "logo",
+  "chat_enabled": true,
+  "chat_title": "VARTEC Assistant",
+  "chat_welcome": "Hello. How can we help with your solar energy project?"
+ },
+ "home": {
+  "hero": {
+   "eyebrow": "Solar engineering across the UK",
+   "title": "VARTEC",
+   "summary": "Design, Development, EPC, Operation and Maintenance of solar PV-Systems (Solar Parks, Carports, Floating) and Battery Storage Systems",
+   "points": [
+    "Engineering & design",
+    "EPC delivery",
+    "Commissioning",
+    "Operations & maintenance"
+   ],
+   "slides": [
+    "battery-storage-site",
+    "grass-cutting-solar-park",
+    "engineers-floating-solar",
+    "cctv-camera-solar-park",
+    "electric-vans-charging",
+    "solar-carport-car-park"
+   ]
+  },
+  "about": {
+   "heading": "About Us",
+   "paragraphs": [
+    "VARTEC has been supplying the most advanced solutions for large-scale solar PV installations for over 10 years in the UK and The Netherlands. With our extensive experience and a team of internal and external consultants and contractors, VARTEC is the ideal partner for designing, building, and operating solar parks, carports, battery storage systems, and electric vehicle charging. Every project starts with a detailed analysis before we make an offer that perfectly suits your needs.",
+    "We combine our professional services with the latest technologies and products available on the market. We can help you with design services, full EPC (Engineering, Procurement & Construction) or EPC-Lite, and/or bespoke services such as project management, construction management, operation and maintenance, and fault-finding. We also have our own portfolio of projects."
+   ],
+   "video": "finalmerge",
+   "video_label": "VARTEC in action",
+   "poster": "battery-storage-site"
+  },
+  "capabilities": {
+   "eyebrow": "VARTEC capabilities",
+   "heading": "From design through operation and maintenance",
+   "intro": "A clear view of the services already available from VARTEC across the solar project lifecycle.",
+   "cards": [
+    {
+     "title": "Engineering and detailed design",
+     "body": "Detailed design, calculations, engineering and project planning for solar PV and battery storage systems."
+    },
+    {
+     "title": "Procurement and construction",
+     "body": "Component procurement, construction management and turnkey EPC delivery."
+    },
+    {
+     "title": "Commissioning and quality control",
+     "body": "Plant commissioning, inspections, compliance support and quality control."
+    },
+    {
+     "title": "Operations and maintenance",
+     "body": "Monitoring, reporting, diagnostics, testing, cleaning and planned site maintenance."
+    }
+   ]
+  },
+  "services_heading": "Our Services",
+  "projects_heading": "Selected renewable energy projects",
+  "contact": {
+   "heading": "Contact details",
+   "text": [
+    "If you have any questions or comments, we would be happy to hear from you.",
+    "In addition, you will find all contact details to reach us."
+   ],
+   "form_heading": "Get in touch"
+  }
+ },
+ "pages": [
+  {
+   "id": "service-epc",
+   "kind": "service",
+   "slug": "epc",
+   "title": "EPC (Engineering, Procurement and Construction)",
+   "intro": "VARTEC is an expert in the professional design, construction and operation of turnkey large-scale photovoltaic plants (including battery storage systems, electric vehicle charging and more). We are a reliable partner and advisor in the EPC process and can manage every stage from detailed design and engineering, through to construction and operation phases. We have in-house health and safety specialists to ensure that projects run smoothly and safely. We have a zero-accident record to date.",
+   "seo_title": "",
+   "seo_description": "",
+   "card_image": "engineering-procurement-and-construction-epc",
+   "visible": true,
+   "sections": [
+    {
+     "id": "s1",
+     "heading": "Engineering, Procurement and Construction (EPC)",
+     "body": "Our highly specialized team consists of experts with decades of experience in plant engineering, procurement and construction. We control every phase of the EPC process with routine and flexibility. In this way, we not only ensure sustainable plant quality, we also make a long-lasting and reliable contribution to green electricity production and the success of the energy transition.",
+     "image": "engineering-procurement-and-construction-epc",
+     "items": []
+    },
+    {
+     "id": "s2",
+     "heading": "Engineering Services",
+     "body": "",
+     "image": "engineering",
+     "items": []
+    },
+    {
+     "id": "s3",
+     "heading": "Procurement Services",
+     "body": "",
+     "image": "procurement",
+     "items": []
+    }
+   ]
+  },
+  {
+   "id": "service-consulting",
+   "kind": "service",
+   "slug": "consulting",
+   "title": "Consulting Services",
+   "intro": "Apart from our main EPC business, VARTEC can support you with ad-hoc services such as:",
+   "seo_title": "",
+   "seo_description": "",
+   "card_image": "design-cad",
+   "visible": true,
+   "sections": [
+    {
+     "id": "s1",
+     "heading": "Design CAD",
+     "body": "Apart from our main EPC business, VARTEC can support you with ad-hoc services such as:",
+     "image": "design-cad",
+     "items": [
+      {
+       "type": "bullet",
+       "text": "Detailed designs and calculations"
+      },
+      {
+       "type": "bullet",
+       "text": "Project, programme and budget management"
+      },
+      {
+       "type": "bullet",
+       "text": "Health and Safety coordination"
+      },
+      {
+       "type": "bullet",
+       "text": "Construction management"
+      }
+     ]
+    },
+    {
+     "id": "s2",
+     "heading": "Health and Safety",
+     "body": "",
+     "image": "health-and-safety",
+     "items": []
+    }
+   ]
+  },
+  {
+   "id": "service-operation-maintenance",
+   "kind": "service",
+   "slug": "operation-maintenance",
+   "title": "Operation and Maintenance (O&M)",
+   "intro": "Our operations and management (O&M) services are delivered by an expert team to secure everything your plant needs to run at peak efficiency.",
+   "seo_title": "",
+   "seo_description": "",
+   "card_image": "om-services",
+   "visible": true,
+   "sections": [
+    {
+     "id": "s1",
+     "heading": "Operations",
+     "body": "We have the technical expertise and high service standards to handle any and all requirements. A strong local presence across the country is backed up by excellent talent and world-class knowledge.",
+     "image": "operation-and-maintenance-floating-solar",
+     "items": [
+      {
+       "type": "bullet",
+       "text": "Remote monitoring"
+      },
+      {
+       "type": "bullet",
+       "text": "Management of tasks and allocation of job numbers"
+      },
+      {
+       "type": "bullet",
+       "text": "Remote plant control"
+      },
+      {
+       "type": "bullet",
+       "text": "Site performance reporting"
+      },
+      {
+       "type": "bullet",
+       "text": "Trend analysis"
+      },
+      {
+       "type": "bullet",
+       "text": "Time-tabling panel cleaning"
+      }
+     ]
+    },
+    {
+     "id": "s2",
+     "heading": "Maintenance",
+     "body": "",
+     "image": "grass-cutting",
+     "items": [
+      {
+       "type": "bullet",
+       "text": "Fixed price annual packages"
+      },
+      {
+       "type": "bullet",
+       "text": "Inspections and maintenance on:"
+      },
+      {
+       "type": "bullet",
+       "text": "Inverters"
+      },
+      {
+       "type": "bullet",
+       "text": "Transformers"
+      },
+      {
+       "type": "bullet",
+       "text": "Medium & high voltage switchgear"
+      },
+      {
+       "type": "bullet",
+       "text": "Sensors"
+      },
+      {
+       "type": "bullet",
+       "text": "Structure"
+      },
+      {
+       "type": "bullet",
+       "text": "Modules"
+      },
+      {
+       "type": "bullet",
+       "text": "Cabling"
+      },
+      {
+       "type": "bullet",
+       "text": "Thermal imaging - ground and aerial by licensed drone"
+      },
+      {
+       "type": "bullet",
+       "text": "Outage and diagnostics on site"
+      },
+      {
+       "type": "bullet",
+       "text": "Site maintenance"
+      }
+     ]
+    },
+    {
+     "id": "s3",
+     "heading": "Electrical Testing",
+     "body": "",
+     "image": "electrical-testing",
+     "items": []
+    },
+    {
+     "id": "s4",
+     "heading": "Panel Cleaning",
+     "body": "",
+     "image": "panel-cleaning",
+     "items": []
+    },
+    {
+     "id": "s5",
+     "heading": "Robot Panel Cleaning",
+     "body": "",
+     "image": "robot-panel-cleaning",
+     "items": []
+    },
+    {
+     "id": "s6",
+     "heading": "Solar Panel Testing",
+     "body": "",
+     "image": "solar-panel-testing",
+     "items": []
+    }
+   ]
+  },
+  {
+   "id": "project-battery-storage",
+   "kind": "project",
+   "slug": "battery-storage",
+   "title": "Battery Storage",
+   "intro": "Explore our state-of-the-art battery storage systems, designed and commissioned to provide reliable and efficient energy solutions. Our projects showcase the integration of advanced technologies to meet the growing demand for sustainable energy storage. Join us in our journey towards a greener future.",
+   "seo_title": "",
+   "seo_description": "",
+   "card_image": "battery-storage-containers",
+   "visible": true,
+   "sections": [
+    {
+     "id": "s1",
+     "heading": "12MW/24MWh Battery Storage System commissioned in 2023.",
+     "body": "",
+     "image": "battery-storage-containers",
+     "items": []
+    },
+    {
+     "id": "s2",
+     "heading": "6MW/12MWh battery Storage System Commissioned in 2023",
+     "body": "",
+     "image": "battery-storage",
+     "items": []
+    },
+    {
+     "id": "s3",
+     "heading": "Solar with Storage System",
+     "body": "",
+     "image": "solar-with-storage",
+     "items": []
+    },
+    {
+     "id": "s4",
+     "heading": "Generic 1MW battery storage unit",
+     "body": "",
+     "image": "battery-storage",
+     "items": []
+    }
+   ]
+  },
+  {
+   "id": "project-carports",
+   "kind": "project",
+   "slug": "carports",
+   "title": "Carports",
+   "intro": "Explore our state-of-the-art carport projects, providing reliable and efficient energy solutions.",
+   "seo_title": "",
+   "seo_description": "",
+   "card_image": "solar-carport-with-ev-charging",
+   "visible": true,
+   "sections": [
+    {
+     "id": "s1",
+     "heading": "1.4MWp solar carport built in 2021/2022",
+     "body": "",
+     "image": "solar-carport-aerial",
+     "items": []
+    },
+    {
+     "id": "s2",
+     "heading": "1MWp solar carport",
+     "body": "",
+     "image": "solar-carport-ground-view",
+     "items": []
+    },
+    {
+     "id": "s3",
+     "heading": "2MWp solar carport built in 2022",
+     "body": "",
+     "image": "solar-carport-wide-view",
+     "items": []
+    },
+    {
+     "id": "s4",
+     "heading": "Solar carport with EV-charging points",
+     "body": "",
+     "image": "solar-carport-with-ev-charging",
+     "items": []
+    }
+   ]
+  },
+  {
+   "id": "project-ev-charging",
+   "kind": "project",
+   "slug": "ev-charging",
+   "title": "EV Charging Projects",
+   "intro": "Explore our state-of-the-art EV charging systems, designed and commissioned to provide reliable and efficient energy solutions for electric vehicles. Our projects showcase the integration of advanced technologies to meet the growing demand for sustainable transportation. Join us in our journey towards a greener future.",
+   "seo_title": "",
+   "seo_description": "",
+   "card_image": "solar-carport-charging-station",
+   "visible": true,
+   "sections": [
+    {
+     "id": "s1",
+     "heading": "solar carpot EV charging stations",
+     "body": "",
+     "image": "solar-carport-charging-station",
+     "items": []
+    },
+    {
+     "id": "s2",
+     "heading": "Solar carport with 1.4MWp solar and EV-charging stations. Commissioned in 2023",
+     "body": "",
+     "image": "solar-carport",
+     "items": []
+    },
+    {
+     "id": "s3",
+     "heading": "Solar carport",
+     "body": "",
+     "image": "solar-carport",
+     "items": []
+    }
+   ]
+  },
+  {
+   "id": "project-floating-solar",
+   "kind": "project",
+   "slug": "floating-solar",
+   "title": "Floating Solar",
+   "intro": "Explore our state-of-the-art floating solar projects, providing reliable and efficient energy solutions.",
+   "seo_title": "",
+   "seo_description": "",
+   "card_image": "15mwp-floating-solar",
+   "visible": true,
+   "sections": [
+    {
+     "id": "s1",
+     "heading": "15MWp Floating Solar built in 2022",
+     "body": "",
+     "image": "15mwp-floating-solar",
+     "items": []
+    },
+    {
+     "id": "s2",
+     "heading": "'Floating solar project with 6MWp installed capacity, commissioned in 2023",
+     "body": "",
+     "image": "",
+     "items": []
+    },
+    {
+     "id": "s3",
+     "heading": "Floating Solar Installation",
+     "body": "",
+     "image": "operation-and-maintenance-floating-solar",
+     "items": []
+    }
+   ]
+  },
+  {
+   "id": "project-security-systems",
+   "kind": "project",
+   "slug": "security-systems",
+   "title": "Security Systems",
+   "intro": "Explore our advanced security systems projects, providing reliable and efficient security solutions.",
+   "seo_title": "",
+   "seo_description": "",
+   "card_image": "radar-ptz-camera-unit",
+   "visible": true,
+   "sections": [
+    {
+     "id": "s1",
+     "heading": "High definition PTZ cameras (with thermal option) with PREDATOR RADAR. The radar can track targets in 360 degrees multiple times per second'",
+     "body": "",
+     "image": "radar-ptz-camera-unit",
+     "items": []
+    },
+    {
+     "id": "s2",
+     "heading": "Security Fencing",
+     "body": "",
+     "image": "security-fencing",
+     "items": []
+    },
+    {
+     "id": "s3",
+     "heading": "CCTV Camera",
+     "body": "",
+     "image": "cctv-camera",
+     "items": []
+    }
+   ]
+  },
+  {
+   "id": "project-solar-parks",
+   "kind": "project",
+   "slug": "solar-parks",
+   "title": "Solar Parks",
+   "intro": "Explore our advanced solar parks designed to harness renewable energy efficiently. Our projects showcase the integration of state-of-the-art technologies to meet the growing demand for sustainable energy solutions.",
+   "seo_title": "",
+   "seo_description": "",
+   "card_image": "solar-farm-beachampton",
+   "visible": true,
+   "sections": [
+    {
+     "id": "s1",
+     "heading": "Solar farm, Beachampton, UK",
+     "body": "POTASH Solar farm with 5MWp solar installation built in 2025",
+     "image": "solar-farm-beachampton",
+     "items": []
+    },
+    {
+     "id": "s2",
+     "heading": "Solar park Emmen",
+     "body": "Solar Energy park with 6.5MWp solar installation built in 2021/2022",
+     "image": "solar-park-emmen",
+     "items": []
+    },
+    {
+     "id": "s3",
+     "heading": "Solar park Nieuwendijk",
+     "body": "Solar Energy park with 2MWp built in 2022",
+     "image": "solar-park-nieuwendijk",
+     "items": []
+    },
+    {
+     "id": "s4",
+     "heading": "Solarpark Vlaamseweg, The Netherlands",
+     "body": "2.5MWp East-West design solar park built in 2020",
+     "image": "solarpark-vlaamseweg-the-netherlands",
+     "items": []
+    }
+   ]
+  }
+ ],
+ "media": {
+  "logo": {
+   "file": "logo.png",
+   "kind": "image",
+   "alt": "VARTEC",
+   "source": "",
+   "licence": "own",
+   "w": 114,
+   "h": 114
+  },
+  "battery-storage-site": {
+   "file": "battery-storage-site.webp",
+   "kind": "image",
+   "alt": "Battery storage site",
+   "source": "",
+   "licence": "own",
+   "w": 1600,
+   "h": 885
+  },
+  "grass-cutting-solar-park": {
+   "file": "grass-cutting-solar-park.webp",
+   "kind": "image",
+   "alt": "Grass cutting solar park",
+   "source": "https://www.shutterstock.com/image-photo/man-mows-grass-near-solar-panels-2444567545",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 1308
+  },
+  "engineers-floating-solar": {
+   "file": "engineers-floating-solar.webp",
+   "kind": "image",
+   "alt": "Engineers floating solar",
+   "source": "https://www.bigstockphoto.com/image-468595951/stock-photo-engineer-working-setup-floating-solar-panels-or-solar-cell-platform-system-on-the-lake-engineer-or",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 841
+  },
+  "cctv-camera-solar-park": {
+   "file": "cctv-camera-solar-park.webp",
+   "kind": "image",
+   "alt": "Cctv camera solar park",
+   "source": "https://www.shutterstock.com/image-photo/providing-surveillance-monitoring-solar-energy-sitesecured-2361622415",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 1044
+  },
+  "electric-vans-charging": {
+   "file": "electric-vans-charging.webp",
+   "kind": "image",
+   "alt": "Electric vans charging",
+   "source": "https://www.shutterstock.com/image-photo/electric-vehicles-charging-station-on-background-1966719229",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 713
+  },
+  "solar-carport-car-park": {
+   "file": "solar-carport-car-park.webp",
+   "kind": "image",
+   "alt": "Solar carport car park",
+   "source": "",
+   "licence": "own",
+   "w": 1600,
+   "h": 870
+  },
+  "finalmerge": {
+   "file": "finalmerge.mp4",
+   "kind": "video",
+   "alt": "Finalmerge",
+   "source": "",
+   "licence": "own"
+  },
+  "engineering-procurement-and-construction-epc": {
+   "file": "engineering-procurement-and-construction-epc.webp",
+   "kind": "image",
+   "alt": "EPC (Engineering, Procurement and Construction)",
+   "source": "https://www.shutterstock.com/image-photo/architect-team-working-blueprints-sketching-construction-2374386943",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 1027
+  },
+  "engineering": {
+   "file": "engineering.webp",
+   "kind": "image",
+   "alt": "Engineering Services",
+   "source": "https://www.alamy.com/design-or-project-concept-of-an-ecological-house-folding-ruler-in-the-shape-of-a-house-on-a-wheat-field-with-a-green-tree-clear-blue-sky-and-sunbea-image557502320.html",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 904
+  },
+  "procurement": {
+   "file": "procurement.webp",
+   "kind": "image",
+   "alt": "Procurement Services",
+   "source": "https://www.shutterstock.com/image-photo/man-working-on-virtual-touch-screen-2332556547",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 1067
+  },
+  "design-cad": {
+   "file": "design-cad.webp",
+   "kind": "image",
+   "alt": "Consulting Services",
+   "source": "https://www.alamy.com/over-the-shoulder-shot-of-engineer-working-with-cad-software-on-desktop-computer-screen-shows-technical-drafts-and-drawings-in-the-background-image376926136.html",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 900
+  },
+  "health-and-safety": {
+   "file": "health-and-safety.webp",
+   "kind": "image",
+   "alt": "Health and Safety",
+   "source": "https://www.shutterstock.com/image-photo/clean-energy-solar-cell-factory-concept-1122790478",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 1068
+  },
+  "om-services": {
+   "file": "om-services.webp",
+   "kind": "image",
+   "alt": "Operation and Maintenance (O&M)",
+   "source": "",
+   "licence": "unknown",
+   "w": 1600,
+   "h": 748
+  },
+  "operation-and-maintenance-floating-solar": {
+   "file": "operation-and-maintenance-floating-solar.webp",
+   "kind": "image",
+   "alt": "Operations",
+   "source": "https://www.bigstockphoto.com/image-468595951/stock-photo-engineer-working-setup-floating-solar-panels-or-solar-cell-platform-system-on-the-lake-engineer-or",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 841
+  },
+  "grass-cutting": {
+   "file": "grass-cutting.webp",
+   "kind": "image",
+   "alt": "Maintenance",
+   "source": "https://www.shutterstock.com/image-photo/man-mows-grass-near-solar-panels-2444567545",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 1064
+  },
+  "electrical-testing": {
+   "file": "electrical-testing.webp",
+   "kind": "image",
+   "alt": "Electrical Testing",
+   "source": "https://www.alamy.com/workers-use-multimeter-to-measure-the-voltage-of-electrical-wires-produced-from-solar-energy-for-confirm-to-systems-working-normal-image383625990.html",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 1067
+  },
+  "panel-cleaning": {
+   "file": "panel-cleaning.webp",
+   "kind": "image",
+   "alt": "Panel Cleaning",
+   "source": "",
+   "licence": "unknown",
+   "w": 1600,
+   "h": 1200
+  },
+  "robot-panel-cleaning": {
+   "file": "robot-panel-cleaning.webp",
+   "kind": "image",
+   "alt": "Robot Panel Cleaning",
+   "source": "",
+   "licence": "unknown",
+   "w": 1600,
+   "h": 900
+  },
+  "solar-panel-testing": {
+   "file": "solar-panel-testing.webp",
+   "kind": "image",
+   "alt": "Solar Panel Testing",
+   "source": "",
+   "licence": "unknown",
+   "w": 1600,
+   "h": 1013
+  },
+  "battery-storage-containers": {
+   "file": "battery-storage-containers.webp",
+   "kind": "image",
+   "alt": "Battery Storage",
+   "source": "",
+   "licence": "own",
+   "w": 1600,
+   "h": 885
+  },
+  "battery-storage": {
+   "file": "battery-storage.webp",
+   "kind": "image",
+   "alt": "6MW/12MWh battery Storage System Commissioned in 2023",
+   "source": "https://www.alamy.com/batteries-for-energy-storage-supplying-and-stabilizing-a-larger-amount-of-renewable-energy-to-the-electric-grid-flevopolder-the-netherlands-image596545702.html",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 1200
+  },
+  "solar-with-storage": {
+   "file": "solar-with-storage.webp",
+   "kind": "image",
+   "alt": "Solar with Storage System",
+   "source": "https://www.alamy.com/detailed-view-of-the-battery-energy-storage-located-in-an-open-industrial-container-on-a-lush-lawn-with-a-photovoltaic-power-plant-in-the-background-image560664409.html",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 793
+  },
+  "solar-carport-with-ev-charging": {
+   "file": "solar-carport-with-ev-charging.webp",
+   "kind": "image",
+   "alt": "Carports",
+   "source": "https://www.alamy.com/aerial-view-of-solar-panels-installed-as-shade-roof-over-parking-lot-with-parked-cars-for-effective-generation-of-clean-electricity-photovoltaic-image469999282.html",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 1067
+  },
+  "solar-carport-aerial": {
+   "file": "solar-carport-aerial.webp",
+   "kind": "image",
+   "alt": "1.4MWp solar carport built in 2021/2022",
+   "source": "",
+   "licence": "own",
+   "w": 1600,
+   "h": 1200
+  },
+  "solar-carport-ground-view": {
+   "file": "solar-carport-ground-view.webp",
+   "kind": "image",
+   "alt": "1MWp solar carport",
+   "source": "",
+   "licence": "own",
+   "w": 1600,
+   "h": 1200
+  },
+  "solar-carport-wide-view": {
+   "file": "solar-carport-wide-view.webp",
+   "kind": "image",
+   "alt": "2MWp solar carport built in 2022",
+   "source": "",
+   "licence": "own",
+   "w": 1600,
+   "h": 870
+  },
+  "solar-carport-charging-station": {
+   "file": "solar-carport-charging-station.webp",
+   "kind": "image",
+   "alt": "EV Charging Projects",
+   "source": "https://fastlane.gm.com/2014/12/03/department-energy-recognizes-gm-workplace-charging/",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 1118
+  },
+  "solar-carport": {
+   "file": "solar-carport.webp",
+   "kind": "image",
+   "alt": "Solar carport with 1.4MWp solar and EV-charging stations. Commissioned in 2023",
+   "source": "https://i.insider.com/61031873aedf2100190f0d42",
+   "licence": "unlicensed",
+   "w": 700,
+   "h": 524
+  },
+  "15mwp-floating-solar": {
+   "file": "15mwp-floating-solar.webp",
+   "kind": "image",
+   "alt": "Floating Solar",
+   "source": "https://www.shutterstock.com/image-photo/largest-floating-solar-park-farm-europe-1869869446",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 900
+  },
+  "radar-ptz-camera-unit": {
+   "file": "radar-ptz-camera-unit.webp",
+   "kind": "image",
+   "alt": "Security Systems",
+   "source": "",
+   "licence": "own",
+   "w": 1600,
+   "h": 900
+  },
+  "security-fencing": {
+   "file": "security-fencing.webp",
+   "kind": "image",
+   "alt": "Security Fencing",
+   "source": "https://www.alamy.com/power-station-with-solar-panels-in-a-field-behind-a-barbed-wire-fence-lighting-and-video-surveillance-equipment-on-a-bright-sunny-day-image566946847.html",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 898
+  },
+  "cctv-camera": {
+   "file": "cctv-camera.webp",
+   "kind": "image",
+   "alt": "CCTV Camera",
+   "source": "https://www.shutterstock.com/image-photo/providing-surveillance-monitoring-solar-energy-sitesecured-2361622415",
+   "licence": "unlicensed",
+   "w": 1600,
+   "h": 1044
+  },
+  "solar-farm-beachampton": {
+   "file": "solar-farm-beachampton.webp",
+   "kind": "image",
+   "alt": "Solar Parks",
+   "source": "",
+   "licence": "own",
+   "w": 1600,
+   "h": 900
+  },
+  "solar-park-emmen": {
+   "file": "solar-park-emmen.webp",
+   "kind": "image",
+   "alt": "Solar park Emmen",
+   "source": "",
+   "licence": "own",
+   "w": 1600,
+   "h": 900
+  },
+  "solar-park-nieuwendijk": {
+   "file": "solar-park-nieuwendijk.webp",
+   "kind": "image",
+   "alt": "Solar park Nieuwendijk",
+   "source": "",
+   "licence": "own",
+   "w": 1600,
+   "h": 900
+  },
+  "solarpark-vlaamseweg-the-netherlands": {
+   "file": "solarpark-vlaamseweg-the-netherlands.webp",
+   "kind": "image",
+   "alt": "Solarpark Vlaamseweg, The Netherlands",
+   "source": "",
+   "licence": "own",
+   "w": 1600,
+   "h": 1200
+  }
+ }
+}

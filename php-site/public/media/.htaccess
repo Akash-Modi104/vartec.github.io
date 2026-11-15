@@ -1,0 +1,5 @@
+# Uploaded files are data only: nothing in this folder may run as a program.
+<FilesMatch "\.(php|phtml|phar|pl|py|cgi|sh)$">
+Require all denied
+</FilesMatch>
+Options -ExecCGI -Indexes
