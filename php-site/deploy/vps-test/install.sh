@@ -54,7 +54,10 @@ else
   # No Docker: run the site with PHP-FPM behind nginx. The rules below mirror public/.htaccess.
   if ! ls /run/php/php*-fpm.sock >/dev/null 2>&1; then
     say "Installing PHP (php-fpm, gd, mbstring)"
-    DEBIAN_FRONTEND=noninteractive apt-get install -y -q php-fpm php-gd php-mbstring >/dev/null
+    # NEEDRESTART_SUSPEND: do not let the package manager restart any other service on this server.
+    export DEBIAN_FRONTEND=noninteractive NEEDRESTART_SUSPEND=1
+    apt-get update -q >/dev/null 2>&1 || true
+    apt-get install -y -q --no-install-recommends php-fpm php-gd php-mbstring >/dev/null
   fi
   SOCK="$(ls /run/php/php*-fpm.sock | grep -v 'php-fpm.sock' | sort -V | tail -1)"
   [ -n "$SOCK" ] || SOCK=/run/php/php-fpm.sock
