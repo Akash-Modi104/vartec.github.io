@@ -9,6 +9,10 @@ Rule for every step: `send_mail.php`, DNS and the mailboxes are never touched. T
 - The hosting runs on several servers. A file just created can return "Page Not Found" for up to about a minute on some requests. Wait a minute after each upload before judging a result.
 - Current files in `htdocs` match the backup `vartec-backup-2026-11-15.zip`.
 
+## Status on 15 Nov 2026, 14:50
+- Steps 2 and 3 are done: the staged `.htaccess` is in place and the site files are unpacked in `htdocs` (fetched from the `go-live-package` branch and checked against its SHA-256). Visitors still get the old site, byte-identical.
+- **Do not switch yet.** About 1 in 5 PHP requests on this hosting returns Network Solutions' own "Page Not Found" page. This also affects the old `send_mail.php` (25 of 30 test requests answered), so it is a hosting fault that existed before this work and already makes some contact-form submissions fail. Static files are not affected. The switch has to wait until Network Solutions fixes it, or the site is served from somewhere else.
+
 ## Rehearsal
 The whole sequence below was run on a local Apache copy of the live `htdocs`: visitors' home page stayed byte-identical during staging, and all 114 checks passed with the final `.htaccess` and the data folder inside `htdocs`.
 
