@@ -16,7 +16,6 @@ export class Hero2Component implements OnInit, OnDestroy {
   readonly backgroundImages = [
     'assets/image/hero1-min.webp',
     'assets/image/hero2-min.webp',
-    'assets/image/hero3-min.webp',
     'assets/image/hero4-min.webp',
     'assets/image/hero5-min.webp',
     'assets/image/hero6-min.webp',
@@ -97,7 +96,7 @@ export class Hero2Component implements OnInit, OnDestroy {
     this.meta.updateTag({ property: 'og:title', content: pageTitle });
     this.meta.updateTag({ property: 'og:description', content: description });
     this.meta.updateTag({ property: 'og:url', content: canonicalUrl });
-    this.meta.updateTag({ property: 'og:image', content: `${this.siteUrl}assets/image/hero3-min.webp` });
+    this.meta.updateTag({ property: 'og:image', content: `${this.siteUrl}assets/image/hero1-min.webp` });
     this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.updateCanonicalUrl(canonicalUrl);
   }
