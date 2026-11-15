@@ -105,6 +105,23 @@ $s = $content['settings'];
   <?php endif; ?>
 </section>
 
+<section class="card" id="recovery">
+  <h2>Recovery code <small>(for a forgotten password)</small></h2>
+  <p class="muted">Anyone who knows this code can set a new password for any editor from the sign-in screen. Keep it somewhere safe and private, away from the passwords. The server stores it only in scrambled form, so it cannot be read back.</p>
+  <?php if (!empty($recovery_once)): ?>
+    <div class="notice notice-ok"><strong>Your recovery code:</strong> <code class="key"><?= e($recovery_once) ?></code><br>Write it down now. It will not be shown again.</div>
+  <?php elseif (!empty($recovery['hash'])): ?>
+    <p><span class="badge badge-own">Set</span> Created <?= e(date('j M Y', strtotime($recovery['created'] ?? 'now'))) ?> by <?= e($recovery['by'] ?? '') ?>. Creating a new one cancels the old one.</p>
+  <?php else: ?>
+    <p><span class="badge badge-unknown">Not set</span> Without it, a forgotten password can only be fixed by another editor.</p>
+  <?php endif; ?>
+  <form method="post" action="/admin/settings/recovery" class="grid-2">
+    <?= csrf_field() ?>
+    <label>Your password, to confirm<input type="password" name="current_password" autocomplete="current-password" required></label>
+    <div><button type="submit" class="btn"><?= !empty($recovery['hash']) ? 'Create a new recovery code' : 'Create a recovery code' ?></button></div>
+  </form>
+</section>
+
 <section class="card" id="editors">
   <h2>Editors</h2>
   <p class="muted">Everyone listed here can edit and publish the website.</p>

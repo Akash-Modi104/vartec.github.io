@@ -202,6 +202,31 @@ with sync_playwright() as p:
     check("a removed editor is signed out at once", other.url.endswith("/admin/login"))
     other.close()
 
+    # --- Forgotten password: recovery code
+    page.goto(BASE + "/admin/settings"); page.fill('#recovery input[name="current_password"]', "wrong-password-x"); page.click("#recovery button"); page.wait_for_selector(".notice-error")
+    check("a recovery code is not created without the right password", not os.path.exists(f"{DATA}/recovery.php"))
+    page.fill('#recovery input[name="current_password"]', PASSWORD); page.click("#recovery button"); page.wait_for_selector("#recovery code.key")
+    recovery = page.locator("#recovery code.key").inner_text()
+    check("the recovery code is shown once and only its hash is stored", len(recovery.replace("-", "")) == 20 and recovery.replace("-", "") not in open(f"{DATA}/recovery.php").read() and (page.reload() or True) and page.locator("#recovery code.key").count() == 0)
+    lost = browser.new_context().new_page(); lost.goto(BASE + "/admin/login"); lost.click("text=Forgotten your password?")
+    reset_password = secrets.token_urlsafe(12)
+    lost.fill('input[name="username"]', USER); lost.fill('input[name="code"]', "AAAAA-BBBBB-CCCCC-DDDDD"); lost.fill('input[name="new_password"]', reset_password); lost.click('button[type="submit"]'); lost.wait_for_load_state()
+    check("a wrong recovery code changes nothing", "not right" in lost.content())
+    lost.fill('input[name="username"]', "nobody-here"); lost.fill('input[name="code"]', recovery); lost.fill('input[name="new_password"]', reset_password); lost.click('button[type="submit"]'); lost.wait_for_load_state()
+    check("the right code with an unknown username gives the same answer", "not right" in lost.content())
+    lost.fill('input[name="username"]', USER); lost.fill('input[name="code"]', recovery.lower()); lost.fill('input[name="new_password"]', reset_password); lost.click('button[type="submit"]'); lost.wait_for_url(BASE + "/admin/login")
+    check("the right code sets a new password", "Password changed" in lost.content())
+    page.goto(BASE + "/admin/home"); check("resetting the password signs the account out everywhere", page.url.endswith("/admin/login"))
+    page.fill('input[name="username"]', USER); page.fill('input[name="password"]', PASSWORD); page.click('button[type="submit"]'); page.wait_for_load_state()
+    check("the old password no longer works", "not right" in page.content())
+    PASSWORD = reset_password
+    page.fill('input[name="username"]', USER); page.fill('input[name="password"]', PASSWORD); page.click('button[type="submit"]'); page.wait_for_url(BASE + "/admin/")
+    check("the new password signs in", "Dashboard" in page.title())
+    for _ in range(6):
+        lost.goto(BASE + "/admin/recover"); lost.fill('input[name="username"]', USER); lost.fill('input[name="code"]', "ZZZZZ-ZZZZZ-ZZZZZ-ZZZZZ"); lost.fill('input[name="new_password"]', reset_password + "x"); lost.click('button[type="submit"]'); lost.wait_for_load_state()
+    check("repeated wrong codes are locked out for 15 minutes", "Too many attempts" in lost.content())
+    lost.close()
+
     # --- Delete a page
     page.goto(BASE + "/admin/pages?kind=info"); page.click('.sort-title:has-text("Privacy policy")'); page.wait_for_selector("[data-section]")
     page.click('button:has-text("Delete this page")'); confirm(); page.wait_for_selector(".notice-ok")

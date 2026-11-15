@@ -8,7 +8,7 @@ declare(strict_types=1);
  * starts with GUARD, so it reveals nothing even if a server were to serve the data folder.
  */
 
-const APP_VERSION = '1.4.0';
+const APP_VERSION = '1.5.0';
 const GUARD = "<?php http_response_code(404); exit; ?>\n";
 const HISTORY_KEEP = 30;
 const SESSION_IDLE_SECONDS = 7200;      // signed out after 2 hours without activity

@@ -30,6 +30,10 @@ function admin_dispatch(string $path): void
         admin_login($post);
         return;
     }
+    if ($path === '/recover') {
+        admin_recover($post);
+        return;
+    }
     $user = current_user();
     if (!$user) {
         redirect('/admin/login');
@@ -48,7 +52,7 @@ function admin_dispatch(string $path): void
         '/page/delete' => 'admin_page_delete', '/media' => 'admin_media', '/media/upload' => 'admin_media_upload',
         '/media/edit' => 'admin_media_edit', '/media/delete' => 'admin_media_delete', '/enquiries' => 'admin_enquiries',
         '/settings' => 'admin_settings', '/settings/password' => 'admin_password', '/settings/editors' => 'admin_editors',
-        '/settings/two-step' => 'admin_two_step',
+        '/settings/two-step' => 'admin_two_step', '/settings/recovery' => 'admin_recovery_code',
         '/history' => 'admin_history', '/help' => 'admin_help', '/wording' => 'admin_wording', '/guide' => 'admin_guide',
     ];
     if (!isset($routes[$path])) {
@@ -178,7 +182,48 @@ function admin_login(bool $post): void
             }
         }
     }
-    echo render('admin/auth', ['mode' => $mode, 'error' => $error]);
+    echo render('admin/auth', ['mode' => $mode, 'error' => $error, 'notice' => $error === '' ? (flash()['message'] ?? '') : '']);
+}
+
+/**
+ * Forgotten password: anyone who knows the recovery code may set a new password for an account.
+ * The code is created under Settings, shown once, and only its hash is kept on the server.
+ */
+function admin_recover(bool $post): void
+{
+    if (current_user()) {
+        redirect('/admin/settings#account');
+    }
+    start_session();
+    $error = '';
+    $stored = (string) (read_data('recovery')['hash'] ?? '');
+    if ($post) {
+        csrf_check();
+        $all = users();
+        $name = strtolower(clean_line($_POST['username'] ?? '', 40));
+        $code = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string) ($_POST['code'] ?? '')) ?? '');
+        $new = (string) ($_POST['new_password'] ?? '');
+        // Always run the hash check, so the response time does not reveal whether a code is set.
+        $match = password_verify($code, $stored !== '' ? $stored : '$2y$10$usesomesillystringfore7hnbRJHxXVLeakoG8K30oukPsA.ztMG') && $stored !== '';
+        if (!rate_limit_ok('recover', 5, 900)) {
+            $error = 'Too many attempts. Wait 15 minutes and try again.';
+        } elseif (!$match || !isset($all[$name])) {
+            audit('Failed password recovery for "' . $name . '"');
+            $error = 'The username or the recovery code is not right.';
+        } elseif ($problem = password_problem($new, $name)) {
+            $error = $problem;
+        } else {
+            $all[$name]['hash'] = password_hash($new, PASSWORD_DEFAULT);
+            $all[$name]['epoch'] = ($all[$name]['epoch'] ?? 0) + 1;     // signs the account out everywhere
+            unset($all[$name]['must_change']);
+            write_data('users', $all);
+            rate_limit_clear('recover');
+            audit('Password reset with the recovery code', $name);
+            flash('Password changed. Sign in with your new password.');
+            redirect('/admin/login');
+        }
+    }
+    echo render('admin/auth', ['mode' => 'recover', 'error' => $error]);
 }
 
 function admin_logout(bool $post, string $user): void
@@ -676,6 +721,7 @@ function admin_settings(bool $post, string $user): void
     }
     start_session();
     admin_page_out('Settings', render('admin/settings', ['content' => $content, 'user' => $user, 'editors' => array_keys(users()),
+        'recovery' => read_data('recovery'), 'recovery_once' => (function () { $c = $_SESSION['recovery_once'] ?? null; unset($_SESSION['recovery_once']); return $c; })(),
         'two_step_on' => !empty(users()[$user]['totp']), 'two_step_setup' => $_SESSION['totp_setup'] ?? null, 'activity' => array_slice(read_data('audit'), 0, 15)]), $user, 'settings');
 }
 
@@ -705,6 +751,24 @@ function admin_password(bool $post, string $user): void
         }
     }
     redirect(!empty(users()[$user]['must_change']) ? '/admin/' : '/admin/settings#account');
+}
+
+/** Creates (or replaces) the recovery code. It is shown once; the server keeps only its hash. */
+function admin_recovery_code(bool $post, string $user): void
+{
+    if ($post) {
+        if (!password_verify((string) ($_POST['current_password'] ?? ''), users()[$user]['hash'])) {
+            flash('Your current password is not right.', 'error');
+        } else {
+            $raw = strtoupper(bin2hex(random_bytes(10)));
+            write_data('recovery', ['hash' => password_hash($raw, PASSWORD_DEFAULT), 'created' => gmdate('c'), 'by' => $user]);
+            start_session();
+            $_SESSION['recovery_once'] = implode('-', str_split($raw, 5));
+            audit('Created a new recovery code', $user);
+            flash('A new recovery code was created. Write it down now: it is shown only once.');
+        }
+    }
+    redirect('/admin/settings#recovery');
 }
 
 function admin_editors(bool $post, string $user): void
