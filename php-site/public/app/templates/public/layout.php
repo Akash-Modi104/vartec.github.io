@@ -30,6 +30,8 @@ $phoneHref = 'tel:' . preg_replace('/[^0-9+]/', '', $s['phone']);
   <?php if ($logo): ?><link rel="icon" href="<?= e($logo) ?>"><?php endif; ?>
   <?php if ($logo): ?><link rel="apple-touch-icon" href="<?= e($logo) ?>"><?php endif; ?>
   <meta name="theme-color" content="#E19F26">
+  <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin.woff2" crossorigin>
+  <?php if ($active === 'home'): ?><link rel="preload" as="font" type="font/woff2" href="/assets/fonts/tinos-latin-400.woff2" crossorigin><?php endif; ?>
   <link rel="stylesheet" href="/assets/site.css?v=<?= APP_VERSION ?>">
   <?php
   $org = array_filter(['@type' => 'Organization', '@id' => $site . '/#organization', 'name' => $s['brand_name'], 'url' => $site . '/',
