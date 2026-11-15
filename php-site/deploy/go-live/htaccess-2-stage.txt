@@ -1,0 +1,32 @@
+# STAGE: visitors get the current site exactly as before.
+# Only a browser carrying the cookie vartec_stage=PUT-A-LONG-RANDOM-WORD-HERE sees the new site.
+Options -Indexes
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# The new site's private folders are never served to anyone.
+RewriteRule ^(app|data)(/|$) - [F,L]
+RewriteRule (^|/)\.(?!well-known/) - [F,L]
+
+# --- testers (cookie present): the new site
+RewriteCond %{HTTP_COOKIE} vartec_stage=PUT-A-LONG-RANDOM-WORD-HERE
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]
+
+# --- everyone else: the new front controller is not reachable ...
+RewriteCond %{HTTP_COOKIE} !vartec_stage=PUT-A-LONG-RANDOM-WORD-HERE
+RewriteRule ^index\.php - [F,L]
+
+# ... and everything that is not a real file goes to the current site, as today.
+RewriteCond %{HTTP_COOKIE} !vartec_stage=PUT-A-LONG-RANDOM-WORD-HERE
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /index.html [L]
+</IfModule>
+
+<IfModule mod_mime.c>
+AddType font/woff2 .woff2
+</IfModule>

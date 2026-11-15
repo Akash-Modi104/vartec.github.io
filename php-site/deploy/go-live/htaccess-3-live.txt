@@ -1,0 +1,30 @@
+# VARTEC website (PHP). Upload with the site; do not remove.
+Options -Indexes
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# Private: code, (fallback) data and dot-files are never served.
+RewriteRule ^(app|data)(/|$) - [F,L]
+RewriteRule (^|/)\.(?!well-known/) - [F,L]
+
+# Everything that is not a real file goes to the site.
+# send_mail.php is a real file, so the contact form's mail script is untouched.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+Header always set X-Content-Type-Options "nosniff"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+<FilesMatch "\.(webp|png|jpg|jpeg|gif|mp4|woff2)$">
+Header set Cache-Control "public, max-age=2592000"
+</FilesMatch>
+</IfModule>
+
+# Web fonts: correct type so browsers accept them.
+<IfModule mod_mime.c>
+AddType font/woff2 .woff2
+</IfModule>

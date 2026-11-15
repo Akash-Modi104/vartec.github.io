@@ -179,7 +179,7 @@ with sync_playwright() as p:
     check("a request without the form token is refused", token_less.status == 400)
     for private in ["/app/bootstrap.php", "/app/seed/content.json", "/data/live.php", "/.user.ini", "/.htaccess", "/media/.htaccess"]:
         r = ctx.request.get(BASE + private)
-        check("private path is not served: " + private, r.status == 404)
+        check("private path is not served: " + private, r.status in (403, 404))
 
     # --- activity log
     page.goto(BASE + "/admin/settings")
