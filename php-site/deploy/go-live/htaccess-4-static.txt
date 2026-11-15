@@ -1,0 +1,51 @@
+# VARTEC: the new design served as plain HTML files from /static-site/.
+# The PHP version (with the admin) stays staged: only a browser carrying the tester cookie reaches it.
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /static-site/404.html
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# Private folders of the PHP version, and dot-files, are never served.
+RewriteRule ^(app|data)(/|$) - [F,L]
+RewriteRule (^|/)\.(?!well-known/) - [F,L]
+
+# Addresses of the previous site go to their new pages.
+RewriteRule ^project/(battery-storage|batterystorage)/?$ https://vartec.global/projects/battery-storage/ [R=301,L]
+RewriteRule ^project/(carports|carpots)/?$ https://vartec.global/projects/carports/ [R=301,L]
+RewriteRule ^project/(ev-charging|evcharging)/?$ https://vartec.global/projects/ev-charging/ [R=301,L]
+RewriteRule ^project/(floating|floating-solar)/?$ https://vartec.global/projects/floating-solar/ [R=301,L]
+RewriteRule ^project/(security|security-systems)/?$ https://vartec.global/projects/security-systems/ [R=301,L]
+RewriteRule ^project/(solar-parks|solarparks)/?$ https://vartec.global/projects/solar-parks/ [R=301,L]
+RewriteRule ^services/operationmaintenance/?$ https://vartec.global/services/operation-maintenance/ [R=301,L]
+RewriteRule ^(home(/about_us)?|index\.html)/?$ https://vartec.global/ [R=301,L]
+
+# Testers (cookie present): the PHP version.
+RewriteCond %{HTTP_COOKIE} vartec_stage=PUT-A-LONG-RANDOM-WORD-HERE
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]
+RewriteCond %{HTTP_COOKIE} !vartec_stage=PUT-A-LONG-RANDOM-WORD-HERE
+RewriteRule ^index\.php - [F,L]
+
+# Everyone else: the plain HTML pages.
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteCond %{THE_REQUEST} \s/static-site/
+RewriteRule ^ - [R=404,L]
+RewriteRule ^$ static-site/index.html [L]
+RewriteRule ^(robots\.txt|sitemap\.xml)$ static-site/$1 [L]
+RewriteRule ^(services/(epc|consulting|operation-maintenance)|projects/(battery-storage|carports|ev-charging|floating-solar|security-systems|solar-parks))/$ static-site/$1/index.html [L]
+RewriteRule ^(services/(epc|consulting|operation-maintenance)|projects/(battery-storage|carports|ev-charging|floating-solar|security-systems|solar-parks))$ https://vartec.global/$1/ [R=301,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+Header always set X-Content-Type-Options "nosniff"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+<FilesMatch "\.(webp|png|jpg|jpeg|gif|mp4|woff2)$">
+Header set Cache-Control "public, max-age=2592000"
+</FilesMatch>
+</IfModule>
+<IfModule mod_mime.c>
+AddType font/woff2 .woff2
+</IfModule>
