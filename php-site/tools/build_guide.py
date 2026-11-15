@@ -45,14 +45,14 @@ def page_frame(canvas, doc):
         canvas.drawRightString(W - MARGIN, 10 * mm, f'Page {doc.page}')
     canvas.restoreState()
 
-def compact(name, max_px=1500):
+def compact(name, max_px=1150):
     """A JPEG copy of a screenshot, so the guide stays a few megabytes."""
     src, dst = os.path.join(SHOTS, name + '.png'), os.path.join(SHOTS, '_' + name + '.jpg')
     with PILImage.open(src) as im:
         im = im.convert('RGB')
         if im.width > max_px:
             im = im.resize((max_px, round(im.height * max_px / im.width)), PILImage.LANCZOS)
-        im.save(dst, quality=84, optimize=True)
+        im.save(dst, quality=72, optimize=True)
     return dst
 
 def shot(name, caption=None, max_h=88, width=None):
