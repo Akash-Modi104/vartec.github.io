@@ -136,6 +136,8 @@ class Command(BaseCommand):
     def _seed_hero(self, keys, assets):
         for index in range(1, 8):
             path = f"image/hero{index}-min.webp"
+            if path not in assets:
+                continue  # image removed from the project (e.g. hero3, an unlicensed stock photo)
             HeroSlide.objects.update_or_create(
                 title=f"VARTEC hero {index}",
                 defaults={"media": assets.get(path), "legacy_image_path": path, "alt_text_key": keys.get("VARTEC_DESC"), "sort_order": index, "is_active": True},
@@ -193,7 +195,7 @@ class Command(BaseCommand):
             ]),
             (Page.PROJECT, "floating-solar", "WELCOME_FLOATING_SOLAR_TITLE", "WELCOME_FLOATING_SOLAR_DESCRIPTION", "project/Floating solar/15MWp floating solar.webp", [
                 ("Floating solar 1", "FLOATING_SOLAR_PROJECT_1_TITLE", None, "project/Floating solar/15MWp floating solar.webp"),
-                ("Floating solar 2", "FLOATING_SOLAR_PROJECT_2_TITLE", None, "project/Floating solar/floating solar 2.webp"),
+                ("Floating solar 2", "FLOATING_SOLAR_PROJECT_2_TITLE", None, None),  # photo removed: unlicensed stock image
                 ("Floating solar 3", "FLOATING_SOLAR_PROJECT_3_TITLE", None, "project/Floating solar/operation and maintenance floating solar.webp"),
             ]),
             (Page.PROJECT, "security-systems", "WELCOME_SECURITY_SYSTEMS_TITLE", "WELCOME_SECURITY_SYSTEMS_DESCRIPTION", "project/Security systems/radar PTZ camera unit.webp", [
@@ -224,7 +226,7 @@ class Command(BaseCommand):
                         title_key=keys.get(section_title),
                         body_key=keys.get(body) if body else None,
                         media=assets.get(image_path),
-                        legacy_image_path=image_path,
+                        legacy_image_path=image_path or "",
                         layout=PageSection.TEXT_LEFT if section_order % 2 == 0 else PageSection.TEXT_RIGHT,
                         background=PageSection.WHITE if section_order % 2 == 0 else PageSection.GOLD,
                         sort_order=section_order,

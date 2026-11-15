@@ -290,3 +290,26 @@ class CmsTestCase(TestCase):
         self.assertTrue(all(row['fields']['block'] == feature.block_id for row in features))
         invalid = self.client.get(reverse('cms-resource-list', kwargs={'resource': 'sections'}), {'page': 'invalid'})
         self.assertEqual(invalid.status_code, 400)
+
+
+class RemovedPhotoTests(TestCase):
+    """The harbour floating-solar stock photo (Copytrack case 83734B) must not come back."""
+
+    @classmethod
+    def setUpTestData(cls):
+        call_command("seed_vartec", "--force", verbosity=0)
+
+    def test_photo_is_not_referenced_anywhere(self):
+        from .models import HeroSlide, PageSection
+        removed = ("image/hero3-min.webp", "project/Floating solar/floating solar 2.webp")
+        self.assertFalse(MediaAsset.objects.filter(legacy_path__in=removed).exists())
+        self.assertFalse(HeroSlide.objects.filter(legacy_image_path__in=removed).exists())
+        self.assertFalse(PageSection.objects.filter(legacy_image_path__in=removed).exists())
+        for url in (reverse("website:home"), "/projects/floating-solar/"):
+            html = self.client.get(url).content.decode()
+            self.assertNotIn("hero3-min", html)
+            self.assertNotIn("floating solar 2", html)
+
+    def test_floating_project_text_is_kept_without_a_picture(self):
+        response = self.client.get("/projects/floating-solar/")
+        self.assertContains(response, "6MWp installed capacity")
