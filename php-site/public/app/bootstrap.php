@@ -38,6 +38,21 @@ function data_dir(): string
     exit('The website cannot write to its data folder. Check folder permissions.');
 }
 
+// Stand-ins for optional PHP extensions, so the site runs on hosts that lack them.
+if (!function_exists('mb_substr')) {
+    function mb_substr(string $text, int $start, ?int $length = null): string
+    {
+        $chars = preg_split('//u', $text, -1, PREG_SPLIT_NO_EMPTY) ?: str_split($text);
+        return implode('', array_slice($chars, $start, $length));
+    }
+}
+if (!function_exists('mb_strlen')) {
+    function mb_strlen(string $text): int
+    {
+        return count(preg_split('//u', $text, -1, PREG_SPLIT_NO_EMPTY) ?: str_split($text));
+    }
+}
+
 function e(?string $text): string
 {
     return htmlspecialchars((string) $text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
@@ -157,7 +172,8 @@ function media_url(array $content, ?string $id): string
 
 function slugify(string $text): string
 {
-    $text = strtolower(trim(preg_replace('/[^A-Za-z0-9]+/', '-', iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text) ?: $text) ?? '', '-'));
+    $plain = function_exists('iconv') ? (@iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text) ?: $text) : $text;
+    $text = strtolower(trim(preg_replace('/[^A-Za-z0-9]+/', '-', $plain) ?? '', '-'));
     return $text !== '' ? $text : 'item';
 }
 

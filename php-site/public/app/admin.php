@@ -424,8 +424,10 @@ function store_upload(array $file, string $alt, string $source, string $licence,
     $record = ['kind' => 'image', 'alt' => $alt, 'source' => $source, 'licence' => isset(LICENCES[$licence]) ? $licence : 'unknown', 'added' => gmdate('c')];
 
     if ($ext === 'mp4') {
-        $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
-        if ($mime !== 'video/mp4') {
+        // An MP4 file carries the marker "ftyp" at bytes 4-8; checked directly so no extension is needed.
+        $head = (string) file_get_contents($file['tmp_name'], false, null, 0, 12);
+        $mime = class_exists('finfo') ? (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']) : 'video/mp4';
+        if (substr($head, 4, 4) !== 'ftyp' || $mime !== 'video/mp4') {
             return 'That file is not a valid MP4 video.';
         }
         $record['kind'] = 'video';
